@@ -4,6 +4,7 @@ import Input.MouseHandler;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Toolkit;
 
 public class Display {
 
@@ -34,6 +35,8 @@ public class Display {
     private void createDisplay() {
         frame = new JFrame(title);
         frame.setSize(width, height);
+        Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
+        frame.setIconImage(icon);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -47,6 +50,7 @@ public class Display {
 
         frame.add(canvas);
         frame.pack();
+
 
         canvas.addMouseListener(new MouseHandler());
     }

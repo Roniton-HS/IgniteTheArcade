@@ -26,9 +26,9 @@ public class Game{
      * Constructor
      */
     public Game(){
-        title = "Aldor";
-        width = 1920;
-        height = 1080;
+        title = "Ignite The Arcade";
+        width = 1000;
+        height = 1000;
         init();
     }
 
