@@ -36,7 +36,7 @@ public class Display {
         frame = new JFrame(title);
         frame.setSize(width, height);
         Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
-        frame.setIconImage(icon);
+        frame.setIconImage(icon);//Icon
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -50,7 +50,6 @@ public class Display {
 
         frame.add(canvas);
         frame.pack();
-
 
         canvas.addMouseListener(new MouseHandler());
     }
