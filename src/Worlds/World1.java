@@ -13,7 +13,7 @@ public class World1 extends Worlds {
     }
 
     @Override
-    public void tick() { //das ist die tick Methode
+    public void tick() {
 
     }
 
