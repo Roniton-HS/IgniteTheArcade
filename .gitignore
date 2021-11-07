@@ -1,23 +1,113 @@
-# Compiled class file
-*.class
+.idea
+######################
+# Eclipse
+######################
+*.pydevproject
+.project
+.metadata
+/bin/**
+/tmp/**
+/tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/**
+.loadpath
+/src/main/resources/rebel.xml
 
-# Log file
-*.log
+# External tool builders
+.externalToolBuilders/**
 
-# BlueJ files
-*.ctxt
+# Locally stored "Eclipse launch configurations"
+*.launch
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# CDT-specific
+.cproject
 
-# Package Files #
+# PDT-specific
+.buildpath
+
+######################
+# Intellij
+######################
+/idea
+.idea
+.idea\workspace.xml
+.idea/
+.idea/**
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+######################
+# Maven
+######################
+/log/**
+/target/**
+
+######################
+# Gradle
+######################
+.gradle/**
+
+######################
+# Package Files
+######################
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
+*.db
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+######################
+# Windows
+######################
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+######################
+# Mac OSX
+######################
+.DS_Store
+.svn
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+######################
+# Directories
+######################
+/build/**
+/data/**
+/spring_loaded/**
+/deploy/**
+target
+
+######################
+# Logs
+######################
+*.log
+
+######################
+# Others
+######################
+*.class
+*.*~
+*~
+.merge_file*
+
+######################
+# Gradle Wrapper
+######################
+!gradle/wrapper/gradle-wrapper.jar
