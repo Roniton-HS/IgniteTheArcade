@@ -14,7 +14,10 @@ public class World1 extends Worlds {
 
     @Override
     public void tick() {
-
+        if(game.getKeyHandler().p){
+            PacMan pacMan = new PacMan(game);
+            Worlds.setWorld(pacMan);
+        }
     }
 
     @Override
