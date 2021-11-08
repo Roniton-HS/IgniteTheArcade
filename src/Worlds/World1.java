@@ -14,11 +14,16 @@ public class World1 extends Worlds {
 
     @Override
     public void tick() {
+        if (game.getKeyHandler().o) {
+            SnakeWorld snakeWorld = new SnakeWorld(game);
+            Worlds.setWorld(snakeWorld);
+        }
 
     }
 
     @Override
     public void render(Graphics g) {
+
 
     }
 }
