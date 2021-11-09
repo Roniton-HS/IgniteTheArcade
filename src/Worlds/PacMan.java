@@ -2,6 +2,7 @@ package Worlds;
 
 import Main.Game;
 import PacMan.Player;
+import PacMan.Ghost;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class PacMan extends Worlds {
     }
 
     Player player;
+    Ghost ghost;
 
     /**
      * Constructor
@@ -31,6 +33,7 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         player = new Player(139 + blockSize, 10 + blockSize, game);
+        ghost = new Ghost(139 + 5*  blockSize, 10 + blockSize, game);
         setWorldBounds();
         setPoints();
     }
@@ -38,6 +41,7 @@ public class PacMan extends Worlds {
     @Override
     public void tick() {
         player.tick();
+        ghost.tick();
         teleport();
     }
 
@@ -46,6 +50,7 @@ public class PacMan extends Worlds {
         renderBorders(g);
         renderPoints(g);
         player.render(g);
+        ghost.render(g);
     }
 
     private void teleport(){
@@ -212,7 +217,7 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize));
     }
 
-    private void renderBorders(Graphics g) {
+    private void renderBorders(Graphics g){
         g.setColor(Color.black);
         g.fillRect(139, 10, 19 * blockSize, 25 * blockSize);
         /* outer stuff */

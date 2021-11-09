@@ -4,7 +4,6 @@ import Input.ImageLoader;
 import Main.Game;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
