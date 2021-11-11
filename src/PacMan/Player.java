@@ -1,12 +1,12 @@
 package PacMan;
 
 import Input.ImageLoader;
-import Main.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import Main.Game;
 import Worlds.PacMan;
 
 public class Player {
