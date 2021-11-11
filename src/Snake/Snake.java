@@ -2,7 +2,7 @@ package Snake;
 
 import Main.Game;
 import Worlds.Worlds;
-import Worlds.World1;
+import Worlds.SnakeWorld;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class Snake {
     int x, y;
     int tick;
     int directions;
-    int start;
+    public int start;
 
     boolean appleCollected = false;
     Game game;
@@ -24,17 +24,27 @@ public class Snake {
     }
 
 
-    ArrayList snake = new ArrayList();
+    public ArrayList getSnake() {
+        return snake;
+    }
+
+    public void setSnake(ArrayList snake) {
+        this.snake = snake;
+    }
+
+    public ArrayList snake = new ArrayList();
 
     public void tick() {
         move();
     }
 
     public void render(Graphics g) {
+        g.setColor(Color.green);
+
         for (int i = 0; i < snake.size(); i++) {
             Rectangle rectangle = (Rectangle) snake.get(i);
             g.fillRect(rectangle.getBounds().x, rectangle.getBounds().y, rectangle.getBounds().width, rectangle.getBounds().height);
-            g.setColor(Color.green);
+
         }
     }
 
@@ -73,16 +83,16 @@ public class Snake {
     }
 
     public void waitForStart() {
-        if (start > 3) {
+        if (start >= 3) {
             if (!appleCollected) {
                 snake.remove(0);
             } else {
                 appleCollected = false;
             }
             die();
+        } else {
+            start++;
         }
-
-        start++;
     }
 
     public void die() {
@@ -92,6 +102,7 @@ public class Snake {
             Rectangle rectangle = (Rectangle) snake.get(i);
             if (head.getBounds().intersects(rectangle.getBounds()) && i != snake.size() - 1) {
                 gameStart = false;
+                restart();
             }
         }
         Rectangle up = new Rectangle(32, 32, 863, 1);
@@ -103,7 +114,13 @@ public class Snake {
                 head.getBounds().intersects(left.getBounds()) ||
                 head.getBounds().intersects(right.getBounds())) {
             gameStart = false;
+            restart();
         }
+    }
+
+    public void restart() {
+        SnakeWorld snakeWorld = new SnakeWorld(game);
+        Worlds.setWorld(snakeWorld);
     }
 
 }

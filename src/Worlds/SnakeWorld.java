@@ -10,7 +10,7 @@ public class SnakeWorld extends Worlds {
 
     boolean startScreen = false;
 
-    Snake snake = new Snake(320, 320, game);
+    Snake snake = new Snake(448, 448, game);
 
     /**
      * Constructor
@@ -43,11 +43,12 @@ public class SnakeWorld extends Worlds {
 
         g.drawRect(64, 64, 863, 863);
         g.setColor(Color.white);
-        if (startScreen) {
-            //restart();
-            renderStartScreen(g);
-        }
         snake.render(g);
+
+        if (startScreen) {
+            renderStartScreen(g);
+            //restart();
+        }
 
 
     }
@@ -67,8 +68,14 @@ public class SnakeWorld extends Worlds {
         }
     }
 
-    public void restart(){
-        snake = null;
-        Snake snake = new Snake(320, 320, game);
+    public void restart() {
+        SnakeWorld snakeWorld = new SnakeWorld(game);
+        Worlds.setWorld(snakeWorld);
+
+
+        /*for (int i = 0; i < snake.getSnake().size() - 1; i++) {
+            snake.getSnake().remove(0);
+        }
+        snake.start = 0;*/
     }
 }
