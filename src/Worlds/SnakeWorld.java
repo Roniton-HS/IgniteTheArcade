@@ -44,15 +44,16 @@ public class SnakeWorld extends Worlds {
     public void render(Graphics g) {
 
 
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(64, 64, 27 * snake.blockSize, 27 * snake.blockSize);
+        g.setColor(Color.gray);
+        g.fillRect(4*snake.blockSize, 4*snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
         g.setColor(Color.white);
-        g.drawRect(64, 64, 27 * snake.blockSize, 27 * snake.blockSize);
+        g.drawRect(4*snake.blockSize, 4*snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
         snake.render(g);
 
         renderGrid(g);
+        renderAppleCounter(g);
 
         if (startScreen) {
             renderStartScreen(g);
@@ -63,7 +64,7 @@ public class SnakeWorld extends Worlds {
     }
 
     public void renderStartScreen(Graphics g) {
-        g.setColor(Color.gray);
+        g.setColor(Color.lightGray);
 
         g.fillRect(80, 300, 831, 100);
         g.setFont(new Font("Monospaced", Font.BOLD, 50));
@@ -80,26 +81,34 @@ public class SnakeWorld extends Worlds {
     public void renderGrid(Graphics g) {
         g.setColor(Color.BLACK);
 
-        for(int i = 1; i < 14; i++) {
-            g.drawRect(((2*i)+1)*snake.blockSize,2*snake.blockSize,snake.blockSize,27*snake.blockSize);
+        for(int i = 2; i < 13; i++) {
+            g.drawRect(((2*i)+1)*snake.blockSize,4*snake.blockSize,snake.blockSize,23*snake.blockSize);
         }
-        for(int i = 1; i < 14; i++) {
-            g.drawRect(2*snake.blockSize,((2*i)+1)*snake.blockSize,27*snake.blockSize,snake.blockSize);
+        for(int i = 2; i < 13; i++) {
+            g.drawRect(4*snake.blockSize,((2*i)+1)*snake.blockSize,23*snake.blockSize,snake.blockSize);
         }
+    }
+
+    public void renderAppleCounter(Graphics g){
+        g.setFont(new Font("Monospaced", Font.BOLD,60));
+        g.setColor(Color.red);
+        g.drawString("Score: " + snake.appleCounter, 4*snake.blockSize, 3*snake.blockSize);
+
     }
 
     public void eatApple() {
         if (snake.getBounds().intersects(apple.getBounds())) {
             snake.appleCollected = true;
+            snake.appleCounter++;
             updateApple();
         }
     }
 
     public void updateApple() {
         Random randomX = new Random();
-        apple.xApple = (randomX.nextInt(24) + 2) * snake.blockSize;
+        apple.xApple = (randomX.nextInt(20) + 4) * snake.blockSize;
         Random randomY = new Random();
-        apple.yApple = (randomY.nextInt(24) + 2) * snake.blockSize;
+        apple.yApple = (randomY.nextInt(20) + 4) * snake.blockSize;
     }
 
 }

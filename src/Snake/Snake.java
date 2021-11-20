@@ -12,6 +12,7 @@ public class Snake {
     int x, y;
     int tick;
     int directions;
+    public int appleCounter;
     public int start;
     public static int blockSize = 32;
 
@@ -55,10 +56,6 @@ public class Snake {
             directions = 3;
         }
 
-        if (game.getKeyHandler().e) {
-            appleCollected = true;
-        }
-
         if (tick > 10) {
             switch (directions) {
                 case 0 -> y = y - blockSize;
@@ -97,10 +94,10 @@ public class Snake {
                 restart();
             }
         }
-        Rectangle up = new Rectangle(32, 32, 27 * blockSize, 1);
-        Rectangle down = new Rectangle(32, 959, 27 * blockSize, 1);
-        Rectangle left = new Rectangle(32, 32, 1, 27 * blockSize);
-        Rectangle right = new Rectangle(959, 32, 1, 27 * blockSize);
+        Rectangle up = new Rectangle(3*blockSize, 3*blockSize, 23 * blockSize, 1);
+        Rectangle down = new Rectangle(3*blockSize, 27*blockSize, 23 * blockSize, 1);
+        Rectangle left = new Rectangle(3*blockSize, 3*blockSize, 1, 23 * blockSize);
+        Rectangle right = new Rectangle(27*blockSize, 3*blockSize, 1, 23 * blockSize);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
