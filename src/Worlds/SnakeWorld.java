@@ -32,7 +32,7 @@ public class SnakeWorld extends Worlds {
     public void tick() {
         if (Snake.gameStart) {
             snake.tick();
-            if (snake.start >= 3){
+            if (snake.start >= 3) {
                 eatApple();
             }
         } else {
@@ -45,20 +45,18 @@ public class SnakeWorld extends Worlds {
 
 
         g.setColor(Color.gray);
-        g.fillRect(4*snake.blockSize, 4*snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
+        g.fillRect(4 * snake.blockSize, 4 * snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
         g.setColor(Color.white);
-        g.drawRect(4*snake.blockSize, 4*snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
+        g.drawRect(4 * snake.blockSize, 4 * snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
         snake.render(g);
-
+        apple.render(g);
         renderGrid(g);
         renderAppleCounter(g);
 
         if (startScreen) {
             renderStartScreen(g);
-        } else {
-            apple.render(g);
         }
 
     }
@@ -81,18 +79,18 @@ public class SnakeWorld extends Worlds {
     public void renderGrid(Graphics g) {
         g.setColor(Color.BLACK);
 
-        for(int i = 2; i < 13; i++) {
-            g.drawRect(((2*i)+1)*snake.blockSize,4*snake.blockSize,snake.blockSize,23*snake.blockSize);
+        for (int i = 2; i < 13; i++) {
+            g.drawRect(((2 * i) + 1) * snake.blockSize, 4 * snake.blockSize, snake.blockSize, 23 * snake.blockSize);
         }
-        for(int i = 2; i < 13; i++) {
-            g.drawRect(4*snake.blockSize,((2*i)+1)*snake.blockSize,23*snake.blockSize,snake.blockSize);
+        for (int i = 2; i < 13; i++) {
+            g.drawRect(4 * snake.blockSize, ((2 * i) + 1) * snake.blockSize, 23 * snake.blockSize, snake.blockSize);
         }
     }
 
-    public void renderAppleCounter(Graphics g){
-        g.setFont(new Font("Monospaced", Font.BOLD,60));
+    public void renderAppleCounter(Graphics g) {
+        g.setFont(new Font("Monospaced", Font.BOLD, 60));
         g.setColor(Color.red);
-        g.drawString("Score: " + snake.appleCounter, 4*snake.blockSize, 3*snake.blockSize);
+        g.drawString("Score: " + snake.appleCounter, 4 * snake.blockSize, 3 * snake.blockSize);
 
     }
 
@@ -109,6 +107,15 @@ public class SnakeWorld extends Worlds {
         apple.xApple = (randomX.nextInt(20) + 4) * snake.blockSize;
         Random randomY = new Random();
         apple.yApple = (randomY.nextInt(20) + 4) * snake.blockSize;
+        for (int i = 0; i < snake.snake.size(); i++) {
+            Rectangle rectangle = (Rectangle) snake.snake.get(i);
+            if(rectangle.getBounds().intersects(apple.getBounds())) {
+                Random randomX2 = new Random();
+                apple.xApple = (randomX2.nextInt(20) + 4) * snake.blockSize;
+                Random randomY2 = new Random();
+                apple.yApple = (randomY2.nextInt(20) + 4) * snake.blockSize;
+            }
+        }
     }
 
 }

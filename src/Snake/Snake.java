@@ -16,6 +16,7 @@ public class Snake {
     public int start;
     public static int blockSize = 32;
 
+
     public boolean appleCollected = false;
     Game game;
 
@@ -43,16 +44,16 @@ public class Snake {
 
     public void move() {
 
-        if (game.getKeyHandler().w) {
+        if ((game.getKeyHandler().w || game.getKeyHandler().up) && directions != 2) {
             directions = 0;
         }
-        if (game.getKeyHandler().a) {
+        if ((game.getKeyHandler().a || game.getKeyHandler().left) && directions != 3) {
             directions = 1;
         }
-        if (game.getKeyHandler().s) {
+        if ((game.getKeyHandler().s || game.getKeyHandler().down) && directions != 0) {
             directions = 2;
         }
-        if (game.getKeyHandler().d) {
+        if ((game.getKeyHandler().d || game.getKeyHandler().right) && directions != 1) {
             directions = 3;
         }
 
@@ -94,10 +95,10 @@ public class Snake {
                 restart();
             }
         }
-        Rectangle up = new Rectangle(3*blockSize, 3*blockSize, 23 * blockSize, 1);
-        Rectangle down = new Rectangle(3*blockSize, 27*blockSize, 23 * blockSize, 1);
-        Rectangle left = new Rectangle(3*blockSize, 3*blockSize, 1, 23 * blockSize);
-        Rectangle right = new Rectangle(27*blockSize, 3*blockSize, 1, 23 * blockSize);
+        Rectangle up = new Rectangle(3 * blockSize, 3 * blockSize, 23 * blockSize, 1);
+        Rectangle down = new Rectangle(3 * blockSize, 27 * blockSize, 23 * blockSize, 1);
+        Rectangle left = new Rectangle(3 * blockSize, 3 * blockSize, 1, 23 * blockSize);
+        Rectangle right = new Rectangle(27 * blockSize, 3 * blockSize, 1, 23 * blockSize);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
