@@ -3,14 +3,17 @@ package Worlds;
 import Main.Game;
 import Main.TextPrinter;
 import Snake.Snake;
+import Snake.Apple;
 
 import java.awt.*;
+import java.util.Random;
 
 public class SnakeWorld extends Worlds {
 
     boolean startScreen = false;
 
-    Snake snake = new Snake(448, 448, game);
+    Snake snake = new Snake(14 * 32, 14 * 32, game);
+    Apple apple = new Apple(8 * 32, 10 * 32);
 
     /**
      * Constructor
@@ -29,6 +32,9 @@ public class SnakeWorld extends Worlds {
     public void tick() {
         if (Snake.gameStart) {
             snake.tick();
+            if (snake.start >= 3){
+                eatApple();
+            }
         } else {
             startScreen = true;
         }
@@ -38,18 +44,21 @@ public class SnakeWorld extends Worlds {
     public void render(Graphics g) {
 
 
-        g.fillRect(64, 64, 863, 863);
         g.setColor(Color.DARK_GRAY);
+        g.fillRect(64, 64, 27 * snake.blockSize, 27 * snake.blockSize);
 
-        g.drawRect(64, 64, 863, 863);
         g.setColor(Color.white);
+        g.drawRect(64, 64, 27 * snake.blockSize, 27 * snake.blockSize);
+
         snake.render(g);
+
+        renderGrid(g);
 
         if (startScreen) {
             renderStartScreen(g);
-            //restart();
+        } else {
+            apple.render(g);
         }
-
 
     }
 
@@ -68,14 +77,29 @@ public class SnakeWorld extends Worlds {
         }
     }
 
-    public void restart() {
-        SnakeWorld snakeWorld = new SnakeWorld(game);
-        Worlds.setWorld(snakeWorld);
+    public void renderGrid(Graphics g) {
+        g.setColor(Color.BLACK);
 
-
-        /*for (int i = 0; i < snake.getSnake().size() - 1; i++) {
-            snake.getSnake().remove(0);
+        for(int i = 1; i < 14; i++) {
+            g.drawRect(((2*i)+1)*snake.blockSize,2*snake.blockSize,snake.blockSize,27*snake.blockSize);
         }
-        snake.start = 0;*/
+        for(int i = 1; i < 14; i++) {
+            g.drawRect(2*snake.blockSize,((2*i)+1)*snake.blockSize,27*snake.blockSize,snake.blockSize);
+        }
     }
+
+    public void eatApple() {
+        if (snake.getBounds().intersects(apple.getBounds())) {
+            snake.appleCollected = true;
+            updateApple();
+        }
+    }
+
+    public void updateApple() {
+        Random randomX = new Random();
+        apple.xApple = (randomX.nextInt(24) + 2) * snake.blockSize;
+        Random randomY = new Random();
+        apple.yApple = (randomY.nextInt(24) + 2) * snake.blockSize;
+    }
+
 }

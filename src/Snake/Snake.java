@@ -13,23 +13,15 @@ public class Snake {
     int tick;
     int directions;
     public int start;
+    public static int blockSize = 32;
 
-    boolean appleCollected = false;
+    public boolean appleCollected = false;
     Game game;
 
     public Snake(int x, int y, Game game) {
         this.x = x;
         this.y = y;
         this.game = game;
-    }
-
-
-    public ArrayList getSnake() {
-        return snake;
-    }
-
-    public void setSnake(ArrayList snake) {
-        this.snake = snake;
     }
 
     public ArrayList snake = new ArrayList();
@@ -69,12 +61,12 @@ public class Snake {
 
         if (tick > 10) {
             switch (directions) {
-                case 0 -> y = y - 32;
-                case 1 -> x = x - 32;
-                case 2 -> y = y + 32;
-                case 3 -> x = x + 32;
+                case 0 -> y = y - blockSize;
+                case 1 -> x = x - blockSize;
+                case 2 -> y = y + blockSize;
+                case 3 -> x = x + blockSize;
             }
-            snake.add(new Rectangle(this.x, this.y, 32, 32));
+            snake.add(new Rectangle(this.x, this.y, blockSize, blockSize));
             tick = 0;
             waitForStart();
         } else {
@@ -105,10 +97,10 @@ public class Snake {
                 restart();
             }
         }
-        Rectangle up = new Rectangle(32, 32, 863, 1);
-        Rectangle down = new Rectangle(32, 959, 863, 1);
-        Rectangle left = new Rectangle(32, 32, 1, 863);
-        Rectangle right = new Rectangle(959, 32, 1, 863);
+        Rectangle up = new Rectangle(32, 32, 27 * blockSize, 1);
+        Rectangle down = new Rectangle(32, 959, 27 * blockSize, 1);
+        Rectangle left = new Rectangle(32, 32, 1, 27 * blockSize);
+        Rectangle right = new Rectangle(959, 32, 1, 27 * blockSize);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
@@ -121,6 +113,11 @@ public class Snake {
     public void restart() {
         SnakeWorld snakeWorld = new SnakeWorld(game);
         Worlds.setWorld(snakeWorld);
+    }
+
+    public Rectangle getBounds() {
+        Rectangle head = (Rectangle) snake.get(snake.size() - 1);
+        return head;
     }
 
 }
