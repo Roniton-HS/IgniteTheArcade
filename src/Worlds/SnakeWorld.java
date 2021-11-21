@@ -1,16 +1,20 @@
 package Worlds;
 
+import Input.ImageLoader;
 import Main.Game;
 import Main.TextPrinter;
 import Snake.Snake;
 import Snake.Apple;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class SnakeWorld extends Worlds {
 
     boolean startScreen = false;
+
+    private BufferedImage snakeBody = ImageLoader.loadImage("/SnakeBody.png");
 
     Snake snake = new Snake(14 * 32, 14 * 32, game);
     Apple apple = new Apple(8 * 32, 10 * 32);
@@ -43,11 +47,13 @@ public class SnakeWorld extends Worlds {
     @Override
     public void render(Graphics g) {
 
+        renderFrame(g);
+
 
         g.setColor(Color.gray);
         g.fillRect(4 * snake.blockSize, 4 * snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
-        g.setColor(Color.white);
+        g.setColor(Color.black);
         g.drawRect(4 * snake.blockSize, 4 * snake.blockSize, 23 * snake.blockSize, 23 * snake.blockSize);
 
         snake.render(g);
@@ -94,6 +100,13 @@ public class SnakeWorld extends Worlds {
 
     }
 
+    public void renderFrame(Graphics g) {
+        for (int i = 2; i < 13; i++) {
+            g.drawImage(snakeBody, 0, 2 * i * snake.blockSize, 128,128,null);
+
+        }
+    }
+
     public void eatApple() {
         if (snake.getBounds().intersects(apple.getBounds())) {
             snake.appleCollected = true;
@@ -109,7 +122,7 @@ public class SnakeWorld extends Worlds {
         apple.yApple = (randomY.nextInt(20) + 4) * snake.blockSize;
         for (int i = 0; i < snake.snake.size(); i++) {
             Rectangle rectangle = (Rectangle) snake.snake.get(i);
-            if(rectangle.getBounds().intersects(apple.getBounds())) {
+            if (rectangle.getBounds().intersects(apple.getBounds())) {
                 Random randomX2 = new Random();
                 apple.xApple = (randomX2.nextInt(20) + 4) * snake.blockSize;
                 Random randomY2 = new Random();
