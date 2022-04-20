@@ -41,6 +41,11 @@ public class Player {
         animation(g);
     }
 
+    public void setCords(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
     private void animation(Graphics g) {
         switch (animationCount) {
             case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
@@ -112,7 +117,7 @@ public class Player {
                         usedImage1 = rotateImage(image1, 90);
                         usedImage2 = rotateImage(image2, 90);
                         break;
-                    case 4:
+                    default:
                         usedImage0 = image0;
                         usedImage1 = image1;
                         usedImage2 = image2;
