@@ -35,13 +35,14 @@ public class Player {
         input();
         move();
         PacMan.getWorldBounds();
+        tickAnimation();
     }
 
     public void render(Graphics g) {
         animation(g);
     }
 
-    public void setCords(int x, int y){
+    public void setCords(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -53,7 +54,10 @@ public class Player {
             case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
 
         }
-        if (animationDelay >= 10 && direction != 0) {
+    }
+
+    private void tickAnimation() {
+        if (animationDelay >= 5 && direction != 0) {
             animationCount++;
             if (animationCount > 3) {
                 animationCount = 0;
@@ -62,7 +66,6 @@ public class Player {
         } else {
             animationDelay++;
         }
-
     }
 
     public static BufferedImage rotateImage(BufferedImage imageToRotate, int grad) {
@@ -144,6 +147,10 @@ public class Player {
         }
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle(x + width / 4, y + height / 4, width/2, height/2);
+    }
+
     public Rectangle getNextBound() {
         return switch (nextDirection) {
             case 1 -> new Rectangle(x, y - 2, width, height);
@@ -171,6 +178,7 @@ public class Player {
     public int getY() {
         return y;
     }
+
     public void setX(int x) {
         this.x = x;
     }

@@ -71,7 +71,7 @@ public class PacMan extends Worlds {
     private void checkGhosts(){
         for (int i = 0; i < ghosts.size(); i++) {
             Ghost ghost = (Ghost) ghosts.get(i);
-            if(player.getNextBound().intersects(ghost.getNextFrontBound())){
+            if(player.getBounds().intersects(ghost.getBounds())){
                 player.setCords(139 + blockSize, 10 + blockSize);
             }
         }

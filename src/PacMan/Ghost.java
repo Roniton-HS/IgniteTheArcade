@@ -62,6 +62,7 @@ public class Ghost {
     }
 
     public void render(Graphics g) {
+
         switch (direction) {
             case 1 -> g.drawImage(up, x, y, 38, 38, null);
             case 2 -> g.drawImage(left, x, y, 38, 38, null);
@@ -129,6 +130,10 @@ public class Ghost {
             case 3 -> y += 1;
             case 4 -> x += 1;
         }
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x + width / 4, y + height / 4, width/2, height/2);
     }
 
     public Rectangle getNextBound(double ranDir) {
