@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Ghost {
     Game game;
+
     private int x, y;
     BufferedImage right = ImageLoader.loadImage("/sprite_03.png");
     BufferedImage left = ImageLoader.loadImage("/sprite_04.png");
