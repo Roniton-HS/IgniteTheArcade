@@ -48,7 +48,7 @@ public class Player {
             case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
 
         }
-        if (animationDelay >= 350 && direction != 0) {
+        if (animationDelay >= 10 && direction != 0) {
             animationCount++;
             if (animationCount > 3) {
                 animationCount = 0;

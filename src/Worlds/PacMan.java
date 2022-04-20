@@ -17,8 +17,8 @@ public class PacMan extends Worlds {
 
     public static ArrayList worldBounds = new ArrayList();
 
-    Rectangle left = new Rectangle(101 - blockSize, 10 + 12*blockSize, blockSize, blockSize);
-    Rectangle right = new Rectangle(139 + 20* blockSize, 10 + 12*blockSize, blockSize, blockSize);
+    Rectangle left = new Rectangle(101 - blockSize, 10 + 12 * blockSize, blockSize, blockSize);
+    Rectangle right = new Rectangle(139 + 20 * blockSize, 10 + 12 * blockSize, blockSize, blockSize);
 
     public static ArrayList getWorldBounds() {
         return worldBounds;
@@ -33,7 +33,7 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         player = new Player(139 + blockSize, 10 + blockSize, game);
-        ghost = new Ghost(139 + 5*  blockSize, 10 + blockSize, game);
+        ghost = new Ghost(139 + 5 * blockSize, 10 + blockSize, 2, game);
         setWorldBounds();
         setPoints();
     }
@@ -53,10 +53,10 @@ public class PacMan extends Worlds {
         ghost.render(g);
     }
 
-    private void teleport(){
-        if(player.getNextBound().intersects(left.getBounds())){
+    private void teleport() {
+        if (player.getNextBound().intersects(left.getBounds())) {
             player.setX(player.getX() + 20 * blockSize);
-        }else if(player.getNextBound().intersects(right.getBounds())){
+        } else if (player.getNextBound().intersects(right.getBounds())) {
             player.setX(player.getX() - 20 * blockSize);
         }
     }
@@ -217,7 +217,7 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize));
     }
 
-    private void renderBorders(Graphics g){
+    private void renderBorders(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(139, 10, 19 * blockSize, 25 * blockSize);
         /* outer stuff */
