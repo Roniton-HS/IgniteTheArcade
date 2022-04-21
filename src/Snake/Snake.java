@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Snake {
     public static boolean gameStart = false;
-    int x, y;
+    public int x, y;
     int tick;
     int directions;
     public int appleCounter;
