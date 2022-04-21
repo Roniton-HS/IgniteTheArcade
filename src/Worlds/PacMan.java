@@ -13,19 +13,22 @@ public class PacMan extends Worlds {
     private final int height = 25;
     private final int blockSize = 38;
 
+    private int maxPoints;
+
     private static ArrayList points = new ArrayList();
 
     public static ArrayList worldBounds = new ArrayList();
 
-    Rectangle left = new Rectangle(101 - blockSize, 10 + 12*blockSize, blockSize, blockSize);
-    Rectangle right = new Rectangle(139 + 20* blockSize, 10 + 12*blockSize, blockSize, blockSize);
+    public static ArrayList ghosts = new ArrayList();
+
+    Rectangle left = new Rectangle(101 - blockSize, 10 + 12 * blockSize, blockSize, blockSize);
+    Rectangle right = new Rectangle(139 + 20 * blockSize, 10 + 12 * blockSize, blockSize, blockSize);
 
     public static ArrayList getWorldBounds() {
         return worldBounds;
     }
 
     Player player;
-    Ghost ghost;
 
     /**
      * Constructor
@@ -33,16 +36,27 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         player = new Player(139 + blockSize, 10 + blockSize, game);
-        ghost = new Ghost(139 + 5*  blockSize, 10 + blockSize, game);
+        ghosts.add(new Ghost(139 + 5 * blockSize, 10 + blockSize, 1, game));
+        ghosts.add(new Ghost(139 + 10 * blockSize, 10 + blockSize, 2, game));
         setWorldBounds();
         setPoints();
+        maxPoints = points.size();
     }
 
     @Override
     public void tick() {
+        checkPoints();
         player.tick();
-        ghost.tick();
+        tickGhosts();
         teleport();
+    }
+
+    private void tickGhosts(){
+        for (int i = 0; i < ghosts.size(); i++) {
+            Ghost ghost = (Ghost) ghosts.get(i);
+            ghost.tick();
+        }
+        checkGhosts();
     }
 
     @Override
@@ -50,13 +64,35 @@ public class PacMan extends Worlds {
         renderBorders(g);
         renderPoints(g);
         player.render(g);
-        ghost.render(g);
+        renderGhosts(g);
+        pointsEaten(g);
     }
 
-    private void teleport(){
-        if(player.getNextBound().intersects(left.getBounds())){
+    private void checkGhosts(){
+        for (int i = 0; i < ghosts.size(); i++) {
+            Ghost ghost = (Ghost) ghosts.get(i);
+            if(player.getBounds().intersects(ghost.getBounds())){
+                player.setCords(139 + blockSize, 10 + blockSize);
+            }
+        }
+
+    }
+
+    private void renderGhosts(Graphics g){
+        for (int i = 0; i < ghosts.size(); i++) {
+            Ghost ghost = (Ghost) ghosts.get(i);
+            ghost.render(g);
+        }
+    }
+    private void pointsEaten(Graphics g){
+        g.setColor(Color.black);
+        g.drawString("Points:" + (maxPoints - points.size() + " / " + maxPoints),10, 10);
+    }
+
+    private void teleport() {
+        if (player.getNextBound().intersects(left.getBounds())) {
             player.setX(player.getX() + 20 * blockSize);
-        }else if(player.getNextBound().intersects(right.getBounds())){
+        } else if (player.getNextBound().intersects(right.getBounds())) {
             player.setX(player.getX() - 20 * blockSize);
         }
     }
@@ -144,6 +180,14 @@ public class PacMan extends Worlds {
     }
 
     private void renderPoints(Graphics g) {
+        for (int i = 0; i < points.size(); i++) {
+            Rectangle point = (Rectangle) points.get(i);
+            g.setColor(Color.white);
+            g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
+        }
+    }
+
+    private void checkPoints() {
         if (points.size() == 0) {
             System.exit(0);
         }
@@ -152,8 +196,6 @@ public class PacMan extends Worlds {
             if (player.getNextBound().intersects(point.getBounds())) {
                 points.remove(point);
             }
-            g.setColor(Color.white);
-            g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
         }
     }
 
@@ -217,7 +259,7 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize));
     }
 
-    private void renderBorders(Graphics g){
+    private void renderBorders(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(139, 10, 19 * blockSize, 25 * blockSize);
         /* outer stuff */
