@@ -34,7 +34,6 @@ public class Player {
     public void tick() {
         input();
         move();
-        PacMan.getWorldBounds();
         tickAnimation();
     }
 
@@ -105,26 +104,26 @@ public class Player {
             if (i == bounds.size() - 1) {
                 direction = nextDirection;
                 switch (direction) {
-                    case 1:
+                    case 1 -> {
                         usedImage0 = rotateImage(image0, -90);
                         usedImage1 = rotateImage(image1, -90);
                         usedImage2 = rotateImage(image2, -90);
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         usedImage0 = rotateImage(image0, 180);
                         usedImage1 = rotateImage(image1, 180);
                         usedImage2 = rotateImage(image2, 180);
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         usedImage0 = rotateImage(image0, 90);
                         usedImage1 = rotateImage(image1, 90);
                         usedImage2 = rotateImage(image2, 90);
-                        break;
-                    default:
+                    }
+                    default -> {
                         usedImage0 = image0;
                         usedImage1 = image1;
                         usedImage2 = image2;
-
+                    }
                 }
             }
         }
@@ -132,8 +131,8 @@ public class Player {
 
     public void move() {
         ArrayList bounds = PacMan.getWorldBounds();
-        for (int i = 0; i < bounds.size(); i++) {
-            Rectangle border = (Rectangle) bounds.get(i);
+        for (Object bound : bounds) {
+            Rectangle border = (Rectangle) bound;
             if (getNextFrontBound().intersects(border)) {
                 direction = 0;
             }

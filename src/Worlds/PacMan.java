@@ -11,9 +11,14 @@ public class PacMan extends Worlds {
 
     private final int width = 19;
     private final int height = 25;
-    private final int blockSize = 38;
 
-    private int maxPoints;
+    static public int getBlockSize() {
+        return blockSize;
+    }
+
+    static private final int blockSize = 38;
+
+    private final int maxPoints;
 
     private static ArrayList points = new ArrayList();
 
@@ -28,8 +33,13 @@ public class PacMan extends Worlds {
         return worldBounds;
     }
 
-    Player player;
 
+
+    static Player player;
+
+    public static Player getPlayer() {
+        return player;
+    }
     /**
      * Constructor
      */
@@ -38,6 +48,8 @@ public class PacMan extends Worlds {
         player = new Player(139 + blockSize, 10 + blockSize, game);
         ghosts.add(new Ghost(139 + 5 * blockSize, 10 + blockSize, 1, game));
         ghosts.add(new Ghost(139 + 10 * blockSize, 10 + blockSize, 2, game));
+        ghosts.add(new Ghost(139 + 4 * blockSize, 10 + 20 * blockSize, 3, game));
+        ghosts.add(new Ghost(139 + 4 * blockSize, 10 + 20 * blockSize, 4, game));
         setWorldBounds();
         setPoints();
         maxPoints = points.size();
@@ -52,8 +64,8 @@ public class PacMan extends Worlds {
     }
 
     private void tickGhosts(){
-        for (int i = 0; i < ghosts.size(); i++) {
-            Ghost ghost = (Ghost) ghosts.get(i);
+        for (Object o : ghosts) {
+            Ghost ghost = (Ghost) o;
             ghost.tick();
         }
         checkGhosts();
@@ -69,9 +81,9 @@ public class PacMan extends Worlds {
     }
 
     private void checkGhosts(){
-        for (int i = 0; i < ghosts.size(); i++) {
-            Ghost ghost = (Ghost) ghosts.get(i);
-            if(player.getBounds().intersects(ghost.getBounds())){
+        for (Object o : ghosts) {
+            Ghost ghost = (Ghost) o;
+            if (player.getBounds().intersects(ghost.getBounds())) {
                 player.setCords(139 + blockSize, 10 + blockSize);
             }
         }
@@ -79,8 +91,8 @@ public class PacMan extends Worlds {
     }
 
     private void renderGhosts(Graphics g){
-        for (int i = 0; i < ghosts.size(); i++) {
-            Ghost ghost = (Ghost) ghosts.get(i);
+        for (Object o : ghosts) {
+            Ghost ghost = (Ghost) o;
             ghost.render(g);
         }
     }
@@ -180,8 +192,8 @@ public class PacMan extends Worlds {
     }
 
     private void renderPoints(Graphics g) {
-        for (int i = 0; i < points.size(); i++) {
-            Rectangle point = (Rectangle) points.get(i);
+        for (Object o : points) {
+            Rectangle point = (Rectangle) o;
             g.setColor(Color.white);
             g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
         }
