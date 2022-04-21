@@ -27,6 +27,7 @@ public class Ghost {
     private int directionTimer = 38;
     long startTime;
     long time;
+    ArrayList bounds = PacMan.getGhostWorldBounds();
 
     BufferedImage right, left, down, up;
 
@@ -47,6 +48,17 @@ public class Ghost {
         setColor();
         setPhase(0);
         startTime = System.currentTimeMillis();
+    }
+
+    private void copyBounds(){
+        ArrayList x = PacMan.getWorldBounds();
+        for (Object bound : x) {
+            Rectangle border = (Rectangle) bound;
+            bounds.add(border);
+        }
+
+        bounds.add(new Rectangle(139 + 3 * PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
+        bounds.add(new Rectangle(139 + (PacMan.width - 4) *  PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
     }
 
     public void tick() {
@@ -315,7 +327,6 @@ public class Ghost {
     }
 
     private boolean checkBorder(String direction) {
-        ArrayList bounds = PacMan.getWorldBounds();
         for (Object bound : bounds) {
             Rectangle border = (Rectangle) bound;
             if (direction.equals("up") && new Rectangle(this.x, this.y - PacMan.getBlockSize() / 2, size, 1).intersects(border)) {
