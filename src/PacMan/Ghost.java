@@ -16,7 +16,9 @@ public class Ghost {
     private int x, y;
     private final int size = 38;
     private final int color;
-    private int phase = 0; //0: scatter | 1: chase
+
+    public static boolean fear = false;
+    private int phase = 0; //0: scatter | 1: chase | 2: fear | 3: go to base
 
     /*
      * movement
@@ -46,41 +48,43 @@ public class Ghost {
         this.y = y;
         this.color = color;
         setColor();
-        setPhase(0);
+        setPhase(2);
         startTime = System.currentTimeMillis();
     }
 
-    private void copyBounds(){
-        ArrayList x = PacMan.getWorldBounds();
-        for (Object bound : x) {
-            Rectangle border = (Rectangle) bound;
-            bounds.add(border);
-        }
-
-        bounds.add(new Rectangle(139 + 3 * PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
-        bounds.add(new Rectangle(139 + (PacMan.width - 4) *  PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
-    }
-
     public void tick() {
-        time = System.currentTimeMillis() - startTime;
-        System.out.println(time);
-        if(time >= 84000){
-            setPhase(1); //endless chase
-        } else if (time >= 79000) {
-            setPhase(0);
-        } else if (time >= 59000) {
-            setPhase(1);
-        } else if (time >= 54000) {
-            setPhase(0);
-        } else if (time >= 34000) {
-            setPhase(1);
-        } else if (time >= 27000) {
-            setPhase(0);
-        } else if (time > 7000) {
-            setPhase(1);
-        }
+        handlePhase();
         move();
     }
+
+    private void handlePhase(){
+        if(fear){
+            setPhase(2);
+        }else {
+            time = System.currentTimeMillis() - startTime;
+            //System.out.println(time);
+            if (time >= 84000) {
+                setPhase(1); //endless chase
+            } else if (time >= 79000) {
+                setPhase(0);
+            } else if (time >= 59000) {
+                setPhase(1);
+            } else if (time >= 54000) {
+                setPhase(0);
+            } else if (time >= 34000) {
+                setPhase(1);
+            } else if (time >= 27000) {
+                setPhase(0);
+            } else if (time > 7000) {
+                setPhase(1);
+            }
+        }
+    }
+
+    public static void startFear(){
+        fear = true;
+    }
+
 
     public void render(Graphics g) {
 
@@ -95,10 +99,13 @@ public class Ghost {
 
     public void move() {
         updateTarget();
-
         //make Ghost move an entire block
         if (directionTimer >= 38) {
-            direction = changeDirection();
+            if (phase == 0 || phase == 1) {
+                direction = changeDirection();
+            } else if (phase == 2) {
+                direction = changeRandomDirection();
+            }
             directionTimer = 2;
         } else {
             directionTimer = directionTimer + 2;
@@ -111,6 +118,14 @@ public class Ghost {
             case 3 -> y += 2;
             case 4 -> x += 2;
         }
+    }
+
+    private void setTargetPlayer(){
+
+    }
+
+    private void setTargetRandom(){
+
     }
 
     private void updateTarget() {
@@ -177,6 +192,106 @@ public class Ghost {
 
         }
     }
+
+    private int changeRandomDirection() {
+        int directions = 0;
+        boolean canUp = false;
+        boolean canDown = false;
+        boolean canRight = false;
+        boolean canLeft = false;
+
+        if (!checkBorder("up")) {
+            canUp = true;
+            directions++;
+        }
+        if (!checkBorder("down")) {
+            canDown = true;
+            directions++;
+        }
+        if (!checkBorder("left")) {
+            canLeft = true;
+            directions++;
+        }
+        if (!checkBorder("right")) {
+            canRight = true;
+            directions++;
+        }
+
+        System.out.println("Up: " + canUp + "Down: " + canDown + "Left: " + canLeft + "Right: " + canRight);
+        switch (direction) {
+            case 1 -> {
+                if (canRight && Math.random() > 0.5) {
+                    return 4;
+                }
+                if (canLeft && Math.random() > 0.5) {
+                    return 2;
+                }
+                if (canUp) {
+                    return 1;
+                }
+                if (canRight) {
+                    return 4;
+                }
+                if (canLeft) {
+                    return 2;
+                }
+            }
+            case 2 -> {
+                if (canUp && Math.random() > 0.5) {
+                    return 1;
+                }
+                if (canDown && Math.random() > 0.5) {
+                    return 3;
+                }
+                if (canLeft) {
+                    return 2;
+                }
+                if (canUp) {
+                    return 1;
+                }
+                if (canDown) {
+                    return 3;
+                }
+            }
+            case 3 -> {
+                if (!checkBorder("right") && Math.random() > 0.5) {
+                    return 4;
+                }
+                if (!checkBorder("left") && Math.random() > 0.5) {
+                    return 2;
+                }
+                if (!checkBorder("down")) {
+                    return 3;
+                }
+                if (!checkBorder("right")) {
+                    return 4;
+                }
+                if (!checkBorder("left")) {
+                    return 2;
+                }
+                return 1;
+            }
+            case 4 -> {
+                if (canUp && Math.random() > 0.5) {
+                    return 1;
+                }
+                if (canDown && Math.random() > 0.5) {
+                    return 3;
+                }
+                if (canRight) {
+                    return 4;
+                }
+                if (canUp) {
+                    return 1;
+                }
+                if (canDown) {
+                    return 3;
+                }
+            }
+        }
+        return 0;
+    }
+
 
     private int changeDirection() {
         boolean canUp = false;
@@ -321,7 +436,7 @@ public class Ghost {
                     targetY = 20 * PacMan.getBlockSize();
                 }
             }
-        } else if (x == 1) {
+        } else {
             phase = x;
         }
     }

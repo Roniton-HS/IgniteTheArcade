@@ -22,6 +22,17 @@ public class PacMan extends Worlds {
     private final int maxPoints;
 
     private static ArrayList points = new ArrayList();
+    private static ArrayList powerUps= new ArrayList();
+
+    public static ArrayList getPowerUps() {
+        return powerUps;
+    }
+
+    public static ArrayList getFruits() {
+        return fruits;
+    }
+
+    private static ArrayList fruits = new ArrayList();
 
     public static ArrayList worldBounds = new ArrayList();
     public static ArrayList ghostWorldBounds = new ArrayList();
@@ -119,6 +130,8 @@ public class PacMan extends Worlds {
     }
 
     private void setPoints() {
+        powerUps.add(new Rectangle(194 + 13 * blockSize, 65 + 3 * blockSize, 10, 10));
+
         for (int i = 0; i < 17; i++) {
             points.add(new Rectangle(194 + i * blockSize, 27 + blockSize, 5, 5));
         }
@@ -201,6 +214,12 @@ public class PacMan extends Worlds {
     }
 
     private void renderPoints(Graphics g) {
+        for(Object o : powerUps){
+            Rectangle point = (Rectangle) o;
+            g.setColor(Color.white);
+            g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
+        }
+
         for (Object o : points) {
             Rectangle point = (Rectangle) o;
             g.setColor(Color.white);
@@ -216,6 +235,20 @@ public class PacMan extends Worlds {
             Rectangle point = (Rectangle) points.get(i);
             if (player.getNextBound().intersects(point.getBounds())) {
                 points.remove(point);
+            }
+        }
+    }
+
+    private void checkPowerUp() {
+        if (powerUps.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < powerUps.size(); i++) {
+            Rectangle powerUp = (Rectangle) powerUps.get(i);
+            if (player.getNextBound().intersects(powerUp.getBounds())) {
+                powerUps.remove(powerUp);
+                Ghost.startFear();
+
             }
         }
     }

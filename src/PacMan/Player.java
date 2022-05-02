@@ -18,7 +18,7 @@ public class Player {
     int direction, nextDirection;
     int width = 38;
     int height = 38;
-    private BufferedImage image0 = ImageLoader.loadImage("/PacMan0.png");
+    private BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");
     private BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
     private BufferedImage image2 = ImageLoader.loadImage("/PacMan2.png");
     private BufferedImage usedImage0, usedImage1, usedImage2;
