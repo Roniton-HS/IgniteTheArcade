@@ -18,6 +18,12 @@ public class Ghost {
     private final int color;
 
     public static boolean fear = false;
+    public boolean eaten = false;
+
+    public void setPhase(int phase) {
+        this.phase = phase;
+    }
+
     private int phase = 0; //0: scatter | 1: chase | 2: fear | 3: go to base
 
     /*
@@ -27,8 +33,9 @@ public class Ghost {
     private int targetY;
     private int direction = 1; // 1: up | 2: left | 3: down | 4: down
     private int directionTimer = 38;
-    long startTime;
-    long time;
+    static long startTime;
+    static long time;
+
     ArrayList bounds = PacMan.getGhostWorldBounds();
 
     BufferedImage right, left, down, up;
@@ -48,7 +55,7 @@ public class Ghost {
         this.y = y;
         this.color = color;
         setColor();
-        setPhase(2);
+        phase = 0;
         startTime = System.currentTimeMillis();
     }
 
@@ -57,32 +64,38 @@ public class Ghost {
         move();
     }
 
-    private void handlePhase(){
-        if(fear){
-            setPhase(2);
-        }else {
-            time = System.currentTimeMillis() - startTime;
+    private void handlePhase() {
+        if (eaten) {
+            phase = 3;
+        } else if (fear) {
+            if (System.currentTimeMillis() - time > 15000) {
+                fear = false;
+            } else {
+                phase = 2;
+            }
+        } else {
             //System.out.println(time);
             if (time >= 84000) {
-                setPhase(1); //endless chase
+                phase = 1; //endless chase
             } else if (time >= 79000) {
-                setPhase(0);
+                phase = 0;
             } else if (time >= 59000) {
-                setPhase(1);
+                phase = 1;
             } else if (time >= 54000) {
-                setPhase(0);
+                phase = 0;
             } else if (time >= 34000) {
-                setPhase(1);
+                phase = 1;
             } else if (time >= 27000) {
-                setPhase(0);
+                phase = 0;
             } else if (time > 7000) {
-                setPhase(1);
+                phase = 1;
             }
         }
     }
 
-    public static void startFear(){
+    public static void startFear() {
         fear = true;
+        time = System.currentTimeMillis();
     }
 
 
@@ -98,19 +111,7 @@ public class Ghost {
     }
 
     public void move() {
-        updateTarget();
-        //make Ghost move an entire block
-        if (directionTimer >= 38) {
-            if (phase == 0 || phase == 1) {
-                direction = changeDirection();
-            } else if (phase == 2) {
-                direction = changeRandomDirection();
-            }
-            directionTimer = 2;
-        } else {
-            directionTimer = directionTimer + 2;
-        }
-
+        updateDirection();
         //move
         switch (direction) {
             case 1 -> y -= 2;
@@ -120,180 +121,29 @@ public class Ghost {
         }
     }
 
-    private void setTargetPlayer(){
-
-    }
-
-    private void setTargetRandom(){
-
-    }
-
-    private void updateTarget() {
-        if (phase == 1) {
-            //update target cords
-            switch (color) {
-                case 1 -> { //pink
-                    switch (PacMan.getPlayer().direction) {
-                        case 1 -> {
-                            targetX = PacMan.getPlayer().getX();
-                            targetY = PacMan.getPlayer().getY() - 3 * PacMan.getBlockSize();
-                        }
-                        case 2 -> {
-                            targetX = PacMan.getPlayer().getX() - 3 * PacMan.getBlockSize();
-                            targetY = PacMan.getPlayer().getY();
-                        }
-                        case 3 -> {
-                            targetX = PacMan.getPlayer().getX();
-                            targetY = PacMan.getPlayer().getY() + 3 * PacMan.getBlockSize();
-                        }
-                        case 4 -> {
-                            targetX = PacMan.getPlayer().getX() + 3 * PacMan.getBlockSize();
-                            targetY = PacMan.getPlayer().getY();
-                        }
-                    }
-
-                }
-                case 2 -> { //rot
-                    targetX = PacMan.getPlayer().getX();
-                    targetY = PacMan.getPlayer().getY();
-                }
-                case 3 -> { //orange
-                    if (PacMan.getPlayer().getX() < 19 * PacMan.getBlockSize() / 2) {
-                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
-                            //oben links
-                            targetX = 4 * PacMan.getBlockSize();
-                            targetY = 0;
-                        } else {
-                            //unten links
-                            targetX = 4 * PacMan.getBlockSize();
-                            targetY = 20 * PacMan.getBlockSize();
-                        }
-                    } else {
-                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
-                            //oben rechts
-                            targetX = 22 * PacMan.getBlockSize();
-                            targetY = 0;
-                        } else {
-                            //unten rechts
-                            targetX = 22 * PacMan.getBlockSize();
-                            targetY = 20 * PacMan.getBlockSize();
-                        }
-
-                    }
-                }
-                case 4 -> { //blue
-                    Ghost ghost = (Ghost) PacMan.ghosts.get(1);
-                    targetX = PacMan.getPlayer().getX() + PacMan.getPlayer().getX() - ghost.getX();
-                    targetY = PacMan.getPlayer().getY() + PacMan.getPlayer().getY() - ghost.getY();
-                }
-
+    public void updateDirection() {
+        //make Ghost move an entire block
+        if (directionTimer >= 38) {
+            if (phase == 0) {
+                targetScatter();
+                direction = directionByVector();
+            } else if (phase == 1) {
+                targetPlayer();
+                direction = directionByVector();
+            } else if (phase == 2) {
+                direction = directionRandom();
+            } else if (phase == 3) {
+                System.out.println("yes");
+                targetBase();
+                direction = directionByVector();
             }
-
-
+            directionTimer = 2;
+        } else {
+            directionTimer = directionTimer + 2;
         }
     }
 
-    private int changeRandomDirection() {
-        int directions = 0;
-        boolean canUp = false;
-        boolean canDown = false;
-        boolean canRight = false;
-        boolean canLeft = false;
-
-        if (!checkBorder("up")) {
-            canUp = true;
-            directions++;
-        }
-        if (!checkBorder("down")) {
-            canDown = true;
-            directions++;
-        }
-        if (!checkBorder("left")) {
-            canLeft = true;
-            directions++;
-        }
-        if (!checkBorder("right")) {
-            canRight = true;
-            directions++;
-        }
-
-        System.out.println("Up: " + canUp + "Down: " + canDown + "Left: " + canLeft + "Right: " + canRight);
-        switch (direction) {
-            case 1 -> {
-                if (canRight && Math.random() > 0.5) {
-                    return 4;
-                }
-                if (canLeft && Math.random() > 0.5) {
-                    return 2;
-                }
-                if (canUp) {
-                    return 1;
-                }
-                if (canRight) {
-                    return 4;
-                }
-                if (canLeft) {
-                    return 2;
-                }
-            }
-            case 2 -> {
-                if (canUp && Math.random() > 0.5) {
-                    return 1;
-                }
-                if (canDown && Math.random() > 0.5) {
-                    return 3;
-                }
-                if (canLeft) {
-                    return 2;
-                }
-                if (canUp) {
-                    return 1;
-                }
-                if (canDown) {
-                    return 3;
-                }
-            }
-            case 3 -> {
-                if (!checkBorder("right") && Math.random() > 0.5) {
-                    return 4;
-                }
-                if (!checkBorder("left") && Math.random() > 0.5) {
-                    return 2;
-                }
-                if (!checkBorder("down")) {
-                    return 3;
-                }
-                if (!checkBorder("right")) {
-                    return 4;
-                }
-                if (!checkBorder("left")) {
-                    return 2;
-                }
-                return 1;
-            }
-            case 4 -> {
-                if (canUp && Math.random() > 0.5) {
-                    return 1;
-                }
-                if (canDown && Math.random() > 0.5) {
-                    return 3;
-                }
-                if (canRight) {
-                    return 4;
-                }
-                if (canUp) {
-                    return 1;
-                }
-                if (canDown) {
-                    return 3;
-                }
-            }
-        }
-        return 0;
-    }
-
-
-    private int changeDirection() {
+    private int directionByVector() {
         boolean canUp = false;
         boolean canDown = false;
         boolean canRight = false;
@@ -411,34 +261,187 @@ public class Ghost {
         return 0;
     }
 
-    private void updatePhase() {
+    private int directionRandom() {
+        boolean canUp = false;
+        boolean canDown = false;
+        boolean canRight = false;
+        boolean canLeft = false;
 
-    }
-
-    private void setPhase(int x) {
-        if (x == 0) {
-            phase = x;
-            switch (color) {
-                case 1 -> {
-                    targetX = 4 * PacMan.getBlockSize();
-                    targetY = 0;
+        if (!checkBorder("up")) {
+            canUp = true;
+        }
+        if (!checkBorder("down")) {
+            canDown = true;
+        }
+        if (!checkBorder("left")) {
+            canLeft = true;
+        }
+        if (!checkBorder("right")) {
+            canRight = true;
+        }
+        switch (direction) {
+            case 1 -> {
+                if (canRight && Math.random() > 0.5) {
+                    return 4;
                 }
-                case 2 -> {
-                    targetX = 22 * PacMan.getBlockSize();
-                    targetY = 0;
+                if (canLeft && Math.random() > 0.5) {
+                    return 2;
                 }
-                case 3 -> {
-                    targetX = 4 * PacMan.getBlockSize();
-                    targetY = 20 * PacMan.getBlockSize();
+                if (canUp) {
+                    return 1;
                 }
-                case 4 -> {
-                    targetX = 22 * PacMan.getBlockSize();
-                    targetY = 20 * PacMan.getBlockSize();
+                if (canRight) {
+                    return 4;
+                }
+                if (canLeft) {
+                    return 2;
                 }
             }
-        } else {
-            phase = x;
+            case 2 -> {
+                if (canUp && Math.random() > 0.5) {
+                    return 1;
+                }
+                if (canDown && Math.random() > 0.5) {
+                    return 3;
+                }
+                if (canLeft) {
+                    return 2;
+                }
+                if (canUp) {
+                    return 1;
+                }
+                if (canDown) {
+                    return 3;
+                }
+            }
+            case 3 -> {
+                if (!checkBorder("right") && Math.random() > 0.5) {
+                    return 4;
+                }
+                if (!checkBorder("left") && Math.random() > 0.5) {
+                    return 2;
+                }
+                if (!checkBorder("down")) {
+                    return 3;
+                }
+                if (!checkBorder("right")) {
+                    return 4;
+                }
+                if (!checkBorder("left")) {
+                    return 2;
+                }
+                return 1;
+            }
+            case 4 -> {
+                if (canUp && Math.random() > 0.5) {
+                    return 1;
+                }
+                if (canDown && Math.random() > 0.5) {
+                    return 3;
+                }
+                if (canRight) {
+                    return 4;
+                }
+                if (canUp) {
+                    return 1;
+                }
+                if (canDown) {
+                    return 3;
+                }
+            }
         }
+        return 0;
+    }
+
+    private void targetPlayer() {
+        if (phase == 1) {
+            //update target cords
+            switch (color) {
+                case 1 -> { //pink
+                    switch (PacMan.getPlayer().direction) {
+                        case 1 -> {
+                            targetX = PacMan.getPlayer().getX();
+                            targetY = PacMan.getPlayer().getY() - 3 * PacMan.getBlockSize();
+                        }
+                        case 2 -> {
+                            targetX = PacMan.getPlayer().getX() - 3 * PacMan.getBlockSize();
+                            targetY = PacMan.getPlayer().getY();
+                        }
+                        case 3 -> {
+                            targetX = PacMan.getPlayer().getX();
+                            targetY = PacMan.getPlayer().getY() + 3 * PacMan.getBlockSize();
+                        }
+                        case 4 -> {
+                            targetX = PacMan.getPlayer().getX() + 3 * PacMan.getBlockSize();
+                            targetY = PacMan.getPlayer().getY();
+                        }
+                    }
+
+                }
+                case 2 -> { //rot
+                    targetX = PacMan.getPlayer().getX();
+                    targetY = PacMan.getPlayer().getY();
+                }
+                case 3 -> { //orange
+                    if (PacMan.getPlayer().getX() < 19 * PacMan.getBlockSize() / 2) {
+                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
+                            //oben links
+                            targetX = 4 * PacMan.getBlockSize();
+                            targetY = 0;
+                        } else {
+                            //unten links
+                            targetX = 4 * PacMan.getBlockSize();
+                            targetY = 20 * PacMan.getBlockSize();
+                        }
+                    } else {
+                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
+                            //oben rechts
+                            targetX = 22 * PacMan.getBlockSize();
+                            targetY = 0;
+                        } else {
+                            //unten rechts
+                            targetX = 22 * PacMan.getBlockSize();
+                            targetY = 20 * PacMan.getBlockSize();
+                        }
+
+                    }
+                }
+                case 4 -> { //blue
+                    Ghost ghost = (Ghost) PacMan.ghosts.get(1);
+                    targetX = PacMan.getPlayer().getX() + PacMan.getPlayer().getX() - ghost.getX();
+                    targetY = PacMan.getPlayer().getY() + PacMan.getPlayer().getY() - ghost.getY();
+                }
+
+            }
+
+
+        }
+    }
+
+    private void targetScatter() {
+        switch (color) {
+            case 1 -> {
+                targetX = 4 * PacMan.getBlockSize();
+                targetY = 0;
+            }
+            case 2 -> {
+                targetX = 22 * PacMan.getBlockSize();
+                targetY = 0;
+            }
+            case 3 -> {
+                targetX = 4 * PacMan.getBlockSize();
+                targetY = 20 * PacMan.getBlockSize();
+            }
+            case 4 -> {
+                targetX = 22 * PacMan.getBlockSize();
+                targetY = 20 * PacMan.getBlockSize();
+            }
+        }
+    }
+
+    private void targetBase() {
+        targetX = 13 * PacMan.getBlockSize();
+        targetY = 10 * PacMan.getBlockSize();
     }
 
     private boolean checkBorder(String direction) {

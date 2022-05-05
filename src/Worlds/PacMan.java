@@ -22,7 +22,7 @@ public class PacMan extends Worlds {
     private final int maxPoints;
 
     private static ArrayList points = new ArrayList();
-    private static ArrayList powerUps= new ArrayList();
+    private static ArrayList powerUps = new ArrayList();
 
     public static ArrayList getPowerUps() {
         return powerUps;
@@ -55,6 +55,7 @@ public class PacMan extends Worlds {
     public static Player getPlayer() {
         return player;
     }
+
     /**
      * Constructor
      */
@@ -73,12 +74,13 @@ public class PacMan extends Worlds {
     @Override
     public void tick() {
         checkPoints();
+        checkPowerUp();
         player.tick();
         tickGhosts();
         teleport();
     }
 
-    private void tickGhosts(){
+    private void tickGhosts() {
         for (Object o : ghosts) {
             Ghost ghost = (Ghost) o;
             ghost.tick();
@@ -95,27 +97,32 @@ public class PacMan extends Worlds {
         renderStats(g);
     }
 
-    private void checkGhosts(){
+    private void checkGhosts() {
         for (Object o : ghosts) {
             Ghost ghost = (Ghost) o;
             if (player.getBounds().intersects(ghost.getBounds())) {
-                hp--;
-                player.setCords(139 + blockSize, 10 + blockSize);
+                if (Ghost.fear) {
+                    ghost.eaten = true;
+                } else {
+                    hp--;
+                    player.setCords(139 + blockSize, 10 + blockSize);
+                }
             }
         }
 
     }
 
-    private void renderGhosts(Graphics g){
+    private void renderGhosts(Graphics g) {
         for (Object o : ghosts) {
             Ghost ghost = (Ghost) o;
             ghost.render(g);
         }
     }
-    private void renderStats(Graphics g){
+
+    private void renderStats(Graphics g) {
         //points
         g.setColor(Color.black);
-        g.drawString("Points:" + (maxPoints - points.size() + " / " + maxPoints),10, 10);
+        g.drawString("Points:" + (maxPoints - points.size() + " / " + maxPoints), 10, 10);
 
         //hp
         g.drawString("HP: " + hp, 10, 25);
@@ -214,7 +221,7 @@ public class PacMan extends Worlds {
     }
 
     private void renderPoints(Graphics g) {
-        for(Object o : powerUps){
+        for (Object o : powerUps) {
             Rectangle point = (Rectangle) o;
             g.setColor(Color.white);
             g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
@@ -314,7 +321,7 @@ public class PacMan extends Worlds {
 
         ghostWorldBounds.addAll(worldBounds);
         ghostWorldBounds.add(new Rectangle(139 + 3 * PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
-        ghostWorldBounds.add(new Rectangle(139 + (PacMan.width - 4) *  PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
+        ghostWorldBounds.add(new Rectangle(139 + (PacMan.width - 4) * PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
     }
 
     private void renderBorders(Graphics g) {
@@ -325,16 +332,12 @@ public class PacMan extends Worlds {
         g.drawRect(139, 10, blockSize * width, blockSize);//upper border
         g.drawRect(139, 10, blockSize, blockSize * 8);
         g.drawRect(139 + 3 * blockSize, 10 + 7 * blockSize, blockSize, 5 * blockSize);
-        g.setColor(Color.green);
         g.drawRect(139 + 3 * blockSize, 10 + 13 * blockSize, blockSize, 5 * blockSize);
-        g.setColor(Color.blue);
         g.drawRect(139, 10 + 17 * blockSize, blockSize, 8 * blockSize);
         g.drawRect(139, 10 + (height - 1) * blockSize, blockSize * width, blockSize);
         g.drawRect(139 + (width - 1) * blockSize, 10, blockSize, blockSize * 8);
         g.drawRect(139 + (width - 4) * blockSize, 10 + 7 * blockSize, blockSize, blockSize * 5);
-        g.setColor(Color.green);
         g.drawRect(139 + (width - 4) * blockSize, 10 + 13 * blockSize, blockSize, blockSize * 5);
-        g.setColor(Color.blue);
         g.drawRect(139 + (width - 1) * blockSize, 10 + 17 * blockSize, blockSize, blockSize * 8);
         g.drawRect(139, 10 + 7 * blockSize, 4 * blockSize, blockSize);
         g.drawRect(139, 10 + 17 * blockSize, 4 * blockSize, blockSize);
