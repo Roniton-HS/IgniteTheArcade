@@ -34,8 +34,8 @@ public class PacMan extends Worlds {
 
     private static ArrayList fruits = new ArrayList();
 
-    public static ArrayList worldBounds = new ArrayList();
-    public static ArrayList ghostWorldBounds = new ArrayList();
+    public static ArrayList<Rectangle> worldBounds = new ArrayList();
+    public static ArrayList<Rectangle> ghostWorldBounds = new ArrayList();
 
     public static ArrayList ghosts = new ArrayList();
 
@@ -101,7 +101,7 @@ public class PacMan extends Worlds {
         for (Object o : ghosts) {
             Ghost ghost = (Ghost) o;
             if (player.getBounds().intersects(ghost.getBounds())) {
-                if (Ghost.fear) {
+                if (ghost.fear) {
                     ghost.eaten = true;
                 } else {
                     hp--;
@@ -149,12 +149,12 @@ public class PacMan extends Worlds {
             points.add(new Rectangle(194 + i * blockSize, 27 + 20 * blockSize, 5, 5));
         }
         for (int i = 0; i < 17; i++) {
-            points.add(new Rectangle(194 + i * blockSize, 27 + 23 * blockSize, 5, 5));
+            points.add(new Rectangle(194 + i * blockSize, 27 + 24 * blockSize, 5, 5));
         }
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 22; i++) {
             points.add(new Rectangle(194 + 3 * blockSize, 65 + i * blockSize, 5, 5));
         }
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 22; i++) {
             points.add(new Rectangle(194 + 13 * blockSize, 65 + i * blockSize, 5, 5));
         }
         for (int i = 0; i < 6; i++) {
@@ -254,7 +254,10 @@ public class PacMan extends Worlds {
             Rectangle powerUp = (Rectangle) powerUps.get(i);
             if (player.getNextBound().intersects(powerUp.getBounds())) {
                 powerUps.remove(powerUp);
-                Ghost.startFear();
+                for (Object o : ghosts) {
+                    Ghost ghost = (Ghost) o;
+                    ghost.startFear();
+                }
 
             }
         }
@@ -265,12 +268,12 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139, 10 + blockSize, blockSize, blockSize * 7));
         worldBounds.add(new Rectangle(139 + 3 * blockSize, 10 + 7 * blockSize, blockSize, 5 * blockSize));
         worldBounds.add(new Rectangle(139 + 3 * blockSize, 10 + 13 * blockSize, blockSize, 5 * blockSize));
-        worldBounds.add(new Rectangle(139, 10 + 18 * blockSize, blockSize, 6 * blockSize));
-        worldBounds.add(new Rectangle(139, 10 + (height - 1) * blockSize, blockSize * width, blockSize));
+        worldBounds.add(new Rectangle(139, 10 + 18 * blockSize, blockSize, 7 * blockSize));
+        worldBounds.add(new Rectangle(139, 10 + height * blockSize, blockSize * width, blockSize));
         worldBounds.add(new Rectangle(139 + (width - 1) * blockSize, 10 + blockSize, blockSize, blockSize * 7));
         worldBounds.add(new Rectangle(139 + (width - 4) * blockSize, 10 + 7 * blockSize, blockSize, blockSize * 5));
         worldBounds.add(new Rectangle(139 + (width - 4) * blockSize, 10 + 13 * blockSize, blockSize, blockSize * 5));
-        worldBounds.add(new Rectangle(139 + (width - 1) * blockSize, 10 + 18 * blockSize, blockSize, blockSize * 6));
+        worldBounds.add(new Rectangle(139 + (width - 1) * blockSize, 10 + 18 * blockSize, blockSize, blockSize * 7));
 
         worldBounds.add(new Rectangle(139, 10 + 7 * blockSize, 4 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139, 10 + 17 * blockSize, 4 * blockSize, blockSize));
@@ -291,33 +294,38 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + 7 * blockSize, blockSize, 2 * blockSize));
         worldBounds.add(new Rectangle(139 + 6 * blockSize, 10 + 8 * blockSize, 2 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 8 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + 13 * blockSize, blockSize, 7 * blockSize));
-        worldBounds.add(new Rectangle(139 + 13 * blockSize, 10 + 13 * blockSize, blockSize, 7 * blockSize));
+        worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + 13 * blockSize, blockSize, 5 * blockSize));
+        worldBounds.add(new Rectangle(139 + 13 * blockSize, 10 + 13 * blockSize, blockSize, 5 * blockSize));
 
-        worldBounds.add(new Rectangle(139 + 2 * blockSize, 10 + (height - 4) * blockSize, 2 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + (height - 4) * blockSize, 3 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 4) * blockSize, 3 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 15 * blockSize, 10 + (height - 4) * blockSize, 2 * blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 2 * blockSize, 10 + (height - 2) * blockSize, 6 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 2) * blockSize, 6 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 4) * blockSize, 5*blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 3) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 13 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 15 * blockSize, 10 + (height - 5) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 17 * blockSize, 10 + (height - 4) * blockSize, blockSize, blockSize));
 
         worldBounds.add(new Rectangle(139 + 2 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 3 * blockSize, 10 + (height - 5) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 1 * blockSize, 10 + (height - 4) * blockSize, blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 15 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 7) * blockSize, 5 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 9) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + (height - 6) * blockSize, 3 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 6) * blockSize, 3 * blockSize, blockSize));
 
-        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + 10 * blockSize, blockSize, 5 * blockSize));
-        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 10 * blockSize, blockSize, 5 * blockSize));
+        worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 7) * blockSize, blockSize, 2 * blockSize));
+        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 8) * blockSize, 5*blockSize, blockSize));
+
+        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + 10 * blockSize, blockSize, 6 * blockSize));
+        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 10 * blockSize, blockSize, 6 * blockSize));
         worldBounds.add(new Rectangle(139 + 8 * blockSize, 10 + 10 * blockSize, blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 10 * blockSize, 10 + 10 * blockSize, blockSize, blockSize));
-        worldBounds.add(new Rectangle(139 + 8 * blockSize, 10 + 14 * blockSize, 3 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 8 * blockSize, 10 + 15 * blockSize, 3 * blockSize, blockSize));
 
         worldBounds.add(new Rectangle(139, 10 + 11 * blockSize, 3 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139, 10 + 13 * blockSize, 3 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + (width - 3) * blockSize, 10 + 11 * blockSize, 3 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + (width - 3) * blockSize, 10 + 13 * blockSize, 3 * blockSize, blockSize));
-
-        worldBounds.add(new Rectangle(139 + 6 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize));
 
         ghostWorldBounds.addAll(worldBounds);
         ghostWorldBounds.add(new Rectangle(139 + 3 * PacMan.getBlockSize(), 10 + 12 * PacMan.getBlockSize(), PacMan.getBlockSize(), 5 * PacMan.getBlockSize()));
@@ -326,59 +334,12 @@ public class PacMan extends Worlds {
 
     private void renderBorders(Graphics g) {
         g.setColor(Color.black);
-        g.fillRect(139, 10, 19 * blockSize, 25 * blockSize);
-        /* outer stuff */
+        g.fillRect(139, 10, 19 * blockSize, 26 * blockSize);
         g.setColor(Color.blue);
-        g.drawRect(139, 10, blockSize * width, blockSize);//upper border
-        g.drawRect(139, 10, blockSize, blockSize * 8);
-        g.drawRect(139 + 3 * blockSize, 10 + 7 * blockSize, blockSize, 5 * blockSize);
-        g.drawRect(139 + 3 * blockSize, 10 + 13 * blockSize, blockSize, 5 * blockSize);
-        g.drawRect(139, 10 + 17 * blockSize, blockSize, 8 * blockSize);
-        g.drawRect(139, 10 + (height - 1) * blockSize, blockSize * width, blockSize);
-        g.drawRect(139 + (width - 1) * blockSize, 10, blockSize, blockSize * 8);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 7 * blockSize, blockSize, blockSize * 5);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 13 * blockSize, blockSize, blockSize * 5);
-        g.drawRect(139 + (width - 1) * blockSize, 10 + 17 * blockSize, blockSize, blockSize * 8);
-        g.drawRect(139, 10 + 7 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139, 10 + 17 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 7 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 17 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139, 10, blockSize * width, blockSize);
-        g.drawRect(139, 10 + 11 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139, 10 + 13 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 11 * blockSize, 4 * blockSize, blockSize);
-        g.drawRect(139 + (width - 4) * blockSize, 10 + 13 * blockSize, 4 * blockSize, blockSize);
-        /*inner stuff*/
-        g.drawRect(139 + 2 * blockSize, 10 + 2 * blockSize, 2 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 2 * blockSize, 10 + 5 * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 5 * blockSize, 10 + 2 * blockSize, 3 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 9 * blockSize, 10 + 2 * blockSize, blockSize, 2 * blockSize);
-        g.drawRect(139 + 11 * blockSize, 10 + 2 * blockSize, 3 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 15 * blockSize, 10 + 2 * blockSize, 2 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 5 * blockSize, 10 + 5 * blockSize, blockSize, 7 * blockSize);
-        g.drawRect(139 + 7 * blockSize, 10 + 5 * blockSize, 5 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 13 * blockSize, 10 + 5 * blockSize, blockSize, 7 * blockSize);
-        g.drawRect(139 + 15 * blockSize, 10 + 5 * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 9 * blockSize, 10 + 7 * blockSize, blockSize, 2 * blockSize);
-        g.drawRect(139 + 6 * blockSize, 10 + 8 * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 11 * blockSize, 10 + 8 * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 5 * blockSize, 10 + 13 * blockSize, blockSize, 7 * blockSize);
-        g.drawRect(139 + 13 * blockSize, 10 + 13 * blockSize, blockSize, 7 * blockSize);
-        g.drawRect(139 + 2 * blockSize, 10 + (height - 4) * blockSize, 2 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 5 * blockSize, 10 + (height - 4) * blockSize, 3 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 9 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize);
-        g.drawRect(139 + 11 * blockSize, 10 + (height - 4) * blockSize, 3 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 15 * blockSize, 10 + (height - 4) * blockSize, 2 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 2 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 15 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 7 * blockSize, 10 + (height - 7) * blockSize, 5 * blockSize, 2 * blockSize);
-        g.drawRect(139 + 9 * blockSize, 10 + (height - 9) * blockSize, blockSize, 2 * blockSize);
-        g.drawRect(139 + 7 * blockSize, 10 + 10 * blockSize, blockSize, 5 * blockSize);
-        g.drawRect(139 + 11 * blockSize, 10 + 10 * blockSize, blockSize, 5 * blockSize);
-        g.drawRect(139 + 8 * blockSize, 10 + 10 * blockSize, blockSize, blockSize);
-        g.drawRect(139 + 10 * blockSize, 10 + 10 * blockSize, blockSize, blockSize);
-        g.drawRect(139 + 8 * blockSize, 10 + 14 * blockSize, 3 * blockSize, blockSize);
-        g.drawRect(139 + 6 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize);
-        g.drawRect(139 + 11 * blockSize, 10 + 16 * blockSize, 2 * blockSize, blockSize);
+        for (int i = 0; i < worldBounds.size(); i++) {
+            Rectangle box = worldBounds.get(i);
+            g.drawRect((int) box.getX(), (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
+
+        }
     }
 }

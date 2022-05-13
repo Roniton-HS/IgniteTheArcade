@@ -17,7 +17,7 @@ public class Ghost {
     private final int size = 38;
     private final int color;
 
-    public static boolean fear = false;
+    public boolean fear = false;
     public boolean eaten = false;
 
     public void setPhase(int phase) {
@@ -39,6 +39,8 @@ public class Ghost {
     ArrayList bounds = PacMan.getGhostWorldBounds();
 
     BufferedImage right, left, down, up;
+    BufferedImage eatenImg = ImageLoader.loadImage("/sprite_00.png");
+    BufferedImage frightened = ImageLoader.loadImage("/icon.png");
 
 
     public int getX() {
@@ -74,38 +76,43 @@ public class Ghost {
                 phase = 2;
             }
         } else {
-            //System.out.println(time);
-            if (time >= 84000) {
+            long systemTime = System.currentTimeMillis() - startTime;
+            if (systemTime >= 84000) {
                 phase = 1; //endless chase
-            } else if (time >= 79000) {
+            } else if (systemTime >= 79000) {
                 phase = 0;
-            } else if (time >= 59000) {
+            } else if (systemTime >= 59000) {
                 phase = 1;
-            } else if (time >= 54000) {
+            } else if (systemTime >= 54000) {
                 phase = 0;
-            } else if (time >= 34000) {
+            } else if (systemTime >= 34000) {
                 phase = 1;
-            } else if (time >= 27000) {
+            } else if (systemTime >= 27000) {
                 phase = 0;
-            } else if (time > 7000) {
+            } else if (systemTime > 7000) {
                 phase = 1;
             }
         }
     }
 
-    public static void startFear() {
+    public void startFear() {
         fear = true;
         time = System.currentTimeMillis();
     }
 
 
     public void render(Graphics g) {
-
-        switch (direction) {
-            case 1 -> g.drawImage(up, x, y, 38, 38, null);
-            case 2 -> g.drawImage(left, x, y, 38, 38, null);
-            case 3 -> g.drawImage(down, x, y, 38, 38, null);
-            case 4 -> g.drawImage(right, x, y, 38, 38, null);
+        if (eaten) {
+            g.drawImage(eatenImg, x, y, 38, 38, null);
+        } else if (fear) {
+            g.drawImage(frightened, x, y, 38, 38, null);
+        } else {
+            switch (direction) {
+                case 1 -> g.drawImage(up, x, y, 38, 38, null);
+                case 2 -> g.drawImage(left, x, y, 38, 38, null);
+                case 3 -> g.drawImage(down, x, y, 38, 38, null);
+                case 4 -> g.drawImage(right, x, y, 38, 38, null);
+            }
         }
         renderVector(g);
     }
@@ -136,6 +143,10 @@ public class Ghost {
                 System.out.println("yes");
                 targetBase();
                 direction = directionByVector();
+                if (getVectorSize(x, y, targetX, targetY) < 40) {
+                    eaten = false;
+                    fear = false;
+                }
             }
             directionTimer = 2;
         } else {
