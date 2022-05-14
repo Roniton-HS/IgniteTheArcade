@@ -18,6 +18,8 @@ public class Ghost {
     private final int color;
 
     public boolean fear = false;
+    private boolean blink;
+    private int blinkTimer = 0;
     public boolean eaten = false;
 
     public void setPhase(int phase) {
@@ -39,8 +41,11 @@ public class Ghost {
     ArrayList bounds = PacMan.getGhostWorldBounds();
 
     BufferedImage right, left, down, up;
-    BufferedImage eatenImg = ImageLoader.loadImage("/sprite_00.png");
-    BufferedImage frightened = ImageLoader.loadImage("/icon.png");
+    BufferedImage eyesUp = ImageLoader.loadImage("/eyesUp.png");
+    BufferedImage eyesLeft = ImageLoader.loadImage("/eyesLeft.png");
+    BufferedImage eyesDown = ImageLoader.loadImage("/eyesDown.png");
+    BufferedImage eyesRight = ImageLoader.loadImage("/eyesRight.png");
+    BufferedImage frightened = ImageLoader.loadImage("/scaredGhost.png");
 
 
     public int getX() {
@@ -70,8 +75,12 @@ public class Ghost {
         if (eaten) {
             phase = 3;
         } else if (fear) {
+
             if (System.currentTimeMillis() - time > 15000) {
                 fear = false;
+                blink = false;
+            }else if(System.currentTimeMillis() - time > 12500){
+                blink = true;
             } else {
                 phase = 2;
             }
@@ -97,15 +106,40 @@ public class Ghost {
 
     public void startFear() {
         fear = true;
+        blink = false;
         time = System.currentTimeMillis();
     }
 
 
     public void render(Graphics g) {
         if (eaten) {
-            g.drawImage(eatenImg, x, y, 38, 38, null);
+            switch (direction){
+                case 1 -> g.drawImage(eyesUp, x, y, 38, 38, null);
+                case 2 -> g.drawImage(eyesLeft, x, y, 38, 38, null);
+                case 3 -> g.drawImage(eyesDown, x, y, 38, 38, null);
+                case 4 -> g.drawImage(eyesRight, x, y, 38, 38, null);
+            }
         } else if (fear) {
-            g.drawImage(frightened, x, y, 38, 38, null);
+            if(blink){
+                if(blinkTimer < 500){
+                    g.drawImage(frightened, x, y, 38, 38, null);
+                }else{
+                    switch (direction) {
+                        case 1 -> g.drawImage(up, x, y, 38, 38, null);
+                        case 2 -> g.drawImage(left, x, y, 38, 38, null);
+                        case 3 -> g.drawImage(down, x, y, 38, 38, null);
+                        case 4 -> g.drawImage(right, x, y, 38, 38, null);
+                    }
+                    if(blinkTimer >=1000){
+                        blinkTimer = 0;
+                    }
+                }
+                blinkTimer++;
+
+            }else{
+                g.drawImage(frightened, x, y, 38, 38, null);
+            }
+
         } else {
             switch (direction) {
                 case 1 -> g.drawImage(up, x, y, 38, 38, null);
@@ -140,7 +174,6 @@ public class Ghost {
             } else if (phase == 2) {
                 direction = directionRandom();
             } else if (phase == 3) {
-                System.out.println("yes");
                 targetBase();
                 direction = directionByVector();
                 if (getVectorSize(x, y, targetX, targetY) < 40) {

@@ -137,16 +137,18 @@ public class PacMan extends Worlds {
     }
 
     private void setPoints() {
-        powerUps.add(new Rectangle(194 + 13 * blockSize, 65 + 3 * blockSize, 10, 10));
-
+        powerUps.add(new Rectangle(189 + 16 * blockSize, 60 + 2 * blockSize, 15, 15));
+        powerUps.add(new Rectangle(189, 60 + 2 * blockSize, 15, 15));
+        powerUps.add(new Rectangle(189, 60 + 19 * blockSize, 15, 15));
+        powerUps.add(new Rectangle(189 + 16 * blockSize, 60 + 19 * blockSize, 15, 15));
         for (int i = 0; i < 17; i++) {
             points.add(new Rectangle(194 + i * blockSize, 27 + blockSize, 5, 5));
         }
         for (int i = 0; i < 17; i++) {
             points.add(new Rectangle(194 + i * blockSize, 27 + 4 * blockSize, 5, 5));
         }
-        for (int i = 0; i < 17; i++) {
-            points.add(new Rectangle(194 + i * blockSize, 27 + 20 * blockSize, 5, 5));
+        for (int i = 0; i < 9; i++) {
+            points.add(new Rectangle(194 + (i + 4) * blockSize, 27 + 20 * blockSize, 5, 5));
         }
         for (int i = 0; i < 17; i++) {
             points.add(new Rectangle(194 + i * blockSize, 27 + 24 * blockSize, 5, 5));
@@ -163,11 +165,17 @@ public class PacMan extends Worlds {
         for (int i = 0; i < 6; i++) {
             points.add(new Rectangle(194 + 16 * blockSize, 65 + i * blockSize, 5, 5));
         }
-        for (int i = 0; i < 6; i++) {
-            points.add(new Rectangle(194, 65 + (i + 17) * blockSize, 5, 5));
+        for (int i = 0; i < 2; i++) {
+            points.add(new Rectangle(194, 65 + (i + 18) * blockSize, 5, 5));
         }
-        for (int i = 0; i < 6; i++) {
-            points.add(new Rectangle(194 + 16 * blockSize, 65 + (i + 17) * blockSize, 5, 5));
+        for (int i = 0; i < 2; i++) {
+            points.add(new Rectangle(194 + 16 * blockSize, 65 + (i + 18) * blockSize, 5, 5));
+        }
+        for (int i = 0; i < 2; i++) {
+            points.add(new Rectangle(194, 65 + (i + 21) * blockSize, 5, 5));
+        }
+        for (int i = 0; i < 2; i++) {
+            points.add(new Rectangle(194 + 16 * blockSize, 65 + (i + 21) * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
             points.add(new Rectangle(194 + 9 * blockSize, 65 + (i + 1) * blockSize, 5, 5));
@@ -176,10 +184,10 @@ public class PacMan extends Worlds {
             points.add(new Rectangle(194 + 7 * blockSize, 65 + (i + 1) * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + 9 * blockSize, 65 + (i + 20) * blockSize, 5, 5));
+            points.add(new Rectangle(194 + 11 * blockSize, 65 + (i + 20) * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + 7 * blockSize, 65 + (i + 20) * blockSize, 5, 5));
+            points.add(new Rectangle(194 + 5 * blockSize, 65 + (i + 20) * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
             points.add(new Rectangle(194 + (1 + i) * blockSize, 65 + 5 * blockSize, 5, 5));
@@ -187,35 +195,41 @@ public class PacMan extends Worlds {
         for (int i = 0; i < 2; i++) {
             points.add(new Rectangle(194 + (14 + i) * blockSize, 65 + 5 * blockSize, 5, 5));
         }
+        for (int i = 0; i < 8; i++) {
+            points.add(new Rectangle(194 + i * blockSize, 65 + 17 * blockSize, 5, 5));
+        }
+        for (int i = 0; i < 8; i++) {
+            points.add(new Rectangle(194 + (i + 9) * blockSize, 65 + 17 * blockSize, 5, 5));
+        }
+        for (int i = 0; i < 3; i++) {
+            points.add(new Rectangle(194 + blockSize, 65 + (19 + i) * blockSize, 5, 5));
+        }
+        points.add(new Rectangle(194 + 2 * blockSize, 65 + 21 * blockSize, 5, 5));
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + (1 + i) * blockSize, 65 + 17 * blockSize, 5, 5));
+            points.add(new Rectangle(194 + (6 + i) * blockSize, 65 + 21 * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + (14 + i) * blockSize, 65 + 17 * blockSize, 5, 5));
+            points.add(new Rectangle(194 + (9 + i) * blockSize, 65 + 21 * blockSize, 5, 5));
         }
+        points.add(new Rectangle(194 + 9 * blockSize, 65 + 22 * blockSize, 5, 5));
+        points.add(new Rectangle(194 + 7 * blockSize, 65 + 22 * blockSize, 5, 5));
+        points.add(new Rectangle(194 + 9 * blockSize, 65 + 18 * blockSize, 5, 5));
+        points.add(new Rectangle(194 + 7 * blockSize, 65 + 18 * blockSize, 5, 5));
+        for (int i = 0; i < 3; i++) {
+            points.add(new Rectangle(194 + 15 * blockSize, 65 + (19 + i) * blockSize, 5, 5));
+        }
+        points.add(new Rectangle(194 + 14 * blockSize, 65 + 21 * blockSize, 5, 5));
         for (int i = 0; i < 3; i++) {
             points.add(new Rectangle(194 + 5 * blockSize, 65 + (4 + i) * blockSize, 5, 5));
         }
         for (int i = 0; i < 3; i++) {
             points.add(new Rectangle(194 + 11 * blockSize, 65 + (4 + i) * blockSize, 5, 5));
         }
-        for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(194 + 5 * blockSize, 65 + (16 + i) * blockSize, 5, 5));
-        }
-        for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(194 + 11 * blockSize, 65 + (16 + i) * blockSize, 5, 5));
-        }
         for (int i = 0; i < 2; i++) {
             points.add(new Rectangle(194 + (6 + i) * blockSize, 65 + 6 * blockSize, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
             points.add(new Rectangle(194 + (9 + i) * blockSize, 65 + 6 * blockSize, 5, 5));
-        }
-        for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + (6 + i) * blockSize, 65 + 16 * blockSize, 5, 5));
-        }
-        for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(194 + (9 + i) * blockSize, 65 + 16 * blockSize, 5, 5));
         }
 
     }
@@ -300,7 +314,7 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 2 * blockSize, 10 + (height - 2) * blockSize, 6 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 2) * blockSize, 6 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 4) * blockSize, 5*blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 4) * blockSize, 5 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 3) * blockSize, blockSize, 2 * blockSize));
         worldBounds.add(new Rectangle(139 + 13 * blockSize, 10 + (height - 4) * blockSize, blockSize, 2 * blockSize));
         worldBounds.add(new Rectangle(139 + 15 * blockSize, 10 + (height - 5) * blockSize, blockSize, 2 * blockSize));
@@ -314,7 +328,7 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 6) * blockSize, 3 * blockSize, blockSize));
 
         worldBounds.add(new Rectangle(139 + 9 * blockSize, 10 + (height - 7) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 8) * blockSize, 5*blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + (height - 8) * blockSize, 5 * blockSize, blockSize));
 
         worldBounds.add(new Rectangle(139 + 7 * blockSize, 10 + 10 * blockSize, blockSize, 6 * blockSize));
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + 10 * blockSize, blockSize, 6 * blockSize));
