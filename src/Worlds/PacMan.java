@@ -1,5 +1,6 @@
 package Worlds;
 
+import Input.KeyHandler;
 import Main.Game;
 import PacMan.Player;
 import PacMan.Ghost;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 
 public class PacMan extends Worlds {
 
+    static public boolean gamePaused = false;
+    boolean escPressed = false;
     static public final int width = 19;
     static public final int height = 25;
     private int hp = 3;
@@ -61,7 +64,7 @@ public class PacMan extends Worlds {
      */
     public PacMan(Game game) {
         super(game);
-        player = new Player(139 + blockSize, 10 + blockSize, game);
+        player = new Player(139 + 9 * blockSize, 10 + 20 * blockSize, game);
         ghosts.add(new Ghost(139 + 5 * blockSize, 10 + blockSize, 1, game));
         ghosts.add(new Ghost(139 + 10 * blockSize, 10 + blockSize, 2, game));
         ghosts.add(new Ghost(139 + 4 * blockSize, 10 + 20 * blockSize, 3, game));
@@ -73,11 +76,29 @@ public class PacMan extends Worlds {
 
     @Override
     public void tick() {
-        checkPoints();
-        checkPowerUp();
-        player.tick();
-        tickGhosts();
-        teleport();
+        input();
+        if (gamePaused) {
+            if (game.getKeyHandler().w || game.getKeyHandler().a || game.getKeyHandler().s || game.getKeyHandler().d ||
+                    game.getKeyHandler().up || game.getKeyHandler().left || game.getKeyHandler().down || game.getKeyHandler().right) {
+                gamePaused = false;
+            }
+        } else {
+            checkPoints();
+            checkPowerUp();
+            player.tick();
+            tickGhosts();
+            teleport();
+        }
+
+    }
+
+    public void input() {
+        if (game.getKeyHandler().esc && !escPressed) {
+            gamePaused = !gamePaused;
+            escPressed = true;
+        } else if (!game.getKeyHandler().esc) {
+            escPressed = false;
+        }
     }
 
     private void tickGhosts() {
@@ -105,7 +126,9 @@ public class PacMan extends Worlds {
                     ghost.eaten = true;
                 } else {
                     hp--;
-                    player.setCords(139 + blockSize, 10 + blockSize);
+                    player.setCords(139 + 9 * blockSize, 10 + 20 * blockSize);
+                    player.direction = 0;
+                    gamePaused = true;
                 }
             }
         }

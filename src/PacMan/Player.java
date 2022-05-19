@@ -15,7 +15,7 @@ public class Player {
     private int x;
     private int y;
 
-    int direction, nextDirection;
+    public int direction, nextDirection;
     int width = 38;
     int height = 38;
     private BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");

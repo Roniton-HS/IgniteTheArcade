@@ -21,11 +21,6 @@ public class Ghost {
     private boolean blink;
     private int blinkTimer = 0;
     public boolean eaten = false;
-
-    public void setPhase(int phase) {
-        this.phase = phase;
-    }
-
     private int phase = 0; //0: scatter | 1: chase | 2: fear | 3: go to base
 
     /*
@@ -48,14 +43,6 @@ public class Ghost {
     BufferedImage frightened = ImageLoader.loadImage("/scaredGhost.png");
 
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public Ghost(int x, int y, int color, Game game) {
         this.game = game;
         this.x = x;
@@ -69,6 +56,17 @@ public class Ghost {
     public void tick() {
         handlePhase();
         move();
+        if (blink) {
+            blinkTimer++;
+            if (blinkTimer >= 30) {
+                blinkTimer = 0;
+            }
+        }
+    }
+
+    public void render(Graphics g) {
+        renderImage(g);
+        renderVector(g);
     }
 
     private void handlePhase() {
@@ -79,7 +77,7 @@ public class Ghost {
             if (System.currentTimeMillis() - time > 15000) {
                 fear = false;
                 blink = false;
-            }else if(System.currentTimeMillis() - time > 12500){
+            } else if (System.currentTimeMillis() - time > 12500) {
                 blink = true;
             } else {
                 phase = 2;
@@ -104,39 +102,27 @@ public class Ghost {
         }
     }
 
-    public void startFear() {
-        fear = true;
-        blink = false;
-        time = System.currentTimeMillis();
-    }
-
-
-    public void render(Graphics g) {
+    public void renderImage(Graphics g) {
         if (eaten) {
-            switch (direction){
+            switch (direction) {
                 case 1 -> g.drawImage(eyesUp, x, y, 38, 38, null);
                 case 2 -> g.drawImage(eyesLeft, x, y, 38, 38, null);
                 case 3 -> g.drawImage(eyesDown, x, y, 38, 38, null);
                 case 4 -> g.drawImage(eyesRight, x, y, 38, 38, null);
             }
         } else if (fear) {
-            if(blink){
-                if(blinkTimer < 500){
+            if (blink) {
+                if (blinkTimer < 15) {
                     g.drawImage(frightened, x, y, 38, 38, null);
-                }else{
+                } else {
                     switch (direction) {
                         case 1 -> g.drawImage(up, x, y, 38, 38, null);
                         case 2 -> g.drawImage(left, x, y, 38, 38, null);
                         case 3 -> g.drawImage(down, x, y, 38, 38, null);
                         case 4 -> g.drawImage(right, x, y, 38, 38, null);
                     }
-                    if(blinkTimer >=1000){
-                        blinkTimer = 0;
-                    }
                 }
-                blinkTimer++;
-
-            }else{
+            } else {
                 g.drawImage(frightened, x, y, 38, 38, null);
             }
 
@@ -148,7 +134,10 @@ public class Ghost {
                 case 4 -> g.drawImage(right, x, y, 38, 38, null);
             }
         }
-        renderVector(g);
+    }
+
+    private void renderVector(Graphics g) {
+        g.drawLine(this.x + size / 2, this.y + size / 2, targetX + size / 2, targetY + size / 2);
     }
 
     public void move() {
@@ -507,16 +496,18 @@ public class Ghost {
         return false;
     }
 
-    private double getVectorSize(int xGhost, int yGhost, int xPlayer, int yPlayer) {
-        return Math.sqrt((xPlayer - xGhost) * (xPlayer - xGhost) + (yPlayer - yGhost) * (yPlayer - yGhost));
-    }
-
-    private void renderVector(Graphics g) {
-        g.drawLine(this.x + size / 2, this.y + size / 2, targetX + size / 2, targetY + size / 2);
+    public void startFear() {
+        fear = true;
+        blink = false;
+        time = System.currentTimeMillis();
     }
 
     public Rectangle getBounds() {
         return new Rectangle(x + size / 4, y + size / 4, size / 2, size / 2);
+    }
+
+    private double getVectorSize(int xGhost, int yGhost, int xPlayer, int yPlayer) {
+        return Math.sqrt((xPlayer - xGhost) * (xPlayer - xGhost) + (yPlayer - yGhost) * (yPlayer - yGhost));
     }
 
     private void setColor() {
@@ -550,5 +541,13 @@ public class Ghost {
                 up = ImageLoader.loadImage("/sprite_18.png");
             }
         }
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
