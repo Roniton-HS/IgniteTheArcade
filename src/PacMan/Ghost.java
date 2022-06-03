@@ -13,15 +13,27 @@ public class Ghost {
      * general
      */
     Game game;
-    private int x, y;
-    private final int size = 38;
-    private final int color;
+    private int x;
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    private int y;
+    private final int size = 38;
+    public final int color;
+
+    private boolean startInBase = true;
+    private boolean leaveBase = false;
     public boolean fear = false;
     private boolean blink;
     private int blinkTimer = 0;
     public boolean eaten = false;
-    private int phase = 0; //0: scatter | 1: chase | 2: fear | 3: go to base
+    private int phase; //0: scatter | 1: chase | 2: fear | 3: go to base | 4: leave base
 
     /*
      * movement
@@ -33,7 +45,7 @@ public class Ghost {
     static long startTime;
     static long time;
 
-    ArrayList bounds = PacMan.getGhostWorldBounds();
+    ArrayList<Rectangle> bounds = PacMan.getGhostWorldBounds();
 
     BufferedImage right, left, down, up;
     BufferedImage eyesUp = ImageLoader.loadImage("/eyesUp.png");
@@ -70,7 +82,35 @@ public class Ghost {
     }
 
     private void handlePhase() {
-        if (eaten) {
+        if (startInBase) {
+            phase = 3;
+            switch (color){
+                case 1 -> {
+                    if(System.currentTimeMillis()-startTime > 5000){
+                        startInBase = false;
+                        leaveBase = true;
+                    }
+                }
+                case 2 -> {
+                    if(System.currentTimeMillis()-startTime > 10000){
+                        startInBase = false;
+                        leaveBase = true;
+                    }
+                }
+                case 3 -> {
+                    if(System.currentTimeMillis()-startTime > 15000){
+                        startInBase = false;
+                        leaveBase = true;
+                    }
+                }
+                case 4 -> {
+                    if(System.currentTimeMillis()-startTime > 20000){
+                        startInBase = false;
+                        leaveBase = true;
+                    }
+                }
+            }
+        } else if (eaten) {
             phase = 3;
         } else if (fear) {
 
@@ -82,6 +122,8 @@ public class Ghost {
             } else {
                 phase = 2;
             }
+        } else if (leaveBase) {
+            phase = 4;
         } else {
             long systemTime = System.currentTimeMillis() - startTime;
             if (systemTime >= 84000) {
@@ -168,6 +210,13 @@ public class Ghost {
                 if (getVectorSize(x, y, targetX, targetY) < 40) {
                     eaten = false;
                     fear = false;
+                    leaveBase = true;
+                }
+            } else if (phase == 4) {
+                targetLeaveBase();
+                direction = directionByVector();
+                if (getVectorSize(x, y, targetX, targetY) < 40) {
+                    leaveBase = false;
                 }
             }
             directionTimer = 2;
@@ -183,19 +232,19 @@ public class Ghost {
         boolean canLeft = false;
         switch (direction) {
             case 1 -> {
-                if (!checkBorder("up")) {
+                if (checkFree("up")) {
                     canUp = true;
                     if (getVectorSize(this.x, this.y - PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 1;
                     }
                 }
-                if (!checkBorder("left")) {
+                if (checkFree("left")) {
                     canLeft = true;
                     if (getVectorSize(this.x - PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 2;
                     }
                 }
-                if (!checkBorder("right")) {
+                if (checkFree("right")) {
                     canRight = true;
                     if (getVectorSize(this.x + size + PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 4;
@@ -210,19 +259,19 @@ public class Ghost {
                 return 3;
             }
             case 2 -> {
-                if (!checkBorder("up")) {
+                if (checkFree("up")) {
                     canUp = true;
                     if (getVectorSize(this.x, this.y - PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 1;
                     }
                 }
-                if (!checkBorder("left")) {
+                if (checkFree("left")) {
                     canLeft = true;
                     if (getVectorSize(this.x - PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 2;
                     }
                 }
-                if (!checkBorder("down")) {
+                if (checkFree("down")) {
                     canDown = true;
                     if (getVectorSize(this.x, this.y + size + PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 3;
@@ -237,19 +286,19 @@ public class Ghost {
                 return 4;
             }
             case 3 -> {
-                if (!checkBorder("right")) {
+                if (checkFree("right")) {
                     canRight = true;
                     if (getVectorSize(this.x + size + PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 4;
                     }
                 }
-                if (!checkBorder("left")) {
+                if (checkFree("left")) {
                     canLeft = true;
                     if (getVectorSize(this.x - PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 2;
                     }
                 }
-                if (!checkBorder("down")) {
+                if (checkFree("down")) {
                     canDown = true;
                     if (getVectorSize(this.x, this.y + size + PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 3;
@@ -264,19 +313,19 @@ public class Ghost {
                 return 1;
             }
             case 4 -> {
-                if (!checkBorder("up")) {
+                if (checkFree("up")) {
                     canUp = true;
                     if (getVectorSize(this.x, this.y - PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 1;
                     }
                 }
-                if (!checkBorder("right")) {
+                if (checkFree("right")) {
                     canRight = true;
                     if (getVectorSize(this.x + size + PacMan.getBlockSize() / 2, this.y, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 4;
                     }
                 }
-                if (!checkBorder("down")) {
+                if (checkFree("down")) {
                     canDown = true;
                     if (getVectorSize(this.x, this.y + size + PacMan.getBlockSize() / 2, targetX, targetY) < getVectorSize(this.x, this.y, targetX, targetY)) {
                         return 3;
@@ -300,16 +349,16 @@ public class Ghost {
         boolean canRight = false;
         boolean canLeft = false;
 
-        if (!checkBorder("up")) {
+        if (checkFree("up")) {
             canUp = true;
         }
-        if (!checkBorder("down")) {
+        if (checkFree("down")) {
             canDown = true;
         }
-        if (!checkBorder("left")) {
+        if (checkFree("left")) {
             canLeft = true;
         }
-        if (!checkBorder("right")) {
+        if (checkFree("right")) {
             canRight = true;
         }
         switch (direction) {
@@ -348,19 +397,19 @@ public class Ghost {
                 }
             }
             case 3 -> {
-                if (!checkBorder("right") && Math.random() > 0.5) {
+                if (checkFree("right") && Math.random() > 0.5) {
                     return 4;
                 }
-                if (!checkBorder("left") && Math.random() > 0.5) {
+                if (checkFree("left") && Math.random() > 0.5) {
                     return 2;
                 }
-                if (!checkBorder("down")) {
+                if (checkFree("down")) {
                     return 3;
                 }
-                if (!checkBorder("right")) {
+                if (checkFree("right")) {
                     return 4;
                 }
-                if (!checkBorder("left")) {
+                if (checkFree("left")) {
                     return 2;
                 }
                 return 1;
@@ -440,7 +489,7 @@ public class Ghost {
                     }
                 }
                 case 4 -> { //blue
-                    Ghost ghost = (Ghost) PacMan.ghosts.get(1);
+                    Ghost ghost = PacMan.ghosts.get(1);
                     targetX = PacMan.getPlayer().getX() + PacMan.getPlayer().getX() - ghost.getX();
                     targetY = PacMan.getPlayer().getY() + PacMan.getPlayer().getY() - ghost.getY();
                 }
@@ -474,26 +523,31 @@ public class Ghost {
 
     private void targetBase() {
         targetX = 13 * PacMan.getBlockSize();
-        targetY = 10 * PacMan.getBlockSize();
+        targetY = 13 * PacMan.getBlockSize();
     }
 
-    private boolean checkBorder(String direction) {
-        for (Object bound : bounds) {
-            Rectangle border = (Rectangle) bound;
-            if (direction.equals("up") && new Rectangle(this.x, this.y - PacMan.getBlockSize() / 2, size, 1).intersects(border)) {
-                return true;
+    private void targetLeaveBase() {
+        targetX = 13 * PacMan.getBlockSize();
+        targetY = 9 * PacMan.getBlockSize();
+    }
+
+
+    private boolean checkFree(String direction) {
+        for (Rectangle bound : bounds) {
+            if (direction.equals("up") && new Rectangle(this.x, this.y - PacMan.getBlockSize() / 2, size, 1).intersects(bound)) {
+                return false;
             }
-            if (direction.equals("down") && new Rectangle(this.x, this.y + size + PacMan.getBlockSize() / 2, size, 1).intersects(border)) {
-                return true;
+            if (direction.equals("down") && new Rectangle(this.x, this.y + size + PacMan.getBlockSize() / 2, size, 1).intersects(bound)) {
+                return false;
             }
-            if (direction.equals("right") && new Rectangle(this.x + size + PacMan.getBlockSize() / 2, this.y, 1, size).intersects(border)) {
-                return true;
+            if (direction.equals("right") && new Rectangle(this.x + size + PacMan.getBlockSize() / 2, this.y, 1, size).intersects(bound)) {
+                return false;
             }
-            if (direction.equals("left") && new Rectangle(this.x - PacMan.getBlockSize() / 2, this.y, 1, size).intersects(border)) {
-                return true;
+            if (direction.equals("left") && new Rectangle(this.x - PacMan.getBlockSize() / 2, this.y, 1, size).intersects(bound)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void startFear() {

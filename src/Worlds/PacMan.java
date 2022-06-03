@@ -1,9 +1,7 @@
 package Worlds;
 
-import Input.KeyHandler;
+import PacMan.*;
 import Main.Game;
-import PacMan.Player;
-import PacMan.Ghost;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,34 +20,35 @@ public class PacMan extends Worlds {
 
     static private final int blockSize = 38;
 
+    private int score = 0;
     private final int maxPoints;
 
-    private static ArrayList points = new ArrayList();
-    private static ArrayList powerUps = new ArrayList();
+    private static final ArrayList<Rectangle> points = new ArrayList<>();
+    private static final ArrayList<Rectangle> powerUps = new ArrayList<>();
 
-    public static ArrayList getPowerUps() {
+    public static ArrayList<Rectangle> getPowerUps() {
         return powerUps;
     }
 
-    public static ArrayList getFruits() {
+    public static ArrayList<Fruit> getFruits() {
         return fruits;
     }
 
-    private static ArrayList fruits = new ArrayList();
+    private static final ArrayList<Fruit> fruits = new ArrayList<>();
 
-    public static ArrayList<Rectangle> worldBounds = new ArrayList();
-    public static ArrayList<Rectangle> ghostWorldBounds = new ArrayList();
+    public static ArrayList<Rectangle> worldBounds = new ArrayList<>();
+    public static ArrayList<Rectangle> ghostWorldBounds = new ArrayList<>();
 
-    public static ArrayList ghosts = new ArrayList();
+    public static ArrayList<Ghost> ghosts = new ArrayList<>();
 
     Rectangle left = new Rectangle(101 - blockSize, 10 + 12 * blockSize, blockSize, blockSize);
     Rectangle right = new Rectangle(139 + 20 * blockSize, 10 + 12 * blockSize, blockSize, blockSize);
 
-    public static ArrayList getWorldBounds() {
+    public static ArrayList<Rectangle> getWorldBounds() {
         return worldBounds;
     }
 
-    public static ArrayList getGhostWorldBounds() {
+    public static ArrayList<Rectangle> getGhostWorldBounds() {
         return ghostWorldBounds;
     }
 
@@ -65,13 +64,39 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         player = new Player(139 + 9 * blockSize, 10 + 20 * blockSize, game);
-        ghosts.add(new Ghost(139 + 5 * blockSize, 10 + blockSize, 1, game));
-        ghosts.add(new Ghost(139 + 10 * blockSize, 10 + blockSize, 2, game));
-        ghosts.add(new Ghost(139 + 4 * blockSize, 10 + 20 * blockSize, 3, game));
-        ghosts.add(new Ghost(139 + 4 * blockSize, 10 + 20 * blockSize, 4, game));
+        ghosts.add(new Ghost(139 + 8 * blockSize, 10 + 11 * blockSize, 1, game));
+        ghosts.add(new Ghost(139 + 10 * blockSize, 10 + 13 * blockSize, 2, game));
+        ghosts.add(new Ghost(139 + 8 * blockSize, 10 + 14 * blockSize, 3, game));
+        ghosts.add(new Ghost(139 + 10 * blockSize, 10 + 12 * blockSize, 4, game));
+        fruits.add(new Fruit(139 + 8 * blockSize, 10 + 16 * blockSize, 1));
         setWorldBounds();
         setPoints();
         maxPoints = points.size();
+    }
+
+    private void reset() {
+        for (Ghost g : ghosts) {
+            switch (g.color) {
+                case 1 -> {
+                    g.setX(139 + 5 * blockSize);
+                    g.setY(10 + blockSize);
+                }
+                case 2 -> {
+                    g.setX(139 + 10 * blockSize);
+                    g.setY(10 + blockSize);
+                }
+                case 3 -> {
+                    g.setX(139 + 4 * blockSize);
+                    g.setY(10 + 20 * blockSize);
+                }
+                case 4 -> {
+                    g.setX(139 + 10 * blockSize);
+                    g.setY(10 + 20 * blockSize);
+                }
+            }
+        }
+        setPoints();
+        player.direction = 0;
     }
 
     @Override
@@ -102,9 +127,8 @@ public class PacMan extends Worlds {
     }
 
     private void tickGhosts() {
-        for (Object o : ghosts) {
-            Ghost ghost = (Ghost) o;
-            ghost.tick();
+        for (Ghost o : ghosts) {
+            o.tick();
         }
         checkGhosts();
     }
@@ -119,11 +143,10 @@ public class PacMan extends Worlds {
     }
 
     private void checkGhosts() {
-        for (Object o : ghosts) {
-            Ghost ghost = (Ghost) o;
-            if (player.getBounds().intersects(ghost.getBounds())) {
-                if (ghost.fear) {
-                    ghost.eaten = true;
+        for (Ghost o : ghosts) {
+            if (player.getBounds().intersects(o.getBounds())) {
+                if (o.fear) {
+                    o.eaten = true;
                 } else {
                     hp--;
                     player.setCords(139 + 9 * blockSize, 10 + 20 * blockSize);
@@ -136,16 +159,15 @@ public class PacMan extends Worlds {
     }
 
     private void renderGhosts(Graphics g) {
-        for (Object o : ghosts) {
-            Ghost ghost = (Ghost) o;
-            ghost.render(g);
+        for (Ghost o : ghosts) {
+            o.render(g);
         }
     }
 
     private void renderStats(Graphics g) {
         //points
         g.setColor(Color.black);
-        g.drawString("Points:" + (maxPoints - points.size() + " / " + maxPoints), 10, 10);
+        g.drawString("Points:" + score, 10, 10);
 
         //hp
         g.drawString("HP: " + hp, 10, 25);
@@ -258,29 +280,41 @@ public class PacMan extends Worlds {
     }
 
     private void renderPoints(Graphics g) {
-        for (Object o : powerUps) {
-            Rectangle point = (Rectangle) o;
+        for (Rectangle o : powerUps) {
             g.setColor(Color.white);
-            g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
+            g.fillRect(o.getBounds().x, o.getBounds().y, o.getBounds().width, o.getBounds().height);
         }
 
-        for (Object o : points) {
-            Rectangle point = (Rectangle) o;
+        for (Rectangle o : points) {
             g.setColor(Color.white);
-            g.fillRect(point.getBounds().x, point.getBounds().y, point.getBounds().width, point.getBounds().height);
+            g.fillRect(o.getBounds().x, o.getBounds().y, o.getBounds().width, o.getBounds().height);
+        }
+
+        for (Fruit f : fruits) {
+            f.render(g);
         }
     }
 
     private void checkPoints() {
         if (points.size() == 0) {
-            System.exit(0);
+            reset();
         }
         for (int i = 0; i < points.size(); i++) {
-            Rectangle point = (Rectangle) points.get(i);
+            Rectangle point = points.get(i);
             if (player.getNextBound().intersects(point.getBounds())) {
                 points.remove(point);
+                score++;
             }
         }
+
+        for (int i = 0; i < fruits.size(); i++) {
+            Fruit fruit = fruits.get(i);
+            if (player.getNextBound().intersects(fruit.getBounds())) {
+                fruits.remove(fruit);
+                score += 50;
+            }
+        }
+
     }
 
     private void checkPowerUp() {
@@ -288,12 +322,11 @@ public class PacMan extends Worlds {
             return;
         }
         for (int i = 0; i < powerUps.size(); i++) {
-            Rectangle powerUp = (Rectangle) powerUps.get(i);
+            Rectangle powerUp = powerUps.get(i);
             if (player.getNextBound().intersects(powerUp.getBounds())) {
                 powerUps.remove(powerUp);
-                for (Object o : ghosts) {
-                    Ghost ghost = (Ghost) o;
-                    ghost.startFear();
+                for (Ghost o : ghosts) {
+                    o.startFear();
                 }
 
             }
@@ -345,7 +378,7 @@ public class PacMan extends Worlds {
 
         worldBounds.add(new Rectangle(139 + 2 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 3 * blockSize, 10 + (height - 5) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(139 + 1 * blockSize, 10 + (height - 4) * blockSize, blockSize, blockSize));
+        worldBounds.add(new Rectangle(139 + blockSize, 10 + (height - 4) * blockSize, blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 15 * blockSize, 10 + (height - 6) * blockSize, 2 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 5 * blockSize, 10 + (height - 6) * blockSize, 3 * blockSize, blockSize));
         worldBounds.add(new Rectangle(139 + 11 * blockSize, 10 + (height - 6) * blockSize, 3 * blockSize, blockSize));
@@ -373,8 +406,7 @@ public class PacMan extends Worlds {
         g.setColor(Color.black);
         g.fillRect(139, 10, 19 * blockSize, 26 * blockSize);
         g.setColor(Color.blue);
-        for (int i = 0; i < worldBounds.size(); i++) {
-            Rectangle box = worldBounds.get(i);
+        for (Rectangle box : worldBounds) {
             g.drawRect((int) box.getX(), (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
 
         }

@@ -18,9 +18,9 @@ public class Player {
     public int direction, nextDirection;
     int width = 38;
     int height = 38;
-    private BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");
-    private BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
-    private BufferedImage image2 = ImageLoader.loadImage("/PacMan2.png");
+    private final BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");
+    private final BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
+    private final BufferedImage image2 = ImageLoader.loadImage("/PacMan2.png");
     private BufferedImage usedImage0, usedImage1, usedImage2;
     private int animationCount = 0;
     private int animationDelay = 0;
@@ -95,9 +95,9 @@ public class Player {
         if (game.getKeyHandler().d || game.getKeyHandler().right) {
             nextDirection = 4;
         }
-        ArrayList bounds = PacMan.getWorldBounds();
+        ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
         for (int i = 0; i < bounds.size(); i++) {
-            Rectangle border = (Rectangle) bounds.get(i);
+            Rectangle border = bounds.get(i);
             if (getNextBound().intersects(border)) {
                 break;
             }
@@ -130,10 +130,9 @@ public class Player {
     }
 
     public void move() {
-        ArrayList bounds = PacMan.getWorldBounds();
-        for (Object bound : bounds) {
-            Rectangle border = (Rectangle) bound;
-            if (getNextFrontBound().intersects(border)) {
+        ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
+        for (Rectangle bound : bounds) {
+            if (getNextFrontBound().intersects(bound)) {
                 direction = 0;
             }
         }
@@ -180,9 +179,5 @@ public class Player {
 
     public void setX(int x) {
         this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 }
