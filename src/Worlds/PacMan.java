@@ -4,6 +4,8 @@ import PacMan.*;
 import Main.Game;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class PacMan extends Worlds {
@@ -21,18 +23,13 @@ public class PacMan extends Worlds {
     static private final int blockSize = 38;
 
     private int score = 0;
-    private final int maxPoints;
+
+    private int ghostsEaten = 0;
+
+    public static Font pixelFont;
 
     private static final ArrayList<Rectangle> points = new ArrayList<>();
     private static final ArrayList<Rectangle> powerUps = new ArrayList<>();
-
-    public static ArrayList<Rectangle> getPowerUps() {
-        return powerUps;
-    }
-
-    public static ArrayList<Fruit> getFruits() {
-        return fruits;
-    }
 
     private static final ArrayList<Fruit> fruits = new ArrayList<>();
 
@@ -63,6 +60,7 @@ public class PacMan extends Worlds {
      */
     public PacMan(Game game) {
         super(game);
+        loadFont();
         player = new Player(139 + 9 * blockSize, 10 + 20 * blockSize, game);
         ghosts.add(new Ghost(139 + 8 * blockSize, 10 + 11 * blockSize, 1, game));
         ghosts.add(new Ghost(139 + 10 * blockSize, 10 + 13 * blockSize, 2, game));
@@ -71,7 +69,6 @@ public class PacMan extends Worlds {
         fruits.add(new Fruit(139 + 8 * blockSize, 10 + 16 * blockSize, 1));
         setWorldBounds();
         setPoints();
-        maxPoints = points.size();
     }
 
     private void reset() {
@@ -147,7 +144,18 @@ public class PacMan extends Worlds {
             if (player.getBounds().intersects(o.getBounds())) {
                 if (o.fear) {
                     o.eaten = true;
-                } else {
+                    o.fear = false;
+                    int scoreToAdd = switch (ghostsEaten) {
+                        default -> 0;
+                        case 0 -> 400;
+                        case 1 -> 800;
+                        case 2 -> 1200;
+                        case 3 -> 1600;
+                    };
+                    player.displayScore(scoreToAdd);
+                    score += scoreToAdd;
+                    ghostsEaten++;
+                } else if (!o.eaten) {
                     hp--;
                     player.setCords(139 + 9 * blockSize, 10 + 20 * blockSize);
                     player.direction = 0;
@@ -167,10 +175,21 @@ public class PacMan extends Worlds {
     private void renderStats(Graphics g) {
         //points
         g.setColor(Color.black);
-        g.drawString("Points:" + score, 10, 10);
+        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 10.0F));
+        g.drawString("Points:" + score, 10, 30);
 
         //hp
-        g.drawString("HP: " + hp, 10, 25);
+        g.drawString("HP: " + hp, 10, 45);
+    }
+
+    private void loadFont() {
+        InputStream is = getClass().getResourceAsStream("/emulogic.ttf");
+        try {
+            assert is != null;
+            pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void teleport() {
@@ -311,7 +330,19 @@ public class PacMan extends Worlds {
             Fruit fruit = fruits.get(i);
             if (player.getNextBound().intersects(fruit.getBounds())) {
                 fruits.remove(fruit);
-                score += 50;
+                int scoreToAdd = switch (fruit.type){
+                    default ->  0;
+                    case 0 ->  100;
+                    case 1 ->  300;
+                    case 2 ->  500;
+                    case 3 ->  700;
+                    case 4 ->  1000;
+                    case 5 ->  2000;
+                    case 6 ->  3000;
+                    case 7 ->  5000;
+                };
+                score += scoreToAdd;
+                player.displayScore(scoreToAdd);
             }
         }
 
@@ -331,6 +362,12 @@ public class PacMan extends Worlds {
 
             }
         }
+        for (Ghost g : ghosts) {
+            if (g.fear) {
+                return;
+            }
+        }
+        ghostsEaten = 0;
     }
 
     public void setWorldBounds() {

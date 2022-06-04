@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import Main.Game;
 import Worlds.PacMan;
 
+import static Worlds.PacMan.pixelFont;
+
 public class Player {
 
     Game game;
@@ -25,6 +27,10 @@ public class Player {
     private int animationCount = 0;
     private int animationDelay = 0;
 
+    private int pointsToShow;
+    private boolean showPoints;
+    private long displayTimer;
+
     public Player(int x, int y, Game game) {
         this.game = game;
         this.x = x;
@@ -39,6 +45,7 @@ public class Player {
 
     public void render(Graphics g) {
         animation(g);
+        renderScore(g);
     }
 
     public void setCords(int x, int y) {
@@ -167,6 +174,22 @@ public class Player {
             case 4 -> new Rectangle(x + width - 10, y, 12, height);
             default -> new Rectangle(0, 0, 0, 0);
         };
+    }
+
+    public void displayScore(int score) {
+        pointsToShow = score;
+        showPoints = true;
+        displayTimer = System.currentTimeMillis();
+    }
+
+    public void renderScore(Graphics g) {
+        if (showPoints) {
+            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 10.0F));
+            g.drawString("" + pointsToShow, x + 32, y);
+            if (System.currentTimeMillis() - displayTimer > 500) {
+                showPoints = false;
+            }
+        }
     }
 
     public int getX() {

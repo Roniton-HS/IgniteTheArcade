@@ -84,27 +84,27 @@ public class Ghost {
     private void handlePhase() {
         if (startInBase) {
             phase = 3;
-            switch (color){
+            switch (color) {
                 case 1 -> {
-                    if(System.currentTimeMillis()-startTime > 5000){
+                    if (System.currentTimeMillis() - startTime > 5000) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 2 -> {
-                    if(System.currentTimeMillis()-startTime > 10000){
+                    if (System.currentTimeMillis() - startTime > 10000) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 3 -> {
-                    if(System.currentTimeMillis()-startTime > 15000){
+                    if (System.currentTimeMillis() - startTime > 15000) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 4 -> {
-                    if(System.currentTimeMillis()-startTime > 20000){
+                    if (System.currentTimeMillis() - startTime > 20000) {
                         startInBase = false;
                         leaveBase = true;
                     }
@@ -196,27 +196,34 @@ public class Ghost {
     public void updateDirection() {
         //make Ghost move an entire block
         if (directionTimer >= 38) {
-            if (phase == 0) {
-                targetScatter();
-                direction = directionByVector();
-            } else if (phase == 1) {
-                targetPlayer();
-                direction = directionByVector();
-            } else if (phase == 2) {
-                direction = directionRandom();
-            } else if (phase == 3) {
-                targetBase();
-                direction = directionByVector();
-                if (getVectorSize(x, y, targetX, targetY) < 40) {
-                    eaten = false;
-                    fear = false;
-                    leaveBase = true;
+            switch (phase) {
+                case 0 -> {
+                    targetScatter();
+                    direction = directionByVector();
                 }
-            } else if (phase == 4) {
-                targetLeaveBase();
-                direction = directionByVector();
-                if (getVectorSize(x, y, targetX, targetY) < 40) {
-                    leaveBase = false;
+                case 1 -> {
+                    targetPlayer();
+                    direction = directionByVector();
+                }
+                case 2 -> direction = directionRandom();
+                case 3 -> {
+                    targetBase();
+                    direction = directionByVector();
+                    if (getVectorSize(x, y, targetX, targetY) < 40) {
+                        eaten = false;
+                        fear = false;
+                        if (!startInBase) {
+                            leaveBase = true;
+                        }
+                    }
+                }
+                case 4 -> {
+                    targetLeaveBase();
+                    direction = directionByVector();
+                    if (getVectorSize(x, y, targetX, targetY) < 20) {
+                        System.out.println(color);
+                        leaveBase = false;
+                    }
                 }
             }
             directionTimer = 2;
@@ -530,7 +537,6 @@ public class Ghost {
         targetX = 13 * PacMan.getBlockSize();
         targetY = 9 * PacMan.getBlockSize();
     }
-
 
     private boolean checkFree(String direction) {
         for (Rectangle bound : bounds) {
