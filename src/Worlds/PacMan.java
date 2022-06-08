@@ -1,5 +1,6 @@
 package Worlds;
 
+import Input.KeyHandler;
 import PacMan.*;
 import Main.Game;
 
@@ -12,6 +13,8 @@ public class PacMan extends Worlds {
 
     static public boolean gamePaused = false;
     boolean escPressed = false;
+    boolean gameOver = false;
+    private long gameOverTime;
     static public final int width = 19;
     static public final int height = 25;
     private int hp = 3;
@@ -67,39 +70,37 @@ public class PacMan extends Worlds {
         ghosts.add(new Ghost(139 + 8 * blockSize, 10 + 14 * blockSize, 3, game));
         ghosts.add(new Ghost(139 + 10 * blockSize, 10 + 12 * blockSize, 4, game));
         fruits.add(new Fruit(139 + 8 * blockSize, 10 + 16 * blockSize, 1));
+        gamePaused = true;
         setWorldBounds();
         setPoints();
     }
 
     private void reset() {
-        for (Ghost g : ghosts) {
-            switch (g.color) {
-                case 1 -> {
-                    g.setX(139 + 5 * blockSize);
-                    g.setY(10 + blockSize);
-                }
-                case 2 -> {
-                    g.setX(139 + 10 * blockSize);
-                    g.setY(10 + blockSize);
-                }
-                case 3 -> {
-                    g.setX(139 + 4 * blockSize);
-                    g.setY(10 + 20 * blockSize);
-                }
-                case 4 -> {
-                    g.setX(139 + 10 * blockSize);
-                    g.setY(10 + 20 * blockSize);
-                }
-            }
-        }
-        setPoints();
+        ghosts.set(0, new Ghost(139 + 8 * blockSize, 10 + 11 * blockSize, 1, game));
+        ghosts.set(1, new Ghost(139 + 10 * blockSize, 10 + 13 * blockSize, 2, game));
+        ghosts.set(2, new Ghost(139 + 8 * blockSize, 10 + 14 * blockSize, 3, game));
+        ghosts.set(3, new Ghost(139 + 10 * blockSize, 10 + 12 * blockSize, 4, game));
         player.direction = 0;
+    }
+
+    private void resetGame() {
+        reset();
+        hp = 3;
+        score = 0;
+        points.clear();
+        setPoints();
+        gameOver = false;
     }
 
     @Override
     public void tick() {
         input();
-        if (gamePaused) {
+        if (gameOver) {
+            gamePaused = true;
+            if (System.currentTimeMillis() - gameOverTime > 3000) {
+                resetGame();
+            }
+        } else if (gamePaused) {
             if (game.getKeyHandler().w || game.getKeyHandler().a || game.getKeyHandler().s || game.getKeyHandler().d ||
                     game.getKeyHandler().up || game.getKeyHandler().left || game.getKeyHandler().down || game.getKeyHandler().right) {
                 gamePaused = false;
@@ -137,6 +138,20 @@ public class PacMan extends Worlds {
         player.render(g);
         renderGhosts(g);
         renderStats(g);
+        renderStatus(g);
+    }
+
+    public void renderStatus(Graphics g) {
+        if (gameOver) {
+            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 20.0F));
+            g.setColor(Color.RED);
+            g.drawString("Game Over", 145 + 7 * blockSize, 17 * blockSize);
+        } else if (gamePaused) {
+            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 20.0F));
+            g.setColor(Color.YELLOW);
+            g.drawString("Ready!", 139 + 8 * blockSize, 17 * blockSize);
+        }
+
     }
 
     private void checkGhosts() {
@@ -160,6 +175,11 @@ public class PacMan extends Worlds {
                     player.setCords(139 + 9 * blockSize, 10 + 20 * blockSize);
                     player.direction = 0;
                     gamePaused = true;
+                    reset();
+                    if (hp <= 0) {
+                        gameOver = true;
+                        gameOverTime = System.currentTimeMillis();
+                    }
                 }
             }
         }
@@ -330,16 +350,16 @@ public class PacMan extends Worlds {
             Fruit fruit = fruits.get(i);
             if (player.getNextBound().intersects(fruit.getBounds())) {
                 fruits.remove(fruit);
-                int scoreToAdd = switch (fruit.type){
-                    default ->  0;
-                    case 0 ->  100;
-                    case 1 ->  300;
-                    case 2 ->  500;
-                    case 3 ->  700;
-                    case 4 ->  1000;
-                    case 5 ->  2000;
-                    case 6 ->  3000;
-                    case 7 ->  5000;
+                int scoreToAdd = switch (fruit.type) {
+                    default -> 0;
+                    case 0 -> 100;
+                    case 1 -> 300;
+                    case 2 -> 500;
+                    case 3 -> 700;
+                    case 4 -> 1000;
+                    case 5 -> 2000;
+                    case 6 -> 3000;
+                    case 7 -> 5000;
                 };
                 score += scoreToAdd;
                 player.displayScore(scoreToAdd);

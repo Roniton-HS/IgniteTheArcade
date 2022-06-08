@@ -42,7 +42,7 @@ public class Ghost {
     private int targetY;
     private int direction = 1; // 1: up | 2: left | 3: down | 4: down
     private int directionTimer = 38;
-    static long startTime;
+    public static long startTime;
     static long time;
 
     ArrayList<Rectangle> bounds = PacMan.getGhostWorldBounds();

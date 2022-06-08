@@ -54,11 +54,15 @@ public class Player {
     }
 
     private void animation(Graphics g) {
-        switch (animationCount) {
-            case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
-            case 1, 3 -> g.drawImage(usedImage1, x + 3, y + 3, 32, 32, null);
-            case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
+        if (direction == 0) {
+            g.drawImage(image0, x + 3, y + 3, 32, 32, null);
+        } else {
+            switch (animationCount) {
+                case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
+                case 1, 3 -> g.drawImage(usedImage1, x + 3, y + 3, 32, 32, null);
+                case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
 
+            }
         }
     }
 
@@ -153,7 +157,7 @@ public class Player {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x + width / 4, y + height / 4, width/2, height/2);
+        return new Rectangle(x + width / 4, y + height / 4, width / 2, height / 2);
     }
 
     public Rectangle getNextBound() {
