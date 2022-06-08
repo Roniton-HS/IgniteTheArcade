@@ -21,7 +21,7 @@ public class Player {
     int width = 38;
     int height = 38;
     private final BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");
-    private final BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
+    public final BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
     private final BufferedImage image2 = ImageLoader.loadImage("/PacMan2.png");
     private BufferedImage usedImage0, usedImage1, usedImage2;
     private int animationCount = 0;

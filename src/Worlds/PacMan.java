@@ -1,10 +1,12 @@
 package Worlds;
 
+import Input.ImageLoader;
 import Input.KeyHandler;
 import PacMan.*;
 import Main.Game;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -196,10 +198,12 @@ public class PacMan extends Worlds {
         //points
         g.setColor(Color.black);
         g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 10.0F));
-        g.drawString("Points:" + score, 10, 30);
+        g.drawString("Score:" + score, 10, 30);
 
         //hp
-        g.drawString("HP: " + hp, 10, 45);
+        for (int i = 0; i < hp; i++) {
+            g.drawImage(player.image1, 10 + i*36,45,null);
+        }
     }
 
     private void loadFont() {
