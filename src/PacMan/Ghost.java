@@ -14,15 +14,6 @@ public class Ghost {
      */
     Game game;
     private int x;
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     private int y;
     private final int size = 38;
     public final int color;
@@ -42,8 +33,7 @@ public class Ghost {
     private int targetY;
     private int direction = 1; // 1: up | 2: left | 3: down | 4: down
     private int directionTimer = 38;
-    public static long startTime;
-    static long time;
+    static int blinkStartTicks;
 
     ArrayList<Rectangle> bounds = PacMan.getGhostWorldBounds();
 
@@ -62,7 +52,6 @@ public class Ghost {
         this.color = color;
         setColor();
         phase = 0;
-        startTime = System.currentTimeMillis();
     }
 
     public void tick() {
@@ -86,25 +75,25 @@ public class Ghost {
             phase = 3;
             switch (color) {
                 case 1 -> {
-                    if (System.currentTimeMillis() - startTime > 5000) {
+                    if (PacMan.ticks >= 300) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 2 -> {
-                    if (System.currentTimeMillis() - startTime > 10000) {
+                    if (PacMan.ticks >= 0) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 3 -> {
-                    if (System.currentTimeMillis() - startTime > 15000) {
+                    if (PacMan.ticks >= 900) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 4 -> {
-                    if (System.currentTimeMillis() - startTime > 20000) {
+                    if (PacMan.ticks >= 600) {
                         startInBase = false;
                         leaveBase = true;
                     }
@@ -114,10 +103,10 @@ public class Ghost {
             phase = 3;
         } else if (fear) {
 
-            if (System.currentTimeMillis() - time > 15000) {
+            if (PacMan.ticks - blinkStartTicks > 900) {
                 fear = false;
                 blink = false;
-            } else if (System.currentTimeMillis() - time > 12500) {
+            } else if (PacMan.ticks - blinkStartTicks > 750) {
                 blink = true;
             } else {
                 phase = 2;
@@ -125,20 +114,19 @@ public class Ghost {
         } else if (leaveBase) {
             phase = 4;
         } else {
-            long systemTime = System.currentTimeMillis() - startTime;
-            if (systemTime >= 84000) {
+            if (PacMan.ticks >= 5040) {
                 phase = 1; //endless chase
-            } else if (systemTime >= 79000) {
+            } else if (PacMan.ticks >= 4740) {
                 phase = 0;
-            } else if (systemTime >= 59000) {
+            } else if (PacMan.ticks >= 3540) {
                 phase = 1;
-            } else if (systemTime >= 54000) {
+            } else if (PacMan.ticks >= 3240) {
                 phase = 0;
-            } else if (systemTime >= 34000) {
+            } else if (PacMan.ticks >= 2040) {
                 phase = 1;
-            } else if (systemTime >= 27000) {
+            } else if (PacMan.ticks >= 1620) {
                 phase = 0;
-            } else if (systemTime > 7000) {
+            } else if (PacMan.ticks >= 420) {
                 phase = 1;
             }
         }
@@ -559,7 +547,7 @@ public class Ghost {
     public void startFear() {
         fear = true;
         blink = false;
-        time = System.currentTimeMillis();
+        blinkStartTicks = PacMan.ticks;
     }
 
     public Rectangle getBounds() {

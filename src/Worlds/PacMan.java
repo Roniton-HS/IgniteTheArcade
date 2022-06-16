@@ -1,12 +1,9 @@
 package Worlds;
 
-import Input.ImageLoader;
-import Input.KeyHandler;
 import PacMan.*;
 import Main.Game;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,6 +17,8 @@ public class PacMan extends Worlds {
     static public final int width = 19;
     static public final int height = 25;
     private int hp = 3;
+
+    public static int ticks = 0;
 
     static public int getBlockSize() {
         return blockSize;
@@ -82,7 +81,9 @@ public class PacMan extends Worlds {
         ghosts.set(1, new Ghost(139 + 10 * blockSize, 10 + 13 * blockSize, 2, game));
         ghosts.set(2, new Ghost(139 + 8 * blockSize, 10 + 14 * blockSize, 3, game));
         ghosts.set(3, new Ghost(139 + 10 * blockSize, 10 + 12 * blockSize, 4, game));
-        player.direction = 0;
+        player = new Player(139 + 9 * blockSize, 10 + 20 * blockSize, game);
+        gamePaused = true;
+        setPoints();
     }
 
     private void resetGame() {
@@ -102,19 +103,14 @@ public class PacMan extends Worlds {
             if (System.currentTimeMillis() - gameOverTime > 3000) {
                 resetGame();
             }
-        } else if (gamePaused) {
-            if (game.getKeyHandler().w || game.getKeyHandler().a || game.getKeyHandler().s || game.getKeyHandler().d ||
-                    game.getKeyHandler().up || game.getKeyHandler().left || game.getKeyHandler().down || game.getKeyHandler().right) {
-                gamePaused = false;
-            }
-        } else {
+        } else if (!gamePaused) {
             checkPoints();
             checkPowerUp();
             player.tick();
             tickGhosts();
             teleport();
         }
-
+        ticks++;
     }
 
     public void input() {
@@ -202,7 +198,7 @@ public class PacMan extends Worlds {
 
         //hp
         for (int i = 0; i < hp; i++) {
-            g.drawImage(player.image1, 10 + i*36,45,null);
+            g.drawImage(player.image1, 10 + i * 36, 45, null);
         }
     }
 
