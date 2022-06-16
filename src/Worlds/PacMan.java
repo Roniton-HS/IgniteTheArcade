@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PacMan extends Worlds {
 
@@ -316,6 +317,15 @@ public class PacMan extends Worlds {
             points.add(new Rectangle(194 + (9 + i) * blockSize, 65 + 6 * blockSize, 5, 5));
         }
 
+        int randomIndex = ThreadLocalRandom.current().nextInt(0, points.size() + 1);
+        int randomType = ThreadLocalRandom.current().nextInt(0, 7 + 1);
+        setFruit(randomIndex, randomType);
+
+    }
+
+    private void setFruit(int i, int type) {
+        fruits.add(new Fruit((int) points.get(i).getX() - 13, (int) points.get(i).getY() - 13, type));
+        points.remove(i);
     }
 
     private void renderPoints(Graphics g) {
