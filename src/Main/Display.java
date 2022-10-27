@@ -12,8 +12,8 @@ public class Display {
     private Canvas canvas; //Canvas
 
     private final String title; //Title of the game
-    private final int width;
-    private final int height; //Size of the game
+    private int width;
+    private int height; //Size of the game
 
     /**
      * Constructor
@@ -50,9 +50,13 @@ public class Display {
 
         frame.add(canvas);
         frame.pack();
-
         canvas.addMouseListener(new MouseHandler());
     }
+
+    public void resize(int width, int height){
+        frame.resize(width, height);
+    }
+
 
     /**
      * @return canvas

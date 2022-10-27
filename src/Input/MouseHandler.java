@@ -6,6 +6,8 @@ import java.awt.event.MouseListener;
 public class MouseHandler implements MouseListener{
     private static int clickX = 10000;
     private static int clickY = 10000;
+    private static int lClickX = 10000;
+    private static int lClickY = 10000;
 
     public static int getClickX(){
         return clickX;
@@ -18,6 +20,17 @@ public class MouseHandler implements MouseListener{
     public static void reset(){
         clickX = 10000;
         clickY = 10000;
+        lClickX = 10000;
+        lClickY = 10000;
+    }
+
+    public static int getlClickX() {
+        return lClickX;
+    }
+
+
+    public static int getlClickY() {
+        return lClickY;
     }
 
     @Override
@@ -27,8 +40,15 @@ public class MouseHandler implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e){
-        clickX = e.getX();
-        clickY = e.getY();
+        if(e.getButton() == 1){
+            clickX = e.getX();
+            clickY = e.getY();
+        }
+        if(e.getButton() == 3){
+            lClickX = e.getX();
+            lClickY = e.getY();
+            System.out.println(lClickX + " " + lClickY);
+        }
     }
 
     @Override

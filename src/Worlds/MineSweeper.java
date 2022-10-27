@@ -15,7 +15,6 @@ public class MineSweeper extends Worlds {
     int blockSize;
     int winCount;
     int mapSize;
-    MouseHandler mouseHandler = new MouseHandler();
     int[][] map;
     int[][] clicked;
     public static Font numFont;
@@ -52,42 +51,49 @@ public class MineSweeper extends Worlds {
     }
 
     private void input() {
-        int clickX = mouseHandler.getClickX() / blockSize;
-        int clickY = mouseHandler.getClickY() / blockSize;
+        int clickX = MouseHandler.getClickX() / blockSize;
+        int clickY = MouseHandler.getClickY() / blockSize;
 
         if (!gameLost && !gameWon) {
             if (clickX < clicked.length && clickY < clicked.length) { //in bounds?
 
                 switch (clicked[clickX][clickY]) {
                     case 0 -> {
-                        if (game.getKeyHandler().space) { //mark
-                            clicked[clickX][clickY] = 2;
-                        } else if (map[clickX][clickY] == 9) { //clicked bomb
-                            if(firstClick){
+                        if (map[clickX][clickY] == 9) { //clicked bomb
+                            if (firstClick) {
                                 reset();
                                 return;
                             }
                             clicked[clickX][clickY] = 1;
                             bomb();
                         } else { //clicked free
-                            if(map[clickX][clickY] != 0 && firstClick){
-                                    reset();
-                                    return;
+                            if (map[clickX][clickY] != 0 && firstClick) {
+                                reset();
+                                return;
                             }
                             reveal(clickX, clickY);
                         }
                     }
                     case 1 -> {
+
                     }
                     case 2 -> {
-                        if (game.getKeyHandler().space) { //remove mark
-                            clicked[clickX][clickY] = 0;
-                        }
+                        //nothing
                     }
                 }
                 firstClick = false;
             }
-        } else{
+            int lClickX = MouseHandler.getlClickX() / blockSize;
+            int lClickY = MouseHandler.getlClickY() / blockSize;
+            if (lClickX < clicked.length && lClickY < clicked.length) {
+                if(clicked[lClickX][lClickY] == 2){
+                    clicked[lClickX][lClickY] = 0;
+                }else {
+                    clicked[lClickX][lClickY] = 2;
+                }
+            }
+
+        } else {
             for (int i = 0; i < mapSize; i++) {
                 for (int j = 0; j < mapSize; j++) {
                     if (map[j][i] == 9) {
@@ -100,7 +106,7 @@ public class MineSweeper extends Worlds {
             }
 
         }
-        mouseHandler.reset();
+        MouseHandler.reset();
     }
 
     private void bomb() {

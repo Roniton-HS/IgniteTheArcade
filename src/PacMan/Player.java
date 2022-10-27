@@ -1,96 +1,58 @@
 package PacMan;
 
 import Input.ImageLoader;
+import Main.Game;
+import Worlds.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import Main.Game;
-import Worlds.PacMan;
-
 import static Worlds.PacMan.pixelFont;
 
 public class Player {
-
+    //general
     Game game;
     private int x;
     private int y;
-
-    public int direction, nextDirection;
     int width = 38;
     int height = 38;
-    private final BufferedImage image0 = ImageLoader.loadImage("/PacMan3.png");
-    public final BufferedImage image1 = ImageLoader.loadImage("/PacMan1.png");
-    private final BufferedImage image2 = ImageLoader.loadImage("/PacMan2.png");
+
+    //movement
+    public int direction, nextDirection;
+
+    //graphical
+    private final BufferedImage image0 = ImageLoader.loadImage("/sprites/player/PacMan3.png");
+    public final BufferedImage image1 = ImageLoader.loadImage("/sprites/player/PacMan1.png");
+    private final BufferedImage image2 = ImageLoader.loadImage("/sprites/player/PacMan2.png");
     private BufferedImage usedImage0, usedImage1, usedImage2;
     private int animationCount = 0;
     private int animationDelay = 0;
-
     private int pointsToShow;
     private boolean showPoints;
     private long displayTimer;
 
+    /*
+    ====================================================================================================================
+    Init Methods
+    ====================================================================================================================
+     */
     public Player(int x, int y, Game game) {
         this.game = game;
         this.x = x;
         this.y = y;
     }
 
+
+    /*
+    ====================================================================================================================
+    game logic
+    ====================================================================================================================
+    */
     public void tick() {
         input();
         move();
         tickAnimation();
-    }
-
-    public void render(Graphics g) {
-        animation(g);
-        renderScore(g);
-    }
-
-    public void setCords(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    private void animation(Graphics g) {
-        if (direction == 0) {
-            g.drawImage(image0, x + 3, y + 3, 32, 32, null);
-        } else {
-            switch (animationCount) {
-                case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
-                case 1, 3 -> g.drawImage(usedImage1, x + 3, y + 3, 32, 32, null);
-                case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
-
-            }
-        }
-    }
-
-    private void tickAnimation() {
-        if (animationDelay >= 5 && direction != 0) {
-            animationCount++;
-            if (animationCount > 3) {
-                animationCount = 0;
-            }
-            animationDelay = 0;
-        } else {
-            animationDelay++;
-        }
-    }
-
-    public static BufferedImage rotateImage(BufferedImage imageToRotate, int grad) {
-        int widthOfImage = imageToRotate.getWidth();
-        int heightOfImage = imageToRotate.getHeight();
-        int typeOfImage = imageToRotate.getType();
-
-        BufferedImage newImageFromBuffer = new BufferedImage(widthOfImage, heightOfImage, typeOfImage);
-
-        Graphics2D graphics2D = newImageFromBuffer.createGraphics();
-
-        graphics2D.rotate(Math.toRadians(grad), widthOfImage / 2, heightOfImage / 2);
-        graphics2D.drawImage(imageToRotate, null, 0, 0);
-
-        return newImageFromBuffer;
     }
 
     private void input() {
@@ -140,6 +102,12 @@ public class Player {
         }
     }
 
+
+    /*
+    ====================================================================================================================
+    movement
+    ====================================================================================================================
+    */
     public void move() {
         ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
         for (Rectangle bound : bounds) {
@@ -180,6 +148,42 @@ public class Player {
         };
     }
 
+
+    /*
+    ====================================================================================================================
+    render
+    ====================================================================================================================
+    */
+    public void render(Graphics g) {
+        animation(g);
+        renderScore(g);
+
+    }
+
+    private void animation(Graphics g) {
+        if (direction == 0) {
+            g.drawImage(image0, x + 3, y + 3, 32, 32, null);
+        } else {
+            switch (animationCount) {
+                case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
+                case 1, 3 -> g.drawImage(usedImage1, x + 3, y + 3, 32, 32, null);
+                case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
+            }
+        }
+    }
+
+    private void tickAnimation() {
+        if (animationDelay >= 5 && direction != 0) {
+            animationCount++;
+            if (animationCount > 3) {
+                animationCount = 0;
+            }
+            animationDelay = 0;
+        } else {
+            animationDelay++;
+        }
+    }
+
     public void displayScore(int score) {
         pointsToShow = score;
         showPoints = true;
@@ -188,6 +192,7 @@ public class Player {
 
     public void renderScore(Graphics g) {
         if (showPoints) {
+            g.setColor(Color.WHITE);
             g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 10.0F));
             g.drawString("" + pointsToShow, x + 32, y);
             if (System.currentTimeMillis() - displayTimer > 500) {
@@ -196,6 +201,27 @@ public class Player {
         }
     }
 
+    public static BufferedImage rotateImage(BufferedImage imageToRotate, int grad) {
+        int widthOfImage = imageToRotate.getWidth();
+        int heightOfImage = imageToRotate.getHeight();
+        int typeOfImage = imageToRotate.getType();
+
+        BufferedImage newImageFromBuffer = new BufferedImage(widthOfImage, heightOfImage, typeOfImage);
+
+        Graphics2D graphics2D = newImageFromBuffer.createGraphics();
+
+        graphics2D.rotate(Math.toRadians(grad), widthOfImage / 2, heightOfImage / 2);
+        graphics2D.drawImage(imageToRotate, null, 0, 0);
+
+        return newImageFromBuffer;
+    }
+
+
+    /*
+    ====================================================================================================================
+    getter / setter
+    ====================================================================================================================
+    */
     public int getX() {
         return x;
     }
@@ -206,5 +232,10 @@ public class Player {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public void setCords(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

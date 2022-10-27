@@ -1,7 +1,7 @@
 package Main;
 
 import Input.KeyHandler;
-import Worlds.World1;
+import Worlds.Menu;
 import Worlds.Worlds;
 
 import java.awt.*;
@@ -32,6 +32,10 @@ public class Game{
         init();
     }
 
+    public Display getDisplay() {
+        return display;
+    }
+
     /**
      * initializes:
      * Input.KeyHandler
@@ -42,7 +46,7 @@ public class Game{
         keyHandler = new KeyHandler();
         display = new Display(title, width, height); //creates Main.Main.Main.Main.Main.Display
         display.getFrame().addKeyListener(keyHandler); //adds KeyListener
-        World1 menuWorld = new World1(this);
+        Menu menuWorld = new Menu(this);
         Worlds.setWorld(menuWorld);
     }
 
