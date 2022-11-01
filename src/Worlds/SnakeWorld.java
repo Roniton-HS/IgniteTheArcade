@@ -14,7 +14,7 @@ public class SnakeWorld extends Worlds {
 
     boolean startScreen = false;
 
-    private BufferedImage snakeBody = ImageLoader.loadImage("/SnakeBody.png");
+    private BufferedImage snakeBody = ImageLoader.loadImage("/icon.png");
 
     Snake snake = new Snake(14 * 32, 14 * 32, game);
     Apple apple = new Apple(8 * 32, 10 * 32);

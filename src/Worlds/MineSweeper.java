@@ -3,7 +3,6 @@ package Worlds;
 import Input.ImageLoader;
 import Input.MouseHandler;
 import Main.Game;
-import Worlds.Worlds;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -264,7 +263,7 @@ public class MineSweeper extends Worlds {
     private final BufferedImage flag = ImageLoader.loadImage("/minesweeper/flag.png");
 
     private void loadFont() {
-        InputStream is = getClass().getResourceAsStream("/minesweeper/Recursive Bold.ttf");
+        InputStream is = getClass().getResourceAsStream("/fonts/Recursive Bold.ttf");
         try {
             assert is != null;
             numFont = Font.createFont(Font.TRUETYPE_FONT, is);

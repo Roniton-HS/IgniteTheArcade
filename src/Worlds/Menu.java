@@ -7,8 +7,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static Worlds.MineSweeper.numFont;
-
 public class Menu extends Worlds {
     Font font;
     /**
@@ -38,7 +36,7 @@ public class Menu extends Worlds {
     }
 
     private void loadFont() {
-        InputStream is = getClass().getResourceAsStream("/minesweeper/Recursive Bold.ttf");
+        InputStream is = getClass().getResourceAsStream("/fonts/Recursive Bold.ttf");
         try {
             assert is != null;
             font = Font.createFont(Font.TRUETYPE_FONT, is);
