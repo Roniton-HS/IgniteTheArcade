@@ -24,7 +24,7 @@ PacMan:
 `space` start/pause game  
 `up` `down` `left` `right` to move  
   
-Snake:
+Snake:  
 `up` `down` `left` `right` to move  
   
 Minesweeper:  
