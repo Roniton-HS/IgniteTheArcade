@@ -1,7 +1,7 @@
 # ![](https://github.com/Roniton-HS/IgniteTheArcade/blob/main/res/icon.png) IgniteTheArcade ![](https://github.com/Roniton-HS/IgniteTheArcade/blob/main/res/icon.png)
 
 ## About
-Collection of retro mini games coded in Java
+Collection of mini games coded in Java
 
 ## Games
 PacMan  
