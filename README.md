@@ -12,8 +12,12 @@ Minesweeper
 [Download](https://github.com/Roniton-HS/IgniteTheArcade/raw/main/versions/IgniteTheArcade.jar) latest version  
 
 ## Pictures
+PacMan:  
+![](https://github.com/Roniton-HS/IgniteTheArcade/blob/main/res/gitHub/pacman.PNG)  
+  
+Minesweeper:  
+![](https://github.com/Roniton-HS/IgniteTheArcade/blob/main/res/gitHub/minesweeper.PNG)
 
-![]
 
 ## Working on
 MainMenu  
