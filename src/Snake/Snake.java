@@ -2,7 +2,6 @@ package Snake;
 
 import Main.Game;
 import Worlds.Worlds;
-import Worlds.SnakeWorld;
 
 import java.awt.*;
 import java.util.ArrayList;

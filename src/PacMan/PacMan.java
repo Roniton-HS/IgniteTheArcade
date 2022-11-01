@@ -1,9 +1,10 @@
-package Worlds;
+package PacMan;
 
 import Main.Game;
 import PacMan.Fruit;
 import PacMan.Ghost;
 import PacMan.Player;
+import Worlds.Worlds;
 
 import java.awt.*;
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class PacMan extends Worlds {
      */
     public PacMan(Game game) {
         super(game);
+        game.getDisplay().resize(19 * 38 + 17, 27 * 38 + 2);
         loadFont();
         player = new Player(9 * blockSize, 20 * blockSize, game);
         ghosts.add(new Ghost(8 * blockSize, 11 * blockSize, 1, game));

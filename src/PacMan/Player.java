@@ -2,13 +2,12 @@ package PacMan;
 
 import Input.ImageLoader;
 import Main.Game;
-import Worlds.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static Worlds.PacMan.pixelFont;
+import static PacMan.PacMan.pixelFont;
 
 public class Player {
     //general

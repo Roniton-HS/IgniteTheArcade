@@ -2,7 +2,6 @@ package PacMan;
 
 import Input.ImageLoader;
 import Main.Game;
-import Worlds.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

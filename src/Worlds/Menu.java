@@ -2,6 +2,9 @@ package Worlds;
 
 import Input.MouseHandler;
 import Main.Game;
+import Minesweeper.MineSweeper;
+import PacMan.PacMan;
+import Snake.SnakeWorld;
 
 import java.awt.*;
 import java.io.IOException;
@@ -14,13 +17,13 @@ public class Menu extends Worlds {
      */
     public Menu(Game game) {
         super(game);
+        game.getDisplay().resize(1000,1000);
         loadFont();
     }
 
     @Override
     public void tick() {
         if (game.getKeyHandler().p) {
-            game.getDisplay().resize(19 * 38 + 17, 27 * 38 + 2);
             PacMan pacMan = new PacMan(game);
             Worlds.setWorld(pacMan);
         }

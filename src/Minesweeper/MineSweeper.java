@@ -1,8 +1,9 @@
-package Worlds;
+package Minesweeper;
 
 import Input.ImageLoader;
 import Input.MouseHandler;
 import Main.Game;
+import Worlds.Worlds;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

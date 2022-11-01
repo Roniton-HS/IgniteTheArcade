@@ -1,10 +1,11 @@
-package Worlds;
+package Snake;
 
 import Input.ImageLoader;
 import Main.Game;
 import Main.TextPrinter;
 import Snake.Snake;
 import Snake.Apple;
+import Worlds.Worlds;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

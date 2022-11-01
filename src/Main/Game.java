@@ -105,6 +105,7 @@ public class Game{
      */
     private void tick(){
         keyHandler.tick();
+        input();
         if(Worlds.getWorld() != null){
             Worlds.getWorld().tick();
         }
@@ -132,6 +133,13 @@ public class Game{
 
         bs.show();
         g.dispose();
+    }
+
+    private void input(){
+        if(keyHandler.esc){
+            Menu menuWorld = new Menu(this);
+            Worlds.setWorld(menuWorld);
+        }
     }
 
     public KeyHandler getKeyHandler(){
