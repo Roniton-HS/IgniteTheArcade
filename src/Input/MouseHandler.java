@@ -47,7 +47,6 @@ public class MouseHandler implements MouseListener{
         if(e.getButton() == 3){
             lClickX = e.getX();
             lClickY = e.getY();
-            System.out.println(lClickX + " " + lClickY);
         }
     }
 
