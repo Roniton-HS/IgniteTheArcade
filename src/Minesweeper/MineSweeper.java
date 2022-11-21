@@ -85,7 +85,7 @@ public class MineSweeper extends Worlds {
             }
             int lClickX = MouseHandler.getlClickX() / blockSize;
             int lClickY = MouseHandler.getlClickY() / blockSize;
-            if (lClickX < clicked.length && lClickY < clicked.length) {
+            if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
                 if(clicked[lClickX][lClickY] == 2){
                     clicked[lClickX][lClickY] = 0;
                 }else {
