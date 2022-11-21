@@ -1,9 +1,6 @@
 package PacMan;
 
 import Main.Game;
-import PacMan.Fruit;
-import PacMan.Ghost;
-import PacMan.Player;
 import Worlds.Worlds;
 
 import java.awt.*;
@@ -30,7 +27,7 @@ public class PacMan extends Worlds {
 
     //pause game
     static public boolean gamePaused = false;
-    boolean escPressed = false;
+    boolean spacePressed = false;
     boolean gameOver = false;
     private long gameOverTime;
 
@@ -289,11 +286,11 @@ public class PacMan extends Worlds {
      * handles keyboard input
      */
     public void input() {
-        if (game.getKeyHandler().esc && !escPressed) {
+        if (game.getKeyHandler().space && !spacePressed) {
             gamePaused = !gamePaused;
-            escPressed = true;
-        } else if (!game.getKeyHandler().esc) {
-            escPressed = false;
+            spacePressed = true;
+        } else if (!game.getKeyHandler().space) {
+            spacePressed = false;
         }
     }
 
