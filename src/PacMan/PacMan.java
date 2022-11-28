@@ -418,6 +418,7 @@ public class PacMan extends Worlds {
                 for (Ghost o : ghosts) {
                     o.startFear();
                 }
+                ghostsEaten = 0;
 
             }
         }

@@ -86,9 +86,9 @@ public class MineSweeper extends Worlds {
             int lClickX = MouseHandler.getlClickX() / blockSize;
             int lClickY = MouseHandler.getlClickY() / blockSize;
             if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
-                if(clicked[lClickX][lClickY] == 2){
+                if (clicked[lClickX][lClickY] == 2) {
                     clicked[lClickX][lClickY] = 0;
-                }else {
+                } else {
                     clicked[lClickX][lClickY] = 2;
                 }
             }
@@ -293,8 +293,7 @@ public class MineSweeper extends Worlds {
                     g.drawImage(bomb, j * blockSize + (int) (blockSize / 1.3 / 5.3),
                             i * blockSize + (int) (blockSize / 1.3 / 5.3),
                             (int) (blockSize / 1.3), (int) (blockSize / 1.3), null);
-                } else if (entry == 0) {
-                } else {
+                } else if (entry != 0) {
                     g.setColor(Color.BLACK);
                     String value = String.valueOf(entry);
                     g.drawString(value, xOff + j * blockSize, yOff + i * blockSize);
@@ -303,3 +302,4 @@ public class MineSweeper extends Worlds {
         }
     }
 }
+
