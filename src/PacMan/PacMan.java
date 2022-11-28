@@ -275,10 +275,18 @@ public class PacMan extends Worlds {
     /**
      * tick all the ghosts
      */
+    boolean slow = false;
     private void tickGhosts() {
         for (Ghost o : ghosts) {
-            o.tick();
+            if(o.fear){
+                if(!slow){
+                    o.tick();
+                }
+            }else {
+                o.tick();
+            }
         }
+        slow = !slow;
         checkGhosts();
     }
 
