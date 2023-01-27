@@ -8,9 +8,6 @@ PacMan
 Snake  
 Minesweeper
 
-## Download
-[Download](https://github.com/Roniton-HS/IgniteTheArcade/raw/main/versions/IgniteTheArcade.jar) latest version  
-
 ## Controls
 General:  
 `esc` return to main menu  
