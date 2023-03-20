@@ -34,7 +34,6 @@ local.properties
 # Intellij
 ######################
 /idea
-.idea
 .idea\workspace.xml
 .idea/
 .idea/**
