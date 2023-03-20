@@ -38,6 +38,8 @@ local.properties
 .idea\workspace.xml
 .idea/
 .idea/**
+.out
+/out
 *.iml
 *.iws
 *.ipr
