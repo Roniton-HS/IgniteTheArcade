@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class MineSweeper extends Worlds {
+public class Minesweeper extends Worlds {
     int blockSize;
     int winCount;
     int mapSize;
@@ -25,7 +25,7 @@ public class MineSweeper extends Worlds {
     /**
      * Constructor
      */
-    public MineSweeper(Game game, int blockSize, int mapSize) {
+    public Minesweeper(Game game, int blockSize, int mapSize) {
         super(game);
         this.blockSize = blockSize;
         this.mapSize = mapSize;
