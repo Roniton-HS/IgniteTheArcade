@@ -1,6 +1,7 @@
 package Worlds;
 
 import Input.ImageLoader;
+import Input.MouseHandler;
 import Main.Game;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
@@ -43,6 +44,7 @@ public class Menu extends Worlds {
 
     @Override
     public void tick() {
+        MouseHandler.reset();
         if (game.getKeyHandler().w) {
             player.y = (int) player.getY() - 2;
         }
@@ -121,8 +123,6 @@ public class Menu extends Worlds {
         g.drawString("PacMan", (int) pacMan.getX() - 20, (int) pacMan.getY() - 10);
         g.drawString("Minesweeper", (int) minesweeper.getX() - 75, (int) minesweeper.getY() - 10);
         g.drawString("Snake", (int) snake.getX() - 10, (int) snake.getY() - 10);
-
-
 
         g.setFont(font.deriveFont(font.getSize() * 20.0F));
         for (Rectangle r : levels) {
