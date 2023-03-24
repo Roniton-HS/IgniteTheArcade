@@ -45,6 +45,7 @@ public class ChessWorld extends Worlds {
                 }
                 g.fillRect(100+(j*fieldSize),100+(i*fieldSize), fieldSize, fieldSize);
             }
+            white = !white;
         }
     }
 }

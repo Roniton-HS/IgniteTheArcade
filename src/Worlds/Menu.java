@@ -1,5 +1,6 @@
 package Worlds;
 
+import Chess.ChessWorld;
 import Input.ImageLoader;
 import Input.MouseHandler;
 import Main.Game;
@@ -92,6 +93,11 @@ public class Menu extends Worlds {
 
         if (game.getKeyHandler().e) {
             checkGame();
+        }
+
+        if (game.getKeyHandler().c){
+            ChessWorld chessWorld = new ChessWorld(game);
+            Worlds.setWorld(chessWorld);
         }
     }
 
