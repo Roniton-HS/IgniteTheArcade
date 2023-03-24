@@ -17,7 +17,7 @@ public class Menu extends Worlds {
     Font font;
     int portalAnimation = 0;
     int portalAnimationDelay = 0;
-    Rectangle player = new Rectangle(0, 200, 52, 60);
+    Rectangle player = new Rectangle(500-26, 200, 52, 60);
 
     private final BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
     private final BufferedImage portal1 = ImageLoader.loadImage("/menu/portal1.png");
@@ -59,11 +59,11 @@ public class Menu extends Worlds {
     public void tick() {
         MouseHandler.reset();
         if (game.getKeyHandler().a) {
-            player.x = (int) player.getX() - 4;
+            player.x = (int) player.getX() - 7;
             moving = true;
         }
         if (game.getKeyHandler().d) {
-            player.x = (int) player.getX() + 4;
+            player.x = (int) player.getX() + 7;
             moving = true;
         }
         if (!game.getKeyHandler().d && !game.getKeyHandler().a || game.getKeyHandler().a && game.getKeyHandler().d) {
