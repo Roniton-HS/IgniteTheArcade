@@ -17,25 +17,31 @@ public class Menu extends Worlds {
     Font font;
     int portalAnimation = 0;
     int portalAnimationDelay = 0;
-    Rectangle player = new Rectangle(0, 0, 52, 60);
+    Rectangle player = new Rectangle(0, 200, 52, 60);
 
-    BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
-    BufferedImage portal1 = ImageLoader.loadImage("/menu/portal1.png");
-    BufferedImage portal2 = ImageLoader.loadImage("/menu/portal2.png");
-    BufferedImage portal3 = ImageLoader.loadImage("/menu/portal3.png");
-    BufferedImage portal4 = ImageLoader.loadImage("/menu/portal4.png");
-    BufferedImage portal = portal0;
-    BufferedImage head0 = ImageLoader.loadImage("/menu/head0.png");
-    BufferedImage head1 = ImageLoader.loadImage("/menu/head1.png");
-    BufferedImage head2 = ImageLoader.loadImage("/menu/head2.png");
-    BufferedImage head3 = ImageLoader.loadImage("/menu/head3.png");
-    BufferedImage legs = ImageLoader.loadImage("/menu/legs.png");
-    BufferedImage legsLeft = ImageLoader.loadImage("/menu/legLeft.png");
-    BufferedImage legRight = ImageLoader.loadImage("/menu/legRight.png");
+    private final BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
+    private final BufferedImage portal1 = ImageLoader.loadImage("/menu/portal1.png");
+    private final BufferedImage portal2 = ImageLoader.loadImage("/menu/portal2.png");
+    private final BufferedImage portal3 = ImageLoader.loadImage("/menu/portal3.png");
+    private final BufferedImage portal4 = ImageLoader.loadImage("/menu/portal4.png");
+    private BufferedImage portal = portal0;
+    private final BufferedImage head0 = ImageLoader.loadImage("/menu/head0.png");
+    private final BufferedImage head1 = ImageLoader.loadImage("/menu/head1.png");
+    private final BufferedImage head2 = ImageLoader.loadImage("/menu/head2.png");
+    private final BufferedImage head3 = ImageLoader.loadImage("/menu/head3.png");
+    private BufferedImage head = head0;
+    private final BufferedImage legsIdle = ImageLoader.loadImage("/menu/legs.png");
+    private final BufferedImage legsLeft = ImageLoader.loadImage("/menu/legLeft.png");
+    private final BufferedImage legRight = ImageLoader.loadImage("/menu/legRight.png");
+    private BufferedImage legs = legsIdle;
     Rectangle pacMan = new Rectangle(50, 200, 64, 64);
     Rectangle minesweeper = new Rectangle(450, 200, 64, 64);
     Rectangle snake = new Rectangle(850, 200, 64, 64);
     ArrayList<Rectangle> levels = new ArrayList<>();
+    private int flameAnimation;
+    private int flameAnimationDelay;
+    private boolean moving = false;
+    private int legAnimation;
 
     /**
      * Constructor
@@ -52,23 +58,22 @@ public class Menu extends Worlds {
     @Override
     public void tick() {
         MouseHandler.reset();
-        if (game.getKeyHandler().w) {
-            player.y = (int) player.getY() - 2;
-        }
         if (game.getKeyHandler().a) {
-            player.x = (int) player.getX() - 2;
-        }
-        if (game.getKeyHandler().s) {
-            player.y = (int) player.getY() + 2;
+            player.x = (int) player.getX() - 4;
+            moving = true;
         }
         if (game.getKeyHandler().d) {
-            player.x = (int) player.getX() + 2;
+            player.x = (int) player.getX() + 4;
+            moving = true;
+        }
+        if (!game.getKeyHandler().d && !game.getKeyHandler().a || game.getKeyHandler().a && game.getKeyHandler().d) {
+            moving = false;
         }
 
         if (game.getKeyHandler().e) {
             checkGame();
         }
-
+        playerAnimation();
         portalAnimation();
     }
 
@@ -122,14 +127,13 @@ public class Menu extends Worlds {
         g.drawImage(portal, (int) minesweeper.getX(), (int) minesweeper.getY(), (int) minesweeper.getWidth(), (int) minesweeper.getHeight(), null);
         g.drawImage(portal, (int) snake.getX(), (int) snake.getY(), (int) snake.getWidth(), (int) snake.getHeight(), null);
 
-        renderPlayer(g);
-
         g.setColor(Color.BLACK);
         g.setFont(font.deriveFont(font.getSize() * 40.0F));
-        g.drawString("PacMan", (int) pacMan.getX() - 20, (int) pacMan.getY() - 10);
-        g.drawString("Minesweeper", (int) minesweeper.getX() - 75, (int) minesweeper.getY() - 10);
-        g.drawString("Snake", (int) snake.getX() - 10, (int) snake.getY() - 10);
-
+        g.drawString("PacMan", (int) pacMan.getX() - 20, (int) pacMan.getY() - 30);
+        g.drawString("Minesweeper", (int) minesweeper.getX() - 75, (int) minesweeper.getY() - 30);
+        g.drawString("Snake", (int) snake.getX() - 10, (int) snake.getY() - 30);
+        g.drawImage(head, (int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight(), null);
+        g.drawImage(legs, (int) player.getX() + 4, (int) player.getY() + 56, 44, 16, null);
         g.setFont(font.deriveFont(font.getSize() * 20.0F));
         for (Rectangle r : levels) {
             if (player.getBounds().intersects(r.getBounds())) {
@@ -138,8 +142,37 @@ public class Menu extends Worlds {
         }
     }
 
-    public void renderPlayer(Graphics g) {
-        g.drawImage(head0, (int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight(), null);
-        g.drawImage(legs, (int) player.getX()+4, (int) player.getY() + 56, 44, 16, null);
+    public void playerAnimation() {
+        switch (flameAnimation) {
+            default -> head = head0;
+            case 1 -> head = head1;
+            case 2 -> head = head2;
+            case 3 -> head = head3;
+        }
+        if (flameAnimation > 3) {
+            flameAnimation = 0;
+        } else {
+            if (flameAnimationDelay > 5) {
+                flameAnimation++;
+                flameAnimationDelay = 0;
+            } else {
+                flameAnimationDelay++;
+            }
+
+        }
+
+        if (moving) {
+            switch (legAnimation) {
+                case 0, 1, 2, 3, 4 -> legs = legRight;
+                case 5, 6, 7, 8, 9 -> legs = legsLeft;
+            }
+            if (legAnimation > 9) {
+                legAnimation = 0;
+            } else {
+                legAnimation++;
+            }
+        } else {
+            legs = legsIdle;
+        }
     }
 }
