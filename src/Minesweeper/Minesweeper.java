@@ -164,7 +164,7 @@ public class Minesweeper extends Worlds {
     private void initBombs() {
         Random r = new Random();
         int ranX, ranY;
-        int bombs = mapSize * mapSize / 10;
+        int bombs = mapSize * mapSize / 6;
         for (int i = 0; i < bombs; i++) {
             ranX = r.nextInt(map.length);
             ranY = r.nextInt(map.length);
