@@ -36,7 +36,7 @@ public class Display {
         frame = new JFrame(title);
         frame.setSize(width, height);
         Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
-        frame.setIconImage(icon);//Icon
+        frame.setIconImage(icon);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
