@@ -17,7 +17,7 @@ public class Menu extends Worlds {
     Font font;
     int portalAnimation = 0;
     int portalAnimationDelay = 0;
-    Rectangle player = new Rectangle(0, 0, 50, 50);
+    Rectangle player = new Rectangle(0, 0, 52, 60);
 
     BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
     BufferedImage portal1 = ImageLoader.loadImage("/menu/portal1.png");
@@ -25,9 +25,16 @@ public class Menu extends Worlds {
     BufferedImage portal3 = ImageLoader.loadImage("/menu/portal3.png");
     BufferedImage portal4 = ImageLoader.loadImage("/menu/portal4.png");
     BufferedImage portal = portal0;
-    Rectangle pacMan = new Rectangle(50, 200, 100, 100);
-    Rectangle minesweeper = new Rectangle(450, 200, 100, 100);
-    Rectangle snake = new Rectangle(850, 200, 100, 100);
+    BufferedImage head0 = ImageLoader.loadImage("/menu/head0.png");
+    BufferedImage head1 = ImageLoader.loadImage("/menu/head1.png");
+    BufferedImage head2 = ImageLoader.loadImage("/menu/head2.png");
+    BufferedImage head3 = ImageLoader.loadImage("/menu/head3.png");
+    BufferedImage legs = ImageLoader.loadImage("/menu/legs.png");
+    BufferedImage legsLeft = ImageLoader.loadImage("/menu/legLeft.png");
+    BufferedImage legRight = ImageLoader.loadImage("/menu/legRight.png");
+    Rectangle pacMan = new Rectangle(50, 200, 64, 64);
+    Rectangle minesweeper = new Rectangle(450, 200, 64, 64);
+    Rectangle snake = new Rectangle(850, 200, 64, 64);
     ArrayList<Rectangle> levels = new ArrayList<>();
 
     /**
@@ -115,8 +122,7 @@ public class Menu extends Worlds {
         g.drawImage(portal, (int) minesweeper.getX(), (int) minesweeper.getY(), (int) minesweeper.getWidth(), (int) minesweeper.getHeight(), null);
         g.drawImage(portal, (int) snake.getX(), (int) snake.getY(), (int) snake.getWidth(), (int) snake.getHeight(), null);
 
-        g.setColor(Color.RED);
-        g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+        renderPlayer(g);
 
         g.setColor(Color.BLACK);
         g.setFont(font.deriveFont(font.getSize() * 40.0F));
@@ -130,5 +136,10 @@ public class Menu extends Worlds {
                 g.drawString("[E] to Enter", (int) player.getX() - 20, (int) player.getY() - 5);
             }
         }
+    }
+
+    public void renderPlayer(Graphics g) {
+        g.drawImage(head0, (int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight(), null);
+        g.drawImage(legs, (int) player.getX()+4, (int) player.getY() + 56, 44, 16, null);
     }
 }
