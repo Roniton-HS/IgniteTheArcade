@@ -13,19 +13,18 @@ public class Snake {
     int directions;
     public int appleCounter;
     public int start;
-    public static int blockSize = 32;
-
-
+    public ArrayList<Rectangle> tiles = new ArrayList();
     public boolean appleCollected = false;
     Game game;
 
+    /**
+     * Constructor
+     */
     public Snake(int x, int y, Game game) {
         this.x = x;
         this.y = y;
         this.game = game;
     }
-
-    public ArrayList snake = new ArrayList();
 
     public void tick() {
         move();
@@ -33,16 +32,13 @@ public class Snake {
 
     public void render(Graphics g) {
         g.setColor(Color.green);
-
-        for (int i = 0; i < snake.size(); i++) {
-            Rectangle rectangle = (Rectangle) snake.get(i);
-            g.fillRect(rectangle.getBounds().x, rectangle.getBounds().y, rectangle.getBounds().width, rectangle.getBounds().height);
-
+        for (Rectangle r : tiles) {
+            g.fillRect(r.getBounds().x, r.getBounds().y, r.getBounds().width, r.getBounds().height);
         }
     }
 
     public void move() {
-
+        final int TICK_TIMER = 10;
         if ((game.getKeyHandler().w || game.getKeyHandler().up) && directions != 2) {
             directions = 0;
         }
@@ -56,14 +52,14 @@ public class Snake {
             directions = 3;
         }
 
-        if (tick > 10) {
+        if (tick > TICK_TIMER) {
             switch (directions) {
-                case 0 -> y = y - blockSize;
-                case 1 -> x = x - blockSize;
-                case 2 -> y = y + blockSize;
-                case 3 -> x = x + blockSize;
+                case 0 -> y = y - SnakeWorld.BLOCK_SIZE;
+                case 1 -> x = x - SnakeWorld.BLOCK_SIZE;
+                case 2 -> y = y + SnakeWorld.BLOCK_SIZE;
+                case 3 -> x = x + SnakeWorld.BLOCK_SIZE;
             }
-            snake.add(new Rectangle(this.x, this.y, blockSize, blockSize));
+            tiles.add(new Rectangle(this.x, this.y, SnakeWorld.BLOCK_SIZE, SnakeWorld.BLOCK_SIZE));
             tick = 0;
             waitForStart();
         } else {
@@ -74,7 +70,7 @@ public class Snake {
     public void waitForStart() {
         if (start >= 3) {
             if (!appleCollected) {
-                snake.remove(0);
+                tiles.remove(0);
             } else {
                 appleCollected = false;
             }
@@ -85,19 +81,18 @@ public class Snake {
     }
 
     public void die() {
-        Rectangle head = (Rectangle) snake.get(snake.size() - 1);
-
-        for (int i = 0; i < snake.size(); i++) {
-            Rectangle rectangle = (Rectangle) snake.get(i);
-            if (head.getBounds().intersects(rectangle.getBounds()) && i != snake.size() - 1) {
+        Rectangle head = tiles.get(tiles.size() - 1);
+        for (int i = 0; i < tiles.size(); i++) {
+            Rectangle rectangle = tiles.get(i);
+            if (head.getBounds().intersects(rectangle.getBounds()) && i != tiles.size() - 1) {
                 gameStart = false;
                 restart();
             }
         }
-        Rectangle up = new Rectangle(3 * blockSize, 3 * blockSize, 23 * blockSize, 1);
-        Rectangle down = new Rectangle(3 * blockSize, 27 * blockSize, 23 * blockSize, 1);
-        Rectangle left = new Rectangle(3 * blockSize, 3 * blockSize, 1, 23 * blockSize);
-        Rectangle right = new Rectangle(27 * blockSize, 3 * blockSize, 1, 23 * blockSize);
+        Rectangle up = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
+        Rectangle down = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 27 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
+        Rectangle left = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
+        Rectangle right = new Rectangle(27 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
@@ -113,8 +108,7 @@ public class Snake {
     }
 
     public Rectangle getBounds() {
-        Rectangle head = (Rectangle) snake.get(snake.size() - 1);
-        return head;
+        return tiles.get(tiles.size() - 1);
     }
 
 }

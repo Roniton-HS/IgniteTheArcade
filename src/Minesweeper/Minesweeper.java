@@ -2,6 +2,7 @@ package Minesweeper;
 
 import Input.ImageLoader;
 import Input.MouseHandler;
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -27,6 +28,7 @@ public class Minesweeper extends Worlds {
      */
     public Minesweeper(Game game, int blockSize, int mapSize) {
         super(game);
+        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         this.blockSize = blockSize;
         this.mapSize = mapSize;
         map = new int[mapSize][mapSize];
@@ -37,19 +39,24 @@ public class Minesweeper extends Worlds {
         loadFont();
     }
 
-
     @Override
     public void tick() {
         input();
         winCon();
     }
 
+    /**
+     * checks if the game is won
+     */
     private void winCon() {
         if (winCount <= 0) {
             gameWon = true;
         }
     }
 
+    /**
+     * checks mouse and keyboard input
+     */
     private void input() {
         int clickX = MouseHandler.getClickX() / blockSize;
         int clickY = MouseHandler.getClickY() / blockSize;
@@ -83,8 +90,8 @@ public class Minesweeper extends Worlds {
                 }
                 firstClick = false;
             }
-            int lClickX = MouseHandler.getlClickX() / blockSize;
-            int lClickY = MouseHandler.getlClickY() / blockSize;
+            int lClickX = MouseHandler.getLClickX() / blockSize;
+            int lClickY = MouseHandler.getLClickY() / blockSize;
             if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
                 if (clicked[lClickX][lClickY] == 2) {
                     clicked[lClickX][lClickY] = 0;

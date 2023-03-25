@@ -572,6 +572,10 @@ public class Ghost {
         }
     }
 
+    /**
+     * only used for debug
+     */
+    @SuppressWarnings("unused")
     private void renderVector(Graphics g) {
         g.drawLine(this.x + size / 2, this.y + size / 2, targetX + size / 2, targetY + size / 2);
     }
