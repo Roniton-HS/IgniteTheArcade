@@ -12,6 +12,7 @@ public class ChessWorld extends Worlds {
     int fieldSize = 100;
     boolean white = true;
 
+    Pawn pawn = new Pawn(100, 100);
     /**
      * Constructor
      *
@@ -30,7 +31,7 @@ public class ChessWorld extends Worlds {
     @Override
     public void render(Graphics g){
         renderField(fieldSize, g);
-
+        pawn.render(g);
     }
 
     public void renderField(int fieldSize, Graphics g){
@@ -47,5 +48,9 @@ public class ChessWorld extends Worlds {
             }
             white = !white;
         }
+    }
+
+    public void renderFigures(){
+
     }
 }
