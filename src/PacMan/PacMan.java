@@ -413,7 +413,7 @@ public class PacMan extends Worlds {
 
     /**
      * checks PowerUp collision
-     * collects powerUps and sets ghost.fear = true
+     * collects powerUps and sets ghost fear to true
      */
     private void checkPowerUp() {
         if (powerUps.size() == 0) {

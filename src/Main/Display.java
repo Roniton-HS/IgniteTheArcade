@@ -53,8 +53,8 @@ public class Display {
         canvas.addMouseListener(new MouseHandler());
     }
 
-    public void resize(int width, int height){
-        frame.resize(width, height);
+    public void resize(int width, int height) {
+        frame.setSize(width, height);
     }
 
 

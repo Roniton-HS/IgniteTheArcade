@@ -3,7 +3,9 @@ package Worlds;
 import Chess.ChessWorld;
 import Input.ImageLoader;
 import Input.MouseHandler;
+import Main.Constants;
 import Main.Game;
+import Main.GameCamera;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
 import Snake.SnakeWorld;
@@ -15,10 +17,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Menu extends Worlds {
-    Font font;
 
-    //player
-    Rectangle player = new Rectangle(500 - 26, 400, 52, 60);
+    private Font font;
+    private GameCamera gameCamera = new GameCamera();
 
     //portal sprites
     private final BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
@@ -41,15 +42,29 @@ public class Menu extends Worlds {
     private final BufferedImage legRight = ImageLoader.loadImage("/menu/legRight.png");
     private BufferedImage legs = legsIdle;
 
+    //design sprites
+    private final BufferedImage tree = ImageLoader.loadImage("/menu/tree.png");
+
+    //player
+    final int PLAYER_START_X = 474;
+    final int PLAYER_START_Y = 400;
+    final int PLAYER_SIZE = 4;
+    Rectangle player = new Rectangle(PLAYER_START_X, PLAYER_START_Y, head.getWidth() * PLAYER_SIZE, head.getHeight() * PLAYER_SIZE);
+
     //levels
-    Rectangle pacMan = new Rectangle(50, 400, 64, 64);
-    Rectangle minesweeper = new Rectangle(450, 400, 64, 64);
-    Rectangle snake = new Rectangle(850, 400, 64, 64);
+    private final int PACMAN_X = 50;
+    private final int MINESWEEPER_X = 450;
+    private final int SNAKE_X = 850;
+    private final int LEVEL_Y = 400;
+    private final int LEVEL_SIZE = 2;
+    Rectangle pacMan = new Rectangle(PACMAN_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
+    Rectangle minesweeper = new Rectangle(MINESWEEPER_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
+    Rectangle snake = new Rectangle(SNAKE_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
     ArrayList<Rectangle> levels = new ArrayList<>();
 
     //animations
-    int portalAnimation = 0;
-    int portalAnimationDelay = 0;
+    private int portalAnimation = 0;
+    private int portalAnimationDelay = 0;
     private int flameAnimation;
     private int flameAnimationDelay;
     private boolean moving = false;
@@ -60,7 +75,7 @@ public class Menu extends Worlds {
      */
     public Menu(Game game) {
         super(game);
-        game.getDisplay().resize(1000, 1000);
+        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         loadFont();
         levels.add(pacMan);
         levels.add(minesweeper);
@@ -78,38 +93,46 @@ public class Menu extends Worlds {
      * handles keyboard and mouse input
      */
     public void input() {
-        MouseHandler.reset();
+        //movement
+        final int PLAYER_SPEED = 7;
         if (game.getKeyHandler().a) {
-            player.x = (int) player.getX() - 7;
+            player.x = (int) player.getX() - PLAYER_SPEED;
+            gameCamera.move(-PLAYER_SPEED, 0);
             moving = true;
         }
         if (game.getKeyHandler().d) {
-            player.x = (int) player.getX() + 7;
+            player.x = (int) player.getX() + PLAYER_SPEED;
+            gameCamera.move(PLAYER_SPEED, 0);
             moving = true;
         }
         if (!game.getKeyHandler().d && !game.getKeyHandler().a || game.getKeyHandler().a && game.getKeyHandler().d) {
             moving = false;
         }
 
+        //actions
         if (game.getKeyHandler().e) {
             checkGame();
         }
 
-        if (game.getKeyHandler().c){
+        if (game.getKeyHandler().c) {
             ChessWorld chessWorld = new ChessWorld(game);
             Worlds.setWorld(chessWorld);
         }
+
+        MouseHandler.reset();
     }
 
     /**
      * loads up a game if the player intersects
      */
     private void checkGame() {
+        final int MINESWEEPER_BLOCK_SIZE = 50;
+        final int MINESWEEPER_MAP_SIZE = 19;
         if (player.getBounds().intersects(pacMan.getBounds())) {
             PacMan pacMan = new PacMan(game);
             Worlds.setWorld(pacMan);
         } else if (player.getBounds().intersects(minesweeper.getBounds())) {
-            Minesweeper mineSweeper = new Minesweeper(game, 50, 19);
+            Minesweeper mineSweeper = new Minesweeper(game, MINESWEEPER_BLOCK_SIZE, MINESWEEPER_MAP_SIZE);
             Worlds.setWorld(mineSweeper);
         } else if (player.getBounds().intersects(snake.getBounds())) {
             SnakeWorld snakeWorld = new SnakeWorld(game);
@@ -134,6 +157,8 @@ public class Menu extends Worlds {
      * ticks portal animations
      */
     private void portalAnimation() {
+        final int ANIMATION_SLOW = 3;
+        final int SPRITES = 4;
         switch (portalAnimation) {
             default -> portal = portal0;
             case 1 -> portal = portal1;
@@ -141,10 +166,10 @@ public class Menu extends Worlds {
             case 3 -> portal = portal3;
             case 4 -> portal = portal4;
         }
-        if (portalAnimation > 3) {
+        if (portalAnimation > SPRITES) {
             portalAnimation = 0;
         } else {
-            if (portalAnimationDelay > 3) {
+            if (portalAnimationDelay > ANIMATION_SLOW) {
                 portalAnimation++;
                 portalAnimationDelay = 0;
             } else {
@@ -155,28 +180,42 @@ public class Menu extends Worlds {
 
     @Override
     public void render(Graphics g) {
+        final int off = gameCamera.getXOffset();
+        //background
+        g.drawImage(tree, 250 - off, 340, 128, 128, null);
+
         //render levels
-        g.drawImage(portal, (int) pacMan.getX(), (int) pacMan.getY(), (int) pacMan.getWidth(), (int) pacMan.getHeight(), null);
-        g.drawImage(portal, (int) minesweeper.getX(), (int) minesweeper.getY(), (int) minesweeper.getWidth(), (int) minesweeper.getHeight(), null);
-        g.drawImage(portal, (int) snake.getX(), (int) snake.getY(), (int) snake.getWidth(), (int) snake.getHeight(), null);
+        g.drawImage(portal, pacMan.x - off, pacMan.y, pacMan.width, pacMan.height, null);
+        g.drawImage(portal, minesweeper.x - off, minesweeper.y, minesweeper.width, minesweeper.height, null);
+        g.drawImage(portal, snake.x - off, snake.y, snake.width, snake.height, null);
 
         //render level names
+        final float LEVEL_TEXT_SIZE = 40.F;
+        final int LEVEL_TEXT_HEIGHT = -30;
+        final int PACMAN_TEXT_OFFSET = -20;
+        final int MINESWEEPER_TEXT_OFFSET = -75;
+        final int SNAKE_TEXT_OFFSET = -10;
         g.setColor(Color.BLACK);
-        g.setFont(font.deriveFont(font.getSize() * 40.0F));
-        g.drawString("PacMan", (int) pacMan.getX() - 20, (int) pacMan.getY() - 30);
-        g.drawString("Minesweeper", (int) minesweeper.getX() - 75, (int) minesweeper.getY() - 30);
-        g.drawString("Snake", (int) snake.getX() - 10, (int) snake.getY() - 30);
+        g.setFont(font.deriveFont(font.getSize() * LEVEL_TEXT_SIZE));
+        g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET - off, pacMan.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET - off, snake.y + LEVEL_TEXT_HEIGHT);
 
         //render player
-        g.drawImage(head, (int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight(), null);
-        g.drawImage(legs, (int) player.getX() + 4, (int) player.getY() + 56, 44, 16, null);
+        final int LEG_OFFSET_X = 4;
+        final int LEG_OFFSET_Y = 56;
+        g.drawImage(head, player.x - off, player.y, player.width, player.height, null);
+        g.drawImage(legs, player.x + LEG_OFFSET_X - off, player.y + LEG_OFFSET_Y, legs.getWidth() * PLAYER_SIZE, legs.getHeight() * PLAYER_SIZE, null);
 
         //render enter text
+        final float ENTER_TEXT_SIZE = 20.F;
+        final int ENTER_TEXT_OFFSET_X = -20;
+        final int ENTER_TEXT_OFFSET_Y = -5;
         g.setColor(Color.BLACK);
-        g.setFont(font.deriveFont(font.getSize() * 20.0F));
+        g.setFont(font.deriveFont(font.getSize() * ENTER_TEXT_SIZE));
         for (Rectangle r : levels) {
             if (player.getBounds().intersects(r.getBounds())) {
-                g.drawString("[E] to Enter", (int) player.getX() - 20, (int) player.getY() - 5);
+                g.drawString("[E] to Enter", player.x + ENTER_TEXT_OFFSET_X - off, player.y + ENTER_TEXT_OFFSET_Y);
             }
         }
     }
@@ -185,6 +224,8 @@ public class Menu extends Worlds {
      * ticks player animation
      */
     public void playerAnimation() {
+        final int HEAD_ANIMATION_SLOW = 5;
+        final int LEG_ANIMATION_SLOW = 9;
         //head animations
         switch (flameAnimation) {
             default -> head = head0;
@@ -195,7 +236,7 @@ public class Menu extends Worlds {
         if (flameAnimation > 3) {
             flameAnimation = 0;
         } else {
-            if (flameAnimationDelay > 5) {
+            if (flameAnimationDelay > HEAD_ANIMATION_SLOW) {
                 flameAnimation++;
                 flameAnimationDelay = 0;
             } else {
@@ -209,7 +250,7 @@ public class Menu extends Worlds {
                 case 0, 1, 2, 3, 4 -> legs = legRight;
                 case 5, 6, 7, 8, 9 -> legs = legsLeft;
             }
-            if (legAnimation > 9) {
+            if (legAnimation > LEG_ANIMATION_SLOW) {
                 legAnimation = 0;
             } else {
                 legAnimation++;

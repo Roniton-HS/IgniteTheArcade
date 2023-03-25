@@ -24,12 +24,12 @@ public class MouseHandler implements MouseListener{
         lClickY = 10000;
     }
 
-    public static int getlClickX() {
+    public static int getLClickX() {
         return lClickX;
     }
 
 
-    public static int getlClickY() {
+    public static int getLClickY() {
         return lClickY;
     }
 

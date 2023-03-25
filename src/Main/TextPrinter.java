@@ -2,6 +2,7 @@ package Main;
 
 import java.awt.*;
 
+@SuppressWarnings("unused")
 public class TextPrinter{
     private static int textCounter;
     private static int textDelay;
