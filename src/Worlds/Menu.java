@@ -43,23 +43,23 @@ public class Menu extends Worlds {
     private BufferedImage legs = legsIdle;
 
     //design sprites
-    private final BufferedImage tree = ImageLoader.loadImage("/menu/tree.png");
+    private final BufferedImage arcadeMachine = ImageLoader.loadImage("/menu/arcadeMachine.png");
 
     //player
     final int PLAYER_START_X = 474;
-    final int PLAYER_START_Y = 400;
+    final int PLAYER_START_Y = 410;
     final int PLAYER_SIZE = 4;
     Rectangle player = new Rectangle(PLAYER_START_X, PLAYER_START_Y, head.getWidth() * PLAYER_SIZE, head.getHeight() * PLAYER_SIZE);
 
     //levels
-    private final int PACMAN_X = 50;
-    private final int MINESWEEPER_X = 450;
-    private final int SNAKE_X = 850;
-    private final int LEVEL_Y = 400;
-    private final int LEVEL_SIZE = 2;
-    Rectangle pacMan = new Rectangle(PACMAN_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
-    Rectangle minesweeper = new Rectangle(MINESWEEPER_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
-    Rectangle snake = new Rectangle(SNAKE_X, LEVEL_Y, portal.getWidth()*LEVEL_SIZE, portal.getHeight()*LEVEL_SIZE);
+    private final int PACMAN_X = 0;
+    private final int MINESWEEPER_X = 350;
+    private final int SNAKE_X = 700;
+    private final int LEVEL_Y = 340;
+    private final int LEVEL_SIZE = 4;
+    Rectangle pacMan = new Rectangle(PACMAN_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle minesweeper = new Rectangle(MINESWEEPER_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle snake = new Rectangle(SNAKE_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
     ArrayList<Rectangle> levels = new ArrayList<>();
 
     //animations
@@ -75,7 +75,7 @@ public class Menu extends Worlds {
      */
     public Menu(Game game) {
         super(game);
-        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
+        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT - 200);
         loadFont();
         levels.add(pacMan);
         levels.add(minesweeper);
@@ -182,7 +182,18 @@ public class Menu extends Worlds {
     public void render(Graphics g) {
         final int off = gameCamera.getXOffset();
         //background
-        g.drawImage(tree, 250 - off, 340, 128, 128, null);
+        g.setColor(new Color(27, 171, 181));
+        g.fillRect(0 - off, 0, 1000, 1000);
+        g.setColor(Color.gray);
+        g.fillRect(0 - off, 464, 1000, 30);
+        g.setColor(new Color(74, 74, 74));
+        g.fillRect(0 - off, 464 + 30, 1000, 500);
+
+        //render arcade
+        final int ARCADE_OFFSET = -88;
+        g.drawImage(arcadeMachine, minesweeper.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+        g.drawImage(arcadeMachine, pacMan.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+        g.drawImage(arcadeMachine, snake.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
 
         //render levels
         g.drawImage(portal, pacMan.x - off, pacMan.y, pacMan.width, pacMan.height, null);
@@ -190,16 +201,16 @@ public class Menu extends Worlds {
         g.drawImage(portal, snake.x - off, snake.y, snake.width, snake.height, null);
 
         //render level names
-        final float LEVEL_TEXT_SIZE = 40.F;
-        final int LEVEL_TEXT_HEIGHT = -30;
-        final int PACMAN_TEXT_OFFSET = -20;
-        final int MINESWEEPER_TEXT_OFFSET = -75;
-        final int SNAKE_TEXT_OFFSET = -10;
+        final float LEVEL_TEXT_SIZE = 30.F;
+        final int LEVEL_TEXT_HEIGHT = -275;
+        final int PACMAN_TEXT_OFFSET = 95;
+        final int MINESWEEPER_TEXT_OFFSET = 53;
+        final int SNAKE_TEXT_OFFSET = 105;
         g.setColor(Color.BLACK);
         g.setFont(font.deriveFont(font.getSize() * LEVEL_TEXT_SIZE));
-        g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET - off, pacMan.y + LEVEL_TEXT_HEIGHT);
-        g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
-        g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET - off, snake.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET - off, pacMan.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET + ARCADE_OFFSET - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET + ARCADE_OFFSET - off, snake.y + LEVEL_TEXT_HEIGHT);
 
         //render player
         final int LEG_OFFSET_X = 4;
