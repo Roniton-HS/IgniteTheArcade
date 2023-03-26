@@ -28,7 +28,7 @@ public class Minesweeper extends Worlds {
      */
     public Minesweeper(Game game, int blockSize, int mapSize) {
         super(game);
-        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
+        game.getDisplay().resize(967, 990);
         this.blockSize = blockSize;
         this.mapSize = mapSize;
         map = new int[mapSize][mapSize];

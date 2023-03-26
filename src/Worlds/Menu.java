@@ -96,12 +96,12 @@ public class Menu extends Worlds {
         //movement
         final int PLAYER_SPEED = 7;
         if (game.getKeyHandler().a) {
-            player.x = (int) player.getX() - PLAYER_SPEED;
+            player.x -= PLAYER_SPEED;
             gameCamera.move(-PLAYER_SPEED, 0);
             moving = true;
         }
         if (game.getKeyHandler().d) {
-            player.x = (int) player.getX() + PLAYER_SPEED;
+            player.x += PLAYER_SPEED;
             gameCamera.move(PLAYER_SPEED, 0);
             moving = true;
         }
