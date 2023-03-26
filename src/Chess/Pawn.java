@@ -11,8 +11,8 @@ public class Pawn {
     BufferedImage image;
 
     private final int x, y;
-    int width = 90;
-    int height = 90;
+    final int WIDTH = 90;
+    final int HEIGHT = 90;
 
     boolean lookDown;
 
@@ -20,7 +20,7 @@ public class Pawn {
         this.x = x;
         this.y = y;
 
-        image = ImageLoader.loadImage("/icon.png");
+        image = ImageLoader.loadImage("/chess/White/PawnWhite.png");
     }
 
     public void tick() {
@@ -28,7 +28,7 @@ public class Pawn {
     }
 
     public void render(Graphics g){
-        g.drawImage(image, x, y, width, height, null);
+        g.drawImage(image, x, y, WIDTH, HEIGHT, null);
     }
 
     public void move(){
