@@ -1,5 +1,6 @@
 package Chess;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -20,6 +21,7 @@ public class ChessWorld extends Worlds {
      */
     public ChessWorld(Game game) {
         super(game);
+        game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
     }
 
     @Override
