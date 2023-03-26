@@ -1,5 +1,6 @@
 package Worlds;
 
+import Arkanoid.Arkanoid;
 import Chess.ChessWorld;
 import Input.ImageLoader;
 import Input.MouseHandler;
@@ -117,6 +118,11 @@ public class Menu extends Worlds {
         if (game.getKeyHandler().c) {
             ChessWorld chessWorld = new ChessWorld(game);
             Worlds.setWorld(chessWorld);
+        }
+
+        if (game.getKeyHandler().b) {
+            Arkanoid arkanoid = new Arkanoid(game);
+            Worlds.setWorld(arkanoid);
         }
 
         MouseHandler.reset();
