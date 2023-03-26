@@ -183,17 +183,18 @@ public class Menu extends Worlds {
         final int off = gameCamera.getXOffset();
         //background
         g.setColor(new Color(27, 171, 181));
-        g.fillRect(0 - off, 0, 1000, 1000);
+        g.fillRect(0, 0, 1000, 1000);
         g.setColor(Color.gray);
-        g.fillRect(0 - off, 464, 1000, 30);
+        g.fillRect(0, 464, 1000, 30);
         g.setColor(new Color(74, 74, 74));
-        g.fillRect(0 - off, 464 + 30, 1000, 500);
+        g.fillRect(0, 464 + 30, 1000, 500);
 
         //render arcade
-        final int ARCADE_OFFSET = -88;
-        g.drawImage(arcadeMachine, minesweeper.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
-        g.drawImage(arcadeMachine, pacMan.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
-        g.drawImage(arcadeMachine, snake.x + ARCADE_OFFSET - off, 30, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+        final int ARCADE_OFFSET_X = -88;
+        final int ARCADE_OFFSET_Y = -2;
+        g.drawImage(arcadeMachine, minesweeper.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+        g.drawImage(arcadeMachine, pacMan.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+        g.drawImage(arcadeMachine, snake.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
 
         //render levels
         g.drawImage(portal, pacMan.x - off, pacMan.y, pacMan.width, pacMan.height, null);
@@ -206,11 +207,11 @@ public class Menu extends Worlds {
         final int PACMAN_TEXT_OFFSET = 95;
         final int MINESWEEPER_TEXT_OFFSET = 53;
         final int SNAKE_TEXT_OFFSET = 105;
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.setFont(font.deriveFont(font.getSize() * LEVEL_TEXT_SIZE));
-        g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET - off, pacMan.y + LEVEL_TEXT_HEIGHT);
-        g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET + ARCADE_OFFSET - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
-        g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET + ARCADE_OFFSET - off, snake.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET + ARCADE_OFFSET_X - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET + ARCADE_OFFSET_X - off, snake.y + LEVEL_TEXT_HEIGHT);
 
         //render player
         final int LEG_OFFSET_X = 4;
@@ -222,7 +223,7 @@ public class Menu extends Worlds {
         final float ENTER_TEXT_SIZE = 20.F;
         final int ENTER_TEXT_OFFSET_X = -20;
         final int ENTER_TEXT_OFFSET_Y = -5;
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.setFont(font.deriveFont(font.getSize() * ENTER_TEXT_SIZE));
         for (Rectangle r : levels) {
             if (player.getBounds().intersects(r.getBounds())) {
