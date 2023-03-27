@@ -96,10 +96,10 @@ public class Snake {
                 restart();
             }
         }
-        Rectangle up = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
-        Rectangle down = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 27 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
-        Rectangle left = new Rectangle(3 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
-        Rectangle right = new Rectangle(27 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
+        Rectangle up = new Rectangle(0, 3 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
+        Rectangle down = new Rectangle(0, 27 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
+        Rectangle left = new Rectangle(-1 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
+        Rectangle right = new Rectangle(23 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
