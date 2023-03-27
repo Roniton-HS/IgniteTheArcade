@@ -4,10 +4,10 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static Main.Constants.pixelFont;
 
 public class PacMan extends Worlds {
 
@@ -30,9 +30,6 @@ public class PacMan extends Worlds {
     boolean spacePressed = false;
     boolean gameOver = false;
     private long gameOverTime;
-
-    //fonts
-    public static Font pixelFont;
 
     //Collectables
     private static final ArrayList<Rectangle> points = new ArrayList<>(); //stores all points
@@ -57,7 +54,6 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         game.getDisplay().resize(19 * 38 + 17, 27 * 38 + 2);
-        loadFont();
         player = new Player(9 * blockSize, 20 * blockSize, game);
         ghosts.add(new Ghost(8 * blockSize, 11 * blockSize, 1, game));
         ghosts.add(new Ghost(10 * blockSize, 13 * blockSize, 2, game));
@@ -134,15 +130,6 @@ public class PacMan extends Worlds {
         worldBounds.add(new Rectangle((width - 3) * blockSize, 13 * blockSize, 5 * blockSize, blockSize));
     }
 
-    private void loadFont() {
-        InputStream is = getClass().getResourceAsStream("/fonts/emulogic.ttf");
-        try {
-            assert is != null;
-            pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void setPoints() {
         powerUps.add(new Rectangle(50 + 16 * blockSize, 50 + 2 * blockSize, 15, 15));

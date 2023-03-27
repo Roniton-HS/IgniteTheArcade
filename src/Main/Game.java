@@ -4,6 +4,9 @@ import Input.KeyHandler;
 import Worlds.Menu;
 import Worlds.Worlds;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -48,6 +51,18 @@ public class Game{
         display.getFrame().addKeyListener(keyHandler); //adds KeyListener
         Menu menuWorld = new Menu(this);
         Worlds.setWorld(menuWorld);
+
+        loadFontPixelFont();
+    }
+
+    private void loadFontPixelFont() {
+        InputStream is = getClass().getResourceAsStream("/fonts/emulogic.ttf");
+        try {
+            assert is != null;
+            Constants.pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

@@ -8,13 +8,16 @@ import Worlds.Worlds;
 import java.awt.*;
 import java.util.Random;
 
+import static Main.Constants.pixelFont;
+
 public class SnakeWorld extends Worlds {
     public static final int BLOCK_SIZE = 32;
+    public boolean gameStart = false;
 
-    boolean startScreen = false;
+    private boolean startScreen = false;
 
-    Snake snake = new Snake(14 * 32, 14 * 32, game);
-    Apple apple = new Apple(8 * 32, 10 * 32);
+    private final Snake snake = new Snake(14 * 32, 14 * 32, game, this);
+    private Apple apple = new Apple(8 * 32, 10 * 32);
 
     /**
      * Constructor
@@ -26,7 +29,7 @@ public class SnakeWorld extends Worlds {
 
     @Override
     public void tick() {
-        if (Snake.gameStart) {
+        if (gameStart) {
             snake.tick();
             if (snake.start >= 3) {
                 checkApple();
@@ -39,7 +42,7 @@ public class SnakeWorld extends Worlds {
     @Override
     public void render(Graphics g) {
         //background
-        g.setColor(Color.gray);
+        g.setColor(new Color(89, 89, 89));
         g.fillRect(4 * BLOCK_SIZE, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
 
         snake.render(g);
@@ -61,7 +64,7 @@ public class SnakeWorld extends Worlds {
         if (game.getKeyHandler().space) {
             TextPrinter.clearText();
             g.clearRect(80, 300, 831, 100);
-            Snake.gameStart = true;
+            gameStart = true;
             startScreen = false;
         }
     }
@@ -71,11 +74,11 @@ public class SnakeWorld extends Worlds {
      */
     public void renderGrid(Graphics g) {
         g.setColor(Color.BLACK);
-        for (int i = 2; i < 13; i++) {
-            g.drawRect(((2 * i) + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 23 * BLOCK_SIZE);
+        for (int i = 0; i < 13; i++) {
+            g.drawRect(((2 * i)) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 23 * BLOCK_SIZE);
         }
         for (int i = 2; i < 13; i++) {
-            g.drawRect(4 * BLOCK_SIZE, ((2 * i) + 1) * BLOCK_SIZE, 23 * BLOCK_SIZE, BLOCK_SIZE);
+            g.drawRect(0, ((2 * i) + 1) * BLOCK_SIZE, 23 * BLOCK_SIZE, BLOCK_SIZE);
         }
         g.setColor(Color.black);
         g.drawRect(4 * BLOCK_SIZE, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
@@ -85,8 +88,8 @@ public class SnakeWorld extends Worlds {
      * renders the score
      */
     public void renderAppleCounter(Graphics g) {
-        g.setFont(new Font("Monospaced", Font.BOLD, 60));
-        g.setColor(Color.red);
+        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 40.0F));
+        g.setColor(new Color(0, 145, 0));
         g.drawString("Score: " + snake.appleCounter, 4 * BLOCK_SIZE, 3 * BLOCK_SIZE);
     }
 

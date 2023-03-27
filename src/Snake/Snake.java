@@ -7,23 +7,25 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Snake {
-    public static boolean gameStart = false;
-    public int x, y;
-    int tick;
-    int directions;
+
+    private int x, y;
+    private int tick;
+    private int directions;
     public int appleCounter;
     public int start;
     public ArrayList<Rectangle> tiles = new ArrayList();
     public boolean appleCollected = false;
-    Game game;
+    private final Game game;
+    private final SnakeWorld snakeWorld;
 
     /**
      * Constructor
      */
-    public Snake(int x, int y, Game game) {
+    public Snake(int x, int y, Game game, SnakeWorld snakeWorld) {
         this.x = x;
         this.y = y;
         this.game = game;
+        this.snakeWorld = snakeWorld;
     }
 
     public void tick() {
@@ -31,8 +33,13 @@ public class Snake {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.green);
-        for (Rectangle r : tiles) {
+        for (int i = 0; i < tiles.size(); i++) {
+            Rectangle r = tiles.get(i);
+            if (i == tiles.size() - 1) {
+                g.setColor(new Color(0, 145, 0));
+            } else {
+                g.setColor(Color.green);
+            }
             g.fillRect(r.getBounds().x, r.getBounds().y, r.getBounds().width, r.getBounds().height);
         }
     }
@@ -85,7 +92,7 @@ public class Snake {
         for (int i = 0; i < tiles.size(); i++) {
             Rectangle rectangle = tiles.get(i);
             if (head.getBounds().intersects(rectangle.getBounds()) && i != tiles.size() - 1) {
-                gameStart = false;
+                snakeWorld.gameStart = false;
                 restart();
             }
         }
@@ -97,7 +104,7 @@ public class Snake {
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
                 head.getBounds().intersects(right.getBounds())) {
-            gameStart = false;
+            snakeWorld.gameStart = false;
             restart();
         }
     }

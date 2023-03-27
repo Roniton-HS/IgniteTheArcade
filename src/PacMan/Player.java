@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static PacMan.PacMan.pixelFont;
+import static Main.Constants.pixelFont;
 
 public class Player {
     //general
