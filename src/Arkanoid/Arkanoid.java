@@ -1,6 +1,5 @@
 package Arkanoid;
 
-import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -15,7 +14,7 @@ public class Arkanoid extends Worlds {
 
     private boolean gameStarted = false;
     private boolean gameOver = false;
-    private int lives = 1;
+    private int lives = 3;
     private int score = 0;
     private long gameOverTime;
 
@@ -45,7 +44,6 @@ public class Arkanoid extends Worlds {
 
     @Override
     public void tick() {
-
         input();
         if (gameStarted) {
             moveBall();
@@ -60,7 +58,7 @@ public class Arkanoid extends Worlds {
 
     private void input() {
         //bar movement
-        if (game.getKeyHandler().a) {
+        if (game.getKeyHandler().a && !gameOver) {
             if (collisionPlayer.getBounds().intersects(borderL.getBounds())) {
                 player.x = borderL.x + borderL.width;
                 collisionPlayer.x = player.x - PLAYER_SPEED;
@@ -72,7 +70,7 @@ public class Arkanoid extends Worlds {
                 ball.x = player.x + player.width / 2 - BALL_DIAMETER / 2;
             }
         }
-        if (game.getKeyHandler().d) {
+        if (game.getKeyHandler().d && !gameOver) {
             if (collisionPlayer.getBounds().intersects(borderR.getBounds())) {
                 player.x = borderR.x - player.width;
                 collisionPlayer.x = player.x - PLAYER_SPEED;
@@ -86,7 +84,7 @@ public class Arkanoid extends Worlds {
         }
 
         // start game
-        if (game.getKeyHandler().space) {
+        if (game.getKeyHandler().space && !gameOver) {
             if (!gameStarted) {
                 gameStarted = true;
             }
@@ -138,14 +136,6 @@ public class Arkanoid extends Worlds {
         renderBackground(g);
         renderPlayer(g);
         renderStats(g);
-
-        // render borders (only for debugging)
-//        g.setColor(Color.red);
-//        g.fillRect(borderL.x, borderL.y, borderL.width, borderL.height);
-//        g.fillRect(borderR.x, borderR.y, borderR.width, borderR.height);
-//        g.fillRect(borderT.x, borderT.y, borderT.width, borderT.height);
-//        g.fillRect(borderB.x, borderB.y, borderB.width, borderB.height);
-
         if (gameOver) {
             renderGameOver(g);
         }
@@ -168,7 +158,7 @@ public class Arkanoid extends Worlds {
     private void renderStats(Graphics g) {
         g.setColor(Color.white);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 15.0F));
-        g.drawString("Score: " + score, 40, 35);
+        g.drawString("Score:" + score, 50, 35);
 
         g.fillOval(400, 15, 20, 20);
         g.drawString("x" + lives, 420, 35);
