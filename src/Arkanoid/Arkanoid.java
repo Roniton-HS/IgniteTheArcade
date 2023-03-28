@@ -1,11 +1,12 @@
 package Arkanoid;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
 
-import static Main.Constants.pixelFont;
+import static Main.Constants.emulogic;
 
 public class Arkanoid extends Worlds {
 
@@ -166,7 +167,7 @@ public class Arkanoid extends Worlds {
 
     private void renderStats(Graphics g) {
         g.setColor(Color.white);
-        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 15.0F));
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 15.0F));
         g.drawString("Score: " + score, 40, 35);
 
         g.fillOval(400, 15, 20, 20);
