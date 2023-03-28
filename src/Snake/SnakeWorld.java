@@ -6,7 +6,7 @@ import Worlds.Worlds;
 import java.awt.*;
 import java.util.Random;
 
-import static Main.Constants.pixelFont;
+import static Main.Constants.emulogic;
 
 public class SnakeWorld extends Worlds {
     public static final int BLOCK_SIZE = 32;
@@ -58,7 +58,7 @@ public class SnakeWorld extends Worlds {
     public void renderStartScreen(Graphics g) {
         g.setColor(new Color(208, 208, 208, 205));
         g.fillRect(0, 400, 831, 100);
-        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 30.0F));
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 30.0F));
         g.setColor(Color.black);
         g.drawString("Press [Space] to start", 30, 460);
         if (game.getKeyHandler().space) {
@@ -86,7 +86,7 @@ public class SnakeWorld extends Worlds {
      * renders the score
      */
     public void renderAppleCounter(Graphics g) {
-        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 60.0F));
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 60.0F));
         g.setColor(new Color(0, 145, 0));
         g.drawString("Score: " + snake.appleCounter, BLOCK_SIZE, 3 * BLOCK_SIZE);
     }

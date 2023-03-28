@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static Main.Constants.pixelFont;
+import static Main.Constants.emulogic;
 
 public class Player {
     //general
@@ -192,7 +192,7 @@ public class Player {
     public void renderScore(Graphics g) {
         if (showPoints) {
             g.setColor(Color.WHITE);
-            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 10.0F));
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
             g.drawString("" + pointsToShow, x + 32, y);
             if (System.currentTimeMillis() - displayTimer > 500) {
                 showPoints = false;
