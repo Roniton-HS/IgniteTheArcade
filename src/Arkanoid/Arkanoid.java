@@ -134,17 +134,9 @@ public class Arkanoid extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        // render background
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        g.setColor(Color.GRAY);
-        g.fillRect(50, 50, WINDOW_WIDTH - 100, WINDOW_HEIGHT - 100);
-
-        // render bar and ball
-        g.setColor(Color.blue);
-        g.fillRect(player.x, player.y, player.width, player.height);
-        g.setColor(Color.white);
-        g.fillOval(ball.x, ball.y, ball.width, ball.height);
+        renderBackground(g);
+        renderPlayer(g);
+        renderStats(g);
 
         // render borders (only for debugging)
 //        g.setColor(Color.red);
@@ -153,17 +145,32 @@ public class Arkanoid extends Worlds {
 //        g.fillRect(borderT.x, borderT.y, borderT.width, borderT.height);
 //        g.fillRect(borderB.x, borderB.y, borderB.width, borderB.height);
 
-        // render stats
+        if (gameOver) {
+            renderGameOver(g);
+        }
+    }
+
+    private void renderBackground(Graphics g) {
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        g.setColor(Color.GRAY);
+        g.fillRect(50, 50, WINDOW_WIDTH - 100, WINDOW_HEIGHT - 100);
+    }
+
+    private void renderPlayer(Graphics g) {
+        g.setColor(Color.blue);
+        g.fillRect(player.x, player.y, player.width, player.height);
+        g.setColor(Color.white);
+        g.fillOval(ball.x, ball.y, ball.width, ball.height);
+    }
+
+    private void renderStats(Graphics g) {
         g.setColor(Color.white);
         g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 15.0F));
         g.drawString("Score: " + score, 40, 35);
 
         g.fillOval(400, 15, 20, 20);
         g.drawString("x" + lives, 420, 35);
-
-        if (gameOver) {
-            renderGameOver(g);
-        }
     }
 
     private void renderGameOver(Graphics g) {
