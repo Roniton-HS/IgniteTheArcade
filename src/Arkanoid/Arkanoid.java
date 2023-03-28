@@ -44,7 +44,21 @@ public class Arkanoid extends Worlds {
 
     @Override
     public void tick() {
-        // bar movement
+
+        input();
+        if (gameStarted) {
+            moveBall();
+        }
+        if (gameOver){
+            gameStarted = false;
+            if (System.currentTimeMillis() - gameOverTime > 3000) {
+                resetGame();
+            }
+        }
+    }
+
+    private void input() {
+        //bar movement
         if (game.getKeyHandler().a) {
             if (collisionPlayer.getBounds().intersects(borderL.getBounds())) {
                 player.x = borderL.x + borderL.width;
@@ -68,7 +82,6 @@ public class Arkanoid extends Worlds {
             if (!gameStarted) {
                 ball.x = player.x + player.width / 2 - BALL_DIAMETER / 2;
             }
-
         }
 
         // start game
@@ -77,11 +90,10 @@ public class Arkanoid extends Worlds {
                 gameStarted = true;
             }
         }
+    }
 
-        // ball movement
-        if (gameStarted) {
-            ball.y -= ballSpeedY;
-        }
+    private void moveBall() {
+        ball.y -= ballSpeedY;
 
         if (ball.getBounds().intersects(player.getBounds())) {
             ballSpeedY = -ballSpeedY;
@@ -95,14 +107,29 @@ public class Arkanoid extends Worlds {
             gameStarted = false;
             reset();
             lives -= 1;
-            if (lives <= 0){
+            if (lives <= 0) {
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
-                if (System.currentTimeMillis() - gameOverTime > 3000) {
-                    resetGame();
-                }
             }
         }
+    }
+
+    private void reset() {
+        player.x = (WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2);
+        player.y = 900;
+
+        collisionPlayer.x = player.x - PLAYER_SPEED;
+        collisionPlayer.y = player.y;
+
+        ball.x = WINDOW_WIDTH / 2 - BALL_DIAMETER/2;
+        ball.y = 890;
+    }
+
+    private void resetGame() {
+        reset();
+        lives = 3;
+        score = 0;
+        gameOver = false;
     }
 
     @Override
@@ -146,23 +173,5 @@ public class Arkanoid extends Worlds {
         g.drawRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
         g.setColor(Color.white);
         g.drawString("GAME OVER", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 +5);
-    }
-
-    private void reset() {
-        player.x = (WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2);
-        player.y = 900;
-
-        collisionPlayer.x = player.x - PLAYER_SPEED;
-        collisionPlayer.y = player.y;
-
-        ball.x = WINDOW_WIDTH / 2 - BALL_DIAMETER;
-        ball.y = 890;
-    }
-
-    private void resetGame() {
-        reset();
-        lives = 3;
-        score = 0;
-        gameStarted = false;
     }
 }
