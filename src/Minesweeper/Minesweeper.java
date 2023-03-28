@@ -8,9 +8,9 @@ import Worlds.Worlds;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
+
+import static Main.Constants.recursiveBold;
 
 public class Minesweeper extends Worlds {
     int blockSize;
@@ -18,7 +18,6 @@ public class Minesweeper extends Worlds {
     int mapSize;
     int[][] map;
     int[][] clicked;
-    public static Font numFont;
     boolean gameLost = false;
     boolean gameWon = false;
     boolean firstClick = true;
@@ -36,13 +35,13 @@ public class Minesweeper extends Worlds {
         winCount = mapSize * mapSize - mapSize * mapSize / 10;
         initBombs();
         initNum();
-        loadFont();
     }
 
     @Override
     public void tick() {
         input();
         winCon();
+        System.out.println(winCount);
     }
 
     /**
@@ -233,18 +232,18 @@ public class Minesweeper extends Worlds {
             g.setColor(new Color(209, 0, 38));
             g.fillRect(xPos, yPos, 500, 100);
             g.setColor(new Color(0, 0, 0));
-            g.setFont(numFont.deriveFont(numFont.getSize() * 60.0F));
+            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 60.0F));
             g.drawString("You Lost", xPos + 100, yPos + 60);
-            g.setFont(numFont.deriveFont(numFont.getSize() * 20.0F));
+            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 20.0F));
             g.drawString("press [enter] to restart", xPos + 105, yPos + 80);
             g.drawRect(xPos, yPos, 500, 100);
         } else if (gameWon) {
             g.setColor(new Color(15, 186, 51));
             g.fillRect(xPos, yPos, 500, 100);
             g.setColor(new Color(0, 0, 0));
-            g.setFont(numFont.deriveFont(numFont.getSize() * 60.0F));
+            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 60.0F));
             g.drawString("You Won", xPos + 125, yPos + 60);
-            g.setFont(numFont.deriveFont(numFont.getSize() * 20.0F));
+            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 20.0F));
             g.drawString("press [enter] to restart", xPos + 105, yPos + 80);
             g.drawRect(xPos, yPos, 500, 100);
         }
@@ -270,21 +269,11 @@ public class Minesweeper extends Worlds {
     private final BufferedImage bomb = ImageLoader.loadImage("/minesweeper/bomb.png");
     private final BufferedImage flag = ImageLoader.loadImage("/minesweeper/flag.png");
 
-    private void loadFont() {
-        InputStream is = getClass().getResourceAsStream("/fonts/Recursive Bold.ttf");
-        try {
-            assert is != null;
-            numFont = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void renderMap(Graphics g) {
         int xOff = 15;
         int yOff = 40;
         g.setColor(Color.BLACK);
-        g.setFont(numFont.deriveFont(numFont.getSize() * 40.0F));
+        g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 40.0F));
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 int entry = map[j][i];

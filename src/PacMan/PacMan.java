@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static Main.Constants.pixelFont;
+import static Main.Constants.emulogic;
 
 public class PacMan extends Worlds {
 
@@ -451,11 +451,11 @@ public class PacMan extends Worlds {
      */
     public void renderStatus(Graphics g) {
         if (gameOver) {
-            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 20.0F));
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.RED);
             g.drawString("Game Over", 6 + 7 * blockSize, 28 + 16 * blockSize);
         } else if (gamePaused) {
-            g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 20.0F));
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.YELLOW);
             g.drawString("Ready!", 8 * blockSize, 28 + 16 * blockSize);
         }
@@ -477,7 +477,7 @@ public class PacMan extends Worlds {
     private void renderStats(Graphics g) {
         //points
         g.setColor(Color.WHITE);
-        g.setFont(pixelFont.deriveFont(pixelFont.getSize() * 20.0F));
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
         g.drawString("Score:" + score, 7, 29);
 
         //hp

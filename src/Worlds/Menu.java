@@ -13,13 +13,12 @@ import Snake.SnakeWorld;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+
+import static Main.Constants.recursiveBold;
 
 public class Menu extends Worlds {
 
-    private Font font;
     private GameCamera gameCamera = new GameCamera();
 
     //portal sprites
@@ -77,7 +76,6 @@ public class Menu extends Worlds {
     public Menu(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT - 200);
-        loadFont();
         levels.add(pacMan);
         levels.add(minesweeper);
         levels.add(snake);
@@ -146,18 +144,6 @@ public class Menu extends Worlds {
         }
     }
 
-    /**
-     * load a font
-     */
-    private void loadFont() {
-        InputStream is = getClass().getResourceAsStream("/fonts/Recursive Bold.ttf");
-        try {
-            assert is != null;
-            font = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * ticks portal animations
@@ -214,7 +200,7 @@ public class Menu extends Worlds {
         final int MINESWEEPER_TEXT_OFFSET = 53;
         final int SNAKE_TEXT_OFFSET = 105;
         g.setColor(Color.WHITE);
-        g.setFont(font.deriveFont(font.getSize() * LEVEL_TEXT_SIZE));
+        g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * LEVEL_TEXT_SIZE));
         g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET + ARCADE_OFFSET_X - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET + ARCADE_OFFSET_X - off, snake.y + LEVEL_TEXT_HEIGHT);
@@ -230,7 +216,7 @@ public class Menu extends Worlds {
         final int ENTER_TEXT_OFFSET_X = -20;
         final int ENTER_TEXT_OFFSET_Y = -5;
         g.setColor(Color.WHITE);
-        g.setFont(font.deriveFont(font.getSize() * ENTER_TEXT_SIZE));
+        g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * ENTER_TEXT_SIZE));
         for (Rectangle r : levels) {
             if (player.getBounds().intersects(r.getBounds())) {
                 g.drawString("[E] to Enter", player.x + ENTER_TEXT_OFFSET_X - off, player.y + ENTER_TEXT_OFFSET_Y);

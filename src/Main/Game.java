@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.nio.file.Path;
 
 public class Game{
 
@@ -52,14 +53,27 @@ public class Game{
         Menu menuWorld = new Menu(this);
         Worlds.setWorld(menuWorld);
 
-        loadFontPixelFont();
+        Constants.loadFonts();
     }
 
-    private void loadFontPixelFont() {
-        InputStream is = getClass().getResourceAsStream("/fonts/emulogic.ttf");
+    private void loadFonts() {
+        InputStream is = getClass().getResourceAsStream("/fonts/recursiveBold.ttf");
         try {
             assert is != null;
-            Constants.pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
+            Constants.recursiveBold = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * load a font
+     */
+    private void loadFont(String path, Font font) {
+        InputStream is = getClass().getResourceAsStream(path);
+        try {
+            assert is != null;
+            Constants.recursiveBold = Font.createFont(Font.TRUETYPE_FONT, is);
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
