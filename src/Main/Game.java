@@ -4,12 +4,8 @@ import Input.KeyHandler;
 import Worlds.Menu;
 import Worlds.Worlds;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.nio.file.Path;
 
 public class Game{
 
@@ -52,31 +48,7 @@ public class Game{
         display.getFrame().addKeyListener(keyHandler); //adds KeyListener
         Menu menuWorld = new Menu(this);
         Worlds.setWorld(menuWorld);
-
         Constants.loadFonts();
-    }
-
-    private void loadFonts() {
-        InputStream is = getClass().getResourceAsStream("/fonts/recursiveBold.ttf");
-        try {
-            assert is != null;
-            Constants.recursiveBold = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * load a font
-     */
-    private void loadFont(String path, Font font) {
-        InputStream is = getClass().getResourceAsStream(path);
-        try {
-            assert is != null;
-            Constants.recursiveBold = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
