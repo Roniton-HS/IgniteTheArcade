@@ -146,7 +146,7 @@ public class Arkanoid extends Worlds {
         for (Brick brick : bricks) {
             if (ball.getBounds().intersects(brick.getBounds())) {
                 brick.setHp(brick.getHp() - 1);
-                ball.setSpeedY(-ball.getSpeedY());
+                checkBrickBorder(brick);
             }
         }
     }
@@ -158,13 +158,36 @@ public class Arkanoid extends Worlds {
         ball.setAngle(normRelativeCollision * MAX_ANGLE);
 
         ball.y = player.y - ball.height;
-        ball.setSpeedY(Math.cos(ball.getAngle()) * BALL_SPEED);
         ball.setSpeedX(-Math.sin(ball.getAngle()) * BALL_SPEED);
+        ball.setSpeedY(Math.cos(ball.getAngle()) * BALL_SPEED);
     }
 
-    private void calculateBorderBounce() {
-        ball.setSpeedX(Math.cos(PI / 2 + (PI / 2 - (ball.getAngle()))) * BALL_SPEED);
-        ball.setSpeedY(-Math.sin(PI / 2 + (PI / 2 - (ball.getAngle()))) * BALL_SPEED);
+    private void checkBrickBorder(Brick brick) {
+        for (Rectangle border:
+             brick.getBorders()) {
+            if(ball.getBounds().intersects(border.getBounds())){
+                calculateBrickBounce(border, brick.getBorders().indexOf(border));
+            }
+        }
+    }
+
+    private void calculateBrickBounce(Rectangle border, int index) {
+
+        if (index == 0 || index == 1){
+            ball.setSpeedY(-ball.getSpeedY());
+        } else{
+            ball.setSpeedX(-ball.getSpeedX());
+        }
+
+        if(index == 0) {
+            ball.y = border.y - ball.height;
+        } else if (index == 1) {
+            ball.y = border.y;
+        } else if (index == 2) {
+            ball.x = border.x - ball.width;
+        } else if (index == 3) {
+            ball.x = border.x;
+        }
     }
 
     private void checkHp() {
