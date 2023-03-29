@@ -161,6 +161,10 @@ public class Arkanoid extends Worlds {
                 checkBrickBorder(brick);
             }
         }
+
+        if (ball.getSpeedY() == 0) {
+            ball.setSpeedY(1);
+        }
     }
 
     private void calculatePlayerBounce() {
