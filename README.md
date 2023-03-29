@@ -13,9 +13,8 @@ General:
 `esc` return to main menu  
   
 Main Menu:  
-`p` PacMan  
-`s` Snake  
-`m` Minesweeper  
+`a` move left
+`d` move right
   
 PacMan:  
 `space` start/pause game  
@@ -26,7 +25,12 @@ Snake:
   
 Minesweeper:  
 `LMB` reveal  
-`RMB` mark  
+`RMB` mark
+
+Arkanoid:
+`space` start game
+`a` move right
+`d` move left
 
 ## Pictures
 PacMan:  
@@ -35,11 +39,7 @@ PacMan:
 Minesweeper:  
 ![](https://github.com/Roniton-HS/IgniteTheArcade/blob/main/res/gitHub/minesweeper.PNG)
 
-
-## Working on
-MainMenu  
-Lobby for level selection  
-
 ## Authors
 [Seyrila](https://github.com/Seyrila)  
 [Roniton](https://github.com/Roniton-HS)
+[Duwutape](https://github.com/Duwutape)
