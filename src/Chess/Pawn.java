@@ -20,6 +20,7 @@ public class Pawn extends Figures {
 
     public void tick() {
         whereTo();
+        moveFigure();
     }
 
     public void whereTo() {
@@ -30,11 +31,11 @@ public class Pawn extends Figures {
                 coordinates.add(new Coordinates(x, y + 1));
             }
 
-            if((Chess.figuresSave[x-1][y+1]!=null)&&!Chess.figuresSave[x-1][y+1].black){ //white figure diagonal left
+            if((Chess.figuresSave[x-1][y+1]!=null)&&!Chess.figuresSave[x-1][y+1].black){ //white figure is diagonal left
                 coordinates.add(new Coordinates(x-1, y+1));
             }
 
-            if((Chess.figuresSave[x+1][y+1]!=null)&&!Chess.figuresSave[x+1][y+1].black){ //white figure diagonal right
+            if((Chess.figuresSave[x+1][y+1]!=null)&&!Chess.figuresSave[x+1][y+1].black){ //white figure is diagonal right
                 coordinates.add(new Coordinates(x+1, y+1));
             }
         }
