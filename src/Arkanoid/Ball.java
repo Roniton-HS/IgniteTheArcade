@@ -7,8 +7,8 @@ public class Ball extends Rectangle {
     private double speedY = 5;
     private double angle;
 
-    public Ball(int x, int y, int width, int height) {
-        super(x, y, width, height);
+    public Ball(int x, int y, int size) {
+        super(x, y, size, size);
     }
 
     public double getSpeedX() {
