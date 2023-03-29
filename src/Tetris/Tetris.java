@@ -76,8 +76,9 @@ public class Tetris extends Worlds {
     private void getNewBlock() {
         boolean full = true;
         for (boolean b: piecesUsed) {
-            if(!b){
+            if (!b) {
                 full = false;
+                break;
             }
         }
         if(full){
