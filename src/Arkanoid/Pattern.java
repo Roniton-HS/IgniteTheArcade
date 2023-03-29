@@ -4,23 +4,16 @@ import java.util.ArrayList;
 
 public class Pattern {
 
-    private static ArrayList<ArrayList> patterns = new ArrayList<>();
+    private static final ArrayList<ArrayList<Brick>> patterns = new ArrayList<>();
 
-    public static ArrayList<ArrayList> getPatterns() {
+    public static ArrayList<ArrayList<Brick>> getPatterns() {
         return patterns;
-    }
-
-    public Pattern setPatterns(ArrayList<ArrayList> patterns) {
-        this.patterns = patterns;
-        return this;
     }
 
     public static void createPattern() {
         patterns.add(createPattern1());
         patterns.add(createPattern2());
         patterns.add(createPattern3());
-
-
     }
 
     private static ArrayList<Brick> createPattern1() {

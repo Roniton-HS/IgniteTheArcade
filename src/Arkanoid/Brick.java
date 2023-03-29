@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class Brick extends Rectangle {
     private int hp;
-    private int score;
-    private ArrayList<Rectangle> borders = new ArrayList<>();
+    private final int score;
+    private final ArrayList<Rectangle> borders = new ArrayList<>();
 
     public Brick(int x, int y, int width, int height, int hp) {
         super(x, y, width, height);
@@ -28,33 +28,22 @@ public class Brick extends Rectangle {
         return hp;
     }
 
-    public Brick setHp(int hp) {
+    public void setHp(int hp) {
         this.hp = hp;
-        return this;
     }
 
     public int getScore() {
         return score;
     }
 
-    public Brick setScore(int score) {
-        this.score = score;
-        return this;
-    }
-
     public ArrayList<Rectangle> getBorders() {
         return borders;
     }
 
-    public Brick setBorders(ArrayList<Rectangle> borders) {
-        this.borders = borders;
-        return this;
-    }
-
     private void createBorders() {
-        borders.add(new Rectangle(x, y, width, 1)); //border top
+        borders.add(new Rectangle(x, y, width, 1));             //border top
         borders.add(new Rectangle(x, y + height, width, 1)); //border bottom
-        borders.add(new Rectangle(x, y, 1, height)); //border left
+        borders.add(new Rectangle(x, y, 1, height));            //border left
         borders.add(new Rectangle(x + width, y, 1, height)); //border right
     }
 
@@ -77,9 +66,8 @@ public class Brick extends Rectangle {
             case 5 -> g.setColor(new Color(136, 52, 0));
             default -> g.setColor(Color.black);
         }
-
         for (int i = 0; i < 3; i++) {
-            g.drawRect(x + i, y + i, width - 2 * i, height - 2 * i);
+            g.drawRect(x + i, y + i, width - (2 * i), height - (2 * i));
         }
     }
 }

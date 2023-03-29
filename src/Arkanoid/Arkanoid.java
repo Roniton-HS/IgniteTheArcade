@@ -26,19 +26,16 @@ public class Arkanoid extends Worlds {
     private long gameWonTime;
 
     private final int PLAYER_SPEED = 5;
-    private final int PLAYER_WIDTH = 100;
     private Rectangle player;
     private Rectangle collisionPlayer;
 
-    private final int BALL_SPEED = 5;
     private final int BALL_DIAMETER = 10;
-    private final double MAX_ANGLE = 75 * PI / 180;
     private Ball ball;
 
-    private Rectangle borderL = new Rectangle(40, 50, 10, 900);
-    private Rectangle borderR = new Rectangle(450, 50, 10, 900);
-    private Rectangle borderT = new Rectangle(50, 40, 400, 10);
-    private Rectangle borderB = new Rectangle(50, 950, 400, 10);
+    private final Rectangle borderL = new Rectangle(40, 50, 10, 900);
+    private final Rectangle borderR = new Rectangle(450, 50, 10, 900);
+    private final Rectangle borderT = new Rectangle(50, 40, 400, 10);
+    private final Rectangle borderB = new Rectangle(50, 950, 400, 10);
 
     private ArrayList<Brick> bricks;
 
@@ -54,6 +51,7 @@ public class Arkanoid extends Worlds {
     }
 
     private void createGame() {
+        int PLAYER_WIDTH = 100;
         player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), 900, PLAYER_WIDTH, 10);
         collisionPlayer = new Rectangle(player.x - PLAYER_SPEED, player.y, player.width + (2 * PLAYER_SPEED), player.height);
         ball = new Ball(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, 890, BALL_DIAMETER);
@@ -143,7 +141,6 @@ public class Arkanoid extends Worlds {
             ball.x = borderR.x - ball.width;
             ball.setSpeedX(-ball.getSpeedX());
         }
-
         if (ball.getBounds().intersects(borderB.getBounds())) {
             gameStarted = false;
             lives--;
@@ -168,19 +165,21 @@ public class Arkanoid extends Worlds {
     }
 
     private void calculatePlayerBounce() {
+        double MAX_ANGLE = 75 * PI / 180;
+        int BALL_SPEED = 5;
+
         int relativeCollision = -(player.x - ball.x + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
 
-        ball.setAngle(normRelativeCollision * MAX_ANGLE);
+        double angle = normRelativeCollision * MAX_ANGLE;
 
         ball.y = player.y - ball.height;
-        ball.setSpeedX(-Math.sin(ball.getAngle()) * BALL_SPEED);
-        ball.setSpeedY(Math.cos(ball.getAngle()) * BALL_SPEED);
+        ball.setSpeedX(-Math.sin(angle * BALL_SPEED));
+        ball.setSpeedY(Math.cos(angle * BALL_SPEED));
     }
 
     private void checkBrickBorder(Brick brick) {
-        for (Rectangle border :
-                brick.getBorders()) {
+        for (Rectangle border : brick.getBorders()) {
             if (ball.getBounds().intersects(border.getBounds())) {
                 calculateBrickBounce(border, brick.getBorders().indexOf(border));
             }
@@ -254,10 +253,12 @@ public class Arkanoid extends Worlds {
     private void renderBackground(Graphics g) {
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
         g.setColor(new Color(26, 26, 26));
         for (int i = 0; i < 3; i++) {
             g.drawRect(47 + i, 47 + i, WINDOW_WIDTH - 94 - (2 * i), WINDOW_HEIGHT - 94 - (2 * i));
         }
+
         g.setColor(Color.GRAY);
         g.fillRect(50, 50, WINDOW_WIDTH - 100, WINDOW_HEIGHT - 100);
     }
@@ -287,17 +288,21 @@ public class Arkanoid extends Worlds {
     private void renderGameOver(Graphics g) {
         g.setColor(new Color(158, 0, 29));
         g.fillRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+
         g.setColor(new Color(209, 0, 38));
         g.fillRect(WINDOW_WIDTH / 2 - 72, WINDOW_HEIGHT / 2 - 17, 144, 34);
+
         g.setColor(Color.white);
         g.drawString("GAME OVER", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5);
     }
 
     private void renderGameWon(Graphics g) {
-        g.setColor(new Color(10,123,34));
+        g.setColor(new Color(10, 123, 34));
         g.fillRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+
         g.setColor(new Color(15, 186, 51));
         g.fillRect(WINDOW_WIDTH / 2 - 72, WINDOW_HEIGHT / 2 - 17, 144, 34);
+
         g.setColor(Color.white);
         g.drawString("GAME WON", WINDOW_WIDTH / 2 - 60, WINDOW_HEIGHT / 2 + 5);
     }
