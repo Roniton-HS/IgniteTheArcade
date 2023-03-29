@@ -4,6 +4,7 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import static Main.Constants.emulogic;
 
@@ -27,12 +28,14 @@ public class Arkanoid extends Worlds {
     private int ballSpeedX = 0;
     private int ballAngle = 0;
     private final int BALL_DIAMETER = 10;
-    private Rectangle ball = new Rectangle(WINDOW_WIDTH / 2 - BALL_DIAMETER, 890, BALL_DIAMETER, BALL_DIAMETER);
+    private Rectangle ball = new Rectangle(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, 890, BALL_DIAMETER, BALL_DIAMETER);
 
     private Rectangle borderL = new Rectangle(40, 50, 10, 900);
     private Rectangle borderR = new Rectangle(450, 50, 10, 900);
     private Rectangle borderT = new Rectangle(50, 40, 400, 10);
     private Rectangle borderB = new Rectangle(50, 950, 400, 10);
+
+    private ArrayList<Brick> bricks = new ArrayList<>();
 
     /**
      * Constructor
@@ -40,6 +43,15 @@ public class Arkanoid extends Worlds {
     public Arkanoid(Game game) {
         super(game);
         game.getDisplay().resize(WINDOW_WIDTH + 16, WINDOW_HEIGHT + 39);
+        createBricks();
+    }
+
+    private void createBricks() {
+        bricks.add(new Brick(60,60,60,10,1));
+        bricks.add(new Brick(140,60,60,10,2));
+        bricks.add(new Brick(220,60,60,10,3));
+        bricks.add(new Brick(300,60,60,10,4));
+        bricks.add(new Brick(380,60,60,10,5));
     }
 
     @Override
@@ -47,6 +59,7 @@ public class Arkanoid extends Worlds {
         input();
         if (gameStarted) {
             moveBall();
+            checkHp();
         }
         if (gameOver){
             gameStarted = false;
@@ -105,10 +118,27 @@ public class Arkanoid extends Worlds {
         if (ball.getBounds().intersects(borderB.getBounds())) {
             gameStarted = false;
             reset();
-            lives -= 1;
+            lives--;
             if (lives <= 0) {
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
+            }
+        }
+
+        for (Brick brick: bricks) {
+            if(ball.getBounds().intersects(brick.getBounds())){
+                ballSpeedY = -ballSpeedY;
+                brick.setHp(brick.getHp()-1);
+            }
+        }
+    }
+
+    private void checkHp() {
+        for(int i = 0; i < bricks.size(); i++){
+            Brick brick = bricks.get(i);
+            if(brick.getHp() <= 0){
+                score += brick.getScore();
+                bricks.remove(brick);
             }
         }
     }
@@ -136,6 +166,9 @@ public class Arkanoid extends Worlds {
         renderBackground(g);
         renderPlayer(g);
         renderStats(g);
+        for (Brick brick: bricks) {
+            brick.render(g);
+        }
         if (gameOver) {
             renderGameOver(g);
         }
