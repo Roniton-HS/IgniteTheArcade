@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class ChessWorld extends Worlds {
 
-    int[][] figuresSave = new int[8][8];
+    static int[][] figuresSave = new int[7][7];
 
     int fieldSize = 100;
     boolean white = true;
@@ -22,12 +22,13 @@ public class ChessWorld extends Worlds {
     public ChessWorld(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
+        figuresSave[0][1]=1;
     }
 
     @Override
 
     public void tick(){
-
+        pawn.tick();
     }
 
     @Override
