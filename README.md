@@ -6,15 +6,15 @@ Collection of mini games coded in Java
 ## Games
 PacMan  
 Snake  
-Minesweeper
+Minesweeper  
+Arkanoid
 
 ## Controls
 General:  
 `esc` return to main menu  
   
 Main Menu:  
-`a` move left
-`d` move right
+`a` `d` move left/right  
   
 PacMan:  
 `space` start/pause game  
@@ -27,10 +27,9 @@ Minesweeper:
 `LMB` reveal  
 `RMB` mark
 
-Arkanoid:
-`space` start game
-`a` move right
-`d` move left
+Arkanoid:  
+`space` start game  
+`a` `d` move left/right  
 
 ## Pictures
 PacMan:  
@@ -41,5 +40,5 @@ Minesweeper:
 
 ## Authors
 [Seyrila](https://github.com/Seyrila)  
-[Roniton](https://github.com/Roniton-HS)
+[Roniton](https://github.com/Roniton-HS)  
 [Duwutape](https://github.com/Duwutape)
