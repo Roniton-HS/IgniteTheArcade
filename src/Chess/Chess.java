@@ -8,7 +8,7 @@ import Worlds.Worlds;
 import java.awt.*;
 import java.sql.SQLOutput;
 
-public class ChessWorld extends Worlds {
+public class Chess extends Worlds {
 
     static Figures[][] figuresSave = new Figures[10][10];
 
@@ -20,11 +20,11 @@ public class ChessWorld extends Worlds {
      *
      * @param game
      */
-    public ChessWorld(Game game) {
+    public Chess(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
-        figuresSave[1][1]= new Pawn(1, 1);
-        figuresSave[4][6]= new Pawn(4, 6);
+        figuresSave[1][1]= new Pawn(1, 1, true);
+        figuresSave[2][2]= new Pawn(2, 2, false);
 
     }
 

@@ -1,7 +1,7 @@
 package Worlds;
 
 import Arkanoid.Arkanoid;
-import Chess.ChessWorld;
+import Chess.Chess;
 import Input.ImageLoader;
 import Input.MouseHandler;
 import Main.Constants;
@@ -140,7 +140,7 @@ public class Menu extends Worlds {
             Arkanoid arkanoid = new Arkanoid(game);
             Worlds.setWorld(arkanoid);
         } else if (player.getBounds().intersects(chess.getBounds())) {
-            ChessWorld chess = new ChessWorld(game);
+            Chess chess = new Chess(game);
             Worlds.setWorld(chess);
         }else if(player.getBounds().intersects(tetris.getBounds())){
             Tetris tetris = new Tetris(game);
