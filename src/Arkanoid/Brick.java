@@ -60,21 +60,21 @@ public class Brick extends Rectangle {
 
     public void render(Graphics g) {
         switch (hp) {
-            case 1 -> g.setColor(Color.red);
-            case 2 -> g.setColor(Color.yellow);
-            case 3 -> g.setColor(Color.green);
-            case 4 -> g.setColor(Color.blue);
-            case 5 -> g.setColor(Color.orange);
+            case 1 -> g.setColor(new Color(255, 0, 56));
+            case 2 -> g.setColor(new Color(255, 248, 7));
+            case 3 -> g.setColor(new Color(17, 255, 17));
+            case 4 -> g.setColor(new Color(17, 17, 255));
+            case 5 -> g.setColor(new Color(255, 97, 0));
             default -> g.setColor(Color.black);
         }
         g.fillRect(x, y, width, height);
 
         switch (hp) {
-            case 1 -> g.setColor(new Color(75, 8, 8));
-            case 2 -> g.setColor(new Color(187, 149, 13));
-            case 3 -> g.setColor(new Color(32, 91, 15));
-            case 4 -> g.setColor(new Color(14, 24, 96));
-            case 5 -> g.setColor(new Color(105, 53, 11));
+            case 1 -> g.setColor(new Color(136, 0, 30));
+            case 2 -> g.setColor(new Color(177, 172, 0));
+            case 3 -> g.setColor(new Color(0, 153, 0));
+            case 4 -> g.setColor(new Color(0, 0, 136));
+            case 5 -> g.setColor(new Color(136, 52, 0));
             default -> g.setColor(Color.black);
         }
 

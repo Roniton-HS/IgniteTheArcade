@@ -5,7 +5,10 @@ import Worlds.Worlds;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
+import static Arkanoid.Pattern.createPattern;
+import static Arkanoid.Pattern.getPatterns;
 import static Main.Constants.emulogic;
 import static java.lang.Math.PI;
 
@@ -37,7 +40,7 @@ public class Arkanoid extends Worlds {
     private Rectangle borderT = new Rectangle(50, 40, 400, 10);
     private Rectangle borderB = new Rectangle(50, 950, 400, 10);
 
-    private ArrayList<Brick> bricks = new ArrayList<>();
+    private ArrayList<Brick> bricks;
 
     /**
      * Constructor
@@ -46,6 +49,7 @@ public class Arkanoid extends Worlds {
         super(game);
         game.getDisplay().resize(WINDOW_WIDTH + 16, WINDOW_HEIGHT + 39);
         createGame();
+        createPattern();
         createBricks();
     }
 
@@ -56,32 +60,10 @@ public class Arkanoid extends Worlds {
     }
 
     private void createBricks() {
-        bricks.add(new Brick(60, 60, 60, 10, 5));
-        bricks.add(new Brick(140, 60, 60, 10, 5));
-        bricks.add(new Brick(220, 60, 60, 10, 5));
-        bricks.add(new Brick(300, 60, 60, 10, 5));
-        bricks.add(new Brick(380, 60, 60, 10, 5));
-        bricks.add(new Brick(60, 80, 60, 10, 4));
-        bricks.add(new Brick(140, 80, 60, 10, 4));
-        bricks.add(new Brick(220, 80, 60, 10, 4));
-        bricks.add(new Brick(300, 80, 60, 10, 4));
-        bricks.add(new Brick(380, 80, 60, 10, 4));
-        bricks.add(new Brick(60, 100, 60, 10, 3));
-        bricks.add(new Brick(140, 100, 60, 10, 3));
-        bricks.add(new Brick(220, 100, 60, 10, 3));
-        bricks.add(new Brick(300, 100, 60, 10, 3));
-        bricks.add(new Brick(380, 100, 60, 10, 3));
-        bricks.add(new Brick(60, 120, 60, 10, 2));
-        bricks.add(new Brick(140, 120, 60, 10, 2));
-        bricks.add(new Brick(220, 120, 60, 10, 2));
-        bricks.add(new Brick(300, 120, 60, 10, 2));
-        bricks.add(new Brick(380, 120, 60, 10, 2));
-        bricks.add(new Brick(60, 140, 60, 10, 1));
-        bricks.add(new Brick(140, 140, 60, 10, 1));
-        bricks.add(new Brick(220, 140, 60, 10, 1));
-        bricks.add(new Brick(300, 140, 60, 10, 1));
-        bricks.add(new Brick(380, 140, 60, 10, 1));
-        }
+        Random random = new Random();
+        int index = random.nextInt(0, getPatterns().size());
+        bricks = getPatterns().get(index);
+    }
 
     @Override
     public void tick() {
@@ -193,9 +175,9 @@ public class Arkanoid extends Worlds {
     }
 
     private void checkBrickBorder(Brick brick) {
-        for (Rectangle border:
-             brick.getBorders()) {
-            if(ball.getBounds().intersects(border.getBounds())){
+        for (Rectangle border :
+                brick.getBorders()) {
+            if (ball.getBounds().intersects(border.getBounds())) {
                 calculateBrickBounce(border, brick.getBorders().indexOf(border));
             }
         }
@@ -203,13 +185,13 @@ public class Arkanoid extends Worlds {
 
     private void calculateBrickBounce(Rectangle border, int index) {
 
-        if (index == 0 || index == 1){
+        if (index == 0 || index == 1) {
             ball.setSpeedY(-ball.getSpeedY());
-        } else{
+        } else {
             ball.setSpeedX(-ball.getSpeedX());
         }
 
-        if(index == 0) {
+        if (index == 0) {
             ball.y = border.y - ball.height;
         } else if (index == 1) {
             ball.y = border.y;
@@ -226,7 +208,7 @@ public class Arkanoid extends Worlds {
             if (brick.getHp() <= 0) {
                 score += brick.getScore();
                 bricks.remove(brick);
-                if(bricks.size() == 0) {
+                if (bricks.size() == 0) {
                     gameWon = true;
                     gameWonTime = System.currentTimeMillis();
                 }
@@ -268,13 +250,23 @@ public class Arkanoid extends Worlds {
     private void renderBackground(Graphics g) {
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        g.setColor(new Color(26, 26, 26));
+        for (int i = 0; i < 3; i++) {
+            g.drawRect(47 + i, 47 + i, WINDOW_WIDTH - 94 - (2 * i), WINDOW_HEIGHT - 94 - (2 * i));
+        }
         g.setColor(Color.GRAY);
         g.fillRect(50, 50, WINDOW_WIDTH - 100, WINDOW_HEIGHT - 100);
     }
 
     private void renderPlayer(Graphics g) {
-        g.setColor(Color.blue);
+        g.setColor(new Color(233, 0, 185));
         g.fillRect(player.x, player.y, player.width, player.height);
+
+        g.setColor(new Color(148, 0, 118));
+        for (int i = 0; i < 3; i++) {
+            g.drawRect(player.x + i, player.y + i, player.width - 2 * i, player.height - 2 * i);
+        }
+
         g.setColor(Color.white);
         g.fillOval(ball.x, ball.y, ball.width, ball.height);
     }
@@ -289,20 +281,20 @@ public class Arkanoid extends Worlds {
     }
 
     private void renderGameOver(Graphics g) {
-        g.setColor(Color.red);
+        g.setColor(new Color(158, 0, 29));
         g.fillRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
-        g.setColor(new Color(96, 6, 6));
-        g.drawRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+        g.setColor(new Color(209, 0, 38));
+        g.fillRect(WINDOW_WIDTH / 2 - 72, WINDOW_HEIGHT / 2 - 17, 144, 34);
         g.setColor(Color.white);
         g.drawString("GAME OVER", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5);
     }
 
     private void renderGameWon(Graphics g) {
-        g.setColor(Color.red);
+        g.setColor(new Color(10,123,34));
         g.fillRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
-        g.setColor(new Color(96, 6, 6));
-        g.drawRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+        g.setColor(new Color(15, 186, 51));
+        g.fillRect(WINDOW_WIDTH / 2 - 72, WINDOW_HEIGHT / 2 - 17, 144, 34);
         g.setColor(Color.white);
-        g.drawString("GAME WON", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5);
+        g.drawString("GAME WON", WINDOW_WIDTH / 2 - 60, WINDOW_HEIGHT / 2 + 5);
     }
 }
