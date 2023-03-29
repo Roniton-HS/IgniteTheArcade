@@ -8,12 +8,13 @@ import java.awt.*;
 
 public class ChessWorld extends Worlds {
 
-    static int[][] figuresSave = new int[7][7];
+    static int[][] figuresSave = new int[8][8];
 
     int fieldSize = 100;
     boolean white = true;
 
     Pawn pawn = new Pawn(100, 100);
+    //Pawn pawn2 = new Pawn(400, 600);
     /**
      * Constructor
      *
@@ -22,19 +23,23 @@ public class ChessWorld extends Worlds {
     public ChessWorld(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
-        figuresSave[0][1]=1;
+        figuresSave[0][0]=1;
+        //figuresSave[4][6]=1;
+
     }
 
     @Override
 
     public void tick(){
         pawn.tick();
+        //pawn2.tick();
     }
 
     @Override
     public void render(Graphics g){
         renderField(fieldSize, g);
         pawn.render(g);
+        //pawn2.render(g);
     }
 
     public void renderField(int fieldSize, Graphics g){
