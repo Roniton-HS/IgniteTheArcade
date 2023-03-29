@@ -4,6 +4,8 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Tetris extends Worlds {
     private final int WIDTH = 10;
@@ -12,24 +14,25 @@ public class Tetris extends Worlds {
     private final int BLOCK_SIZE = 25;
     private long timer = System.currentTimeMillis();
     private boolean keyPressed = false;
+    private boolean[] piecesUsed = new boolean[7];
     /*
     0:  empty
 
     1:  static o
-    2:  static i
-    3:  static s
-    4:  static z
-    5:  static l
-    6:  static j
-    7:  static t
+    2:  static s
+    3:  static z
+    4:  static l
+    5:  static j
+    6:  static t
+    7:  static i
 
     8:  moving o
-    9:  moving i
-    10: moving s
-    11: moving z
-    12: moving l
-    13: moving j
-    14: moving t
+    9:  moving s
+    10: moving z
+    11: moving l
+    12: moving j
+    13: moving t
+    14: moving i
      */
 
     /**
@@ -44,7 +47,7 @@ public class Tetris extends Worlds {
     public void tick() {
         input();
         if (!movingBlock()) {
-            spawnBlock('z');
+            getNewBlock();
         }
         if (System.currentTimeMillis() - timer > 800) {
             moveDown();
@@ -70,9 +73,41 @@ public class Tetris extends Worlds {
         }
     }
 
+    private void getNewBlock() {
+        boolean full = true;
+        for (boolean b: piecesUsed) {
+            if (!b) {
+                full = false;
+                break;
+            }
+        }
+        if(full){
+            Arrays.fill(piecesUsed, false);
+        }
+        Random r = new Random();
+        int randomInt;
+        do {
+            randomInt = r.nextInt(7) + 1;
+        } while (piecesUsed[randomInt-1]);
+
+        char randomChar = switch (randomInt) {
+            case 1 -> 'o';
+            case 2 -> 'i';
+            case 3 -> 's';
+            case 4 -> 'z';
+            case 5 -> 'l';
+            case 6 -> 'j';
+            case 7 -> 't';
+            default -> throw new IllegalStateException("Unexpected value: " + randomInt);
+        };
+
+        piecesUsed[randomInt-1] = true;
+        spawnBlock(randomChar);
+    }
+
     private void spawnBlock(char block) {
         switch (block) {
-            case 'o' ->{
+            case 'o' -> {
                 map[5][0] = 1;
                 map[6][0] = 1;
                 map[5][1] = 1;
@@ -84,7 +119,7 @@ public class Tetris extends Worlds {
                 map[5][2] = 4;
                 map[6][2] = 4;
             }
-            case 'j' ->{
+            case 'j' -> {
                 map[6][0] = 5;
                 map[6][1] = 5;
                 map[6][2] = 5;
@@ -96,17 +131,17 @@ public class Tetris extends Worlds {
                 map[6][1] = 2;
                 map[7][1] = 2;
             }
-            case 'z' ->{
+            case 'z' -> {
                 map[5][1] = 3;
                 map[6][1] = 3;
                 map[6][0] = 3;
                 map[7][0] = 3;
             }
-            case 'i'->{
-                map[5][1] = 9;
-                map[5][2] = 9;
-                map[5][3] = 9;
-                map[5][4] = 9;
+            case 'i' -> {
+                map[5][1] = 7;
+                map[5][2] = 7;
+                map[5][3] = 7;
+                map[5][4] = 7;
             }
             case 't' -> {
                 map[5][0] = 6;
@@ -257,15 +292,15 @@ public class Tetris extends Worlds {
         final int SPACING = 2 * BLOCK_SIZE;
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                switch (map[j][i]){
+                switch (map[j][i]) {
                     default -> g.setColor(Color.WHITE);
-                    case 1,8 -> g.setColor(Color.YELLOW);
-                    case 2,9-> g.setColor(Color.GREEN);
-                    case 3,10-> g.setColor(Color.RED);
-                    case 4,11-> g.setColor(Color.ORANGE);
-                    case 5,12-> g.setColor(Color.CYAN);
-                    case 6,13-> g.setColor(new Color(211, 16, 211, 255));
-                    case 7,14-> g.setColor(new Color(77, 0, 77));
+                    case 1, 8 -> g.setColor(Color.YELLOW);
+                    case 2, 9 -> g.setColor(Color.GREEN);
+                    case 3, 10 -> g.setColor(Color.RED);
+                    case 4, 11 -> g.setColor(Color.ORANGE);
+                    case 5, 12 -> g.setColor(Color.CYAN);
+                    case 6, 13 -> g.setColor(new Color(211, 16, 211, 255));
+                    case 7, 14 -> g.setColor(new Color(77, 0, 77));
                 }
                 g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);

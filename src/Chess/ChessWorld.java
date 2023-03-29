@@ -1,20 +1,20 @@
 package Chess;
 
+import Input.MouseHandler;
 import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+import java.sql.SQLOutput;
 
 public class ChessWorld extends Worlds {
 
-    static int[][] figuresSave = new int[8][8];
+    static Figures[][] figuresSave = new Figures[10][10];
 
-    int fieldSize = 100;
+    static final int FIELD_SIZE = 100;
     boolean white = true;
 
-    Pawn pawn = new Pawn(100, 100);
-    //Pawn pawn2 = new Pawn(400, 600);
     /**
      * Constructor
      *
@@ -23,23 +23,28 @@ public class ChessWorld extends Worlds {
     public ChessWorld(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
-        figuresSave[0][0]=1;
-        //figuresSave[4][6]=1;
+        figuresSave[1][1]= new Pawn(1, 1);
+        figuresSave[4][6]= new Pawn(4, 6);
 
     }
 
     @Override
 
     public void tick(){
-        pawn.tick();
-        //pawn2.tick();
+        input();
+        for (int i = 0; i < figuresSave.length; i++) {
+            for (int j = 0; j < figuresSave.length; j++) {
+                if(figuresSave[j][i]!=null) {
+                    figuresSave[j][i].tick();
+                }
+            }
+        }
     }
 
     @Override
     public void render(Graphics g){
-        renderField(fieldSize, g);
-        pawn.render(g);
-        //pawn2.render(g);
+        renderField(FIELD_SIZE, g);
+        renderFigures(g);
     }
 
     public void renderField(int fieldSize, Graphics g){
@@ -58,7 +63,39 @@ public class ChessWorld extends Worlds {
         }
     }
 
-    public void renderFigures(){
+    public void renderFigures(Graphics g){
+        for (int i = 0; i < figuresSave.length; i++) {
+            for (int j = 0; j < figuresSave.length; j++) {
+                if(figuresSave[j][i]!=null) {
+                    figuresSave[j][i].render(g);
+                }
+            }
+        }
+    }
 
+    public void input() {
+        //get Mouse X and Y Positions
+        int clickX = (MouseHandler.getClickX()/FIELD_SIZE);
+        int clickY = (MouseHandler.getClickY()/FIELD_SIZE);
+        if(clickX >= 1 && clickX <= 8 && clickY >= 1 && clickY <= 8) { //in bound?
+
+            if(figuresSave[clickX][clickY]!=null) { //true if a figure is standing on selected field
+
+                if(!(figuresSave[clickX][clickY].selected)) {
+                    figuresSave[clickX][clickY].selected = true; //changes selected to true
+                } else {
+                    figuresSave[clickX][clickY].selected = false; //if figure is already selected, change selected to false
+                }
+                for (int i = 0; i < figuresSave.length; i++) {
+                    for (int j = 0; j < figuresSave.length; j++) {
+
+                        if((figuresSave[j][i] != null) && (figuresSave[j][i]!=figuresSave[clickX][clickY])){ //changes all not selected figures to false
+                            figuresSave[j][i].selected = false;
+                        }
+                    }
+                }
+            }
+        }
+        MouseHandler.reset();
     }
 }

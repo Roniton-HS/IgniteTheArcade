@@ -4,118 +4,124 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Random;
 
-public class Snake {
+import static Main.Constants.emulogic;
 
-    private int x, y;
-    private int tick;
-    private int directions;
-    public int appleCounter;
-    public int start;
-    public ArrayList<Rectangle> tiles = new ArrayList();
-    public boolean appleCollected = false;
-    private final Game game;
-    private final SnakeWorld snakeWorld;
+public class Snake extends Worlds {
+    public static final int BLOCK_SIZE = 32;
+    public boolean gameStart = false;
+
+    private boolean startScreen = false;
+
+    private final Player snake = new Player(14 * 32, 14 * 32, game, this);
+    private Apple apple = new Apple(8 * 32, 10 * 32);
 
     /**
      * Constructor
      */
-    public Snake(int x, int y, Game game, SnakeWorld snakeWorld) {
-        this.x = x;
-        this.y = y;
-        this.game = game;
-        this.snakeWorld = snakeWorld;
+    public Snake(Game game) {
+        super(game);
+        game.getDisplay().resize(753, 904);
     }
 
+    @Override
     public void tick() {
-        move();
+        if (gameStart) {
+            snake.tick();
+            if (snake.start >= 3) {
+                checkApple();
+            }
+        } else {
+            startScreen = true;
+        }
     }
 
+    @Override
     public void render(Graphics g) {
-        for (int i = 0; i < tiles.size(); i++) {
-            Rectangle r = tiles.get(i);
-            if (i == tiles.size() - 1) {
-                g.setColor(new Color(0, 145, 0));
-            } else {
-                g.setColor(Color.green);
+        //background
+        g.setColor(new Color(31, 31, 31));
+        g.fillRect(0, 0, 1000, 1000);
+        g.setColor(new Color(63, 63, 63));
+        g.fillRect(0, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
+
+        snake.render(g);
+        apple.render(g);
+        renderGrid(g);
+        renderAppleCounter(g);
+
+        if (startScreen) {
+            renderStartScreen(g);
+        }
+    }
+
+    public void renderStartScreen(Graphics g) {
+        g.setColor(new Color(208, 208, 208, 205));
+        g.fillRect(0, 400, 831, 100);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 30.0F));
+        g.setColor(Color.black);
+        g.drawString("Press [Space] to start", 30, 460);
+        if (game.getKeyHandler().space) {
+            gameStart = true;
+            startScreen = false;
+        }
+    }
+
+    /**
+     * renders the map
+     */
+    public void renderGrid(Graphics g) {
+        g.setColor(Color.BLACK);
+        for (int i = 0; i < 12; i++) {
+            g.drawRect(((2 * i)) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 23 * BLOCK_SIZE);
+        }
+        for (int i = 2; i < 13; i++) {
+            g.drawRect(0, ((2 * i) + 1) * BLOCK_SIZE, 23 * BLOCK_SIZE, BLOCK_SIZE);
+        }
+        g.setColor(Color.black);
+        g.drawRect(0, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
+    }
+
+    /**
+     * renders the score
+     */
+    public void renderAppleCounter(Graphics g) {
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 60.0F));
+        g.setColor(new Color(0, 145, 0));
+        g.drawString("Score: " + snake.appleCounter, BLOCK_SIZE, 3 * BLOCK_SIZE);
+    }
+
+    /**
+     * checks if the snake can eat an apple
+     */
+    public void checkApple() {
+        if (snake.getBounds().intersects(apple.getBounds())) {
+            snake.appleCollected = true;
+            snake.appleCounter++;
+            updateApple();
+        }
+    }
+
+    /**
+     * spawn a new apple
+     */
+    public void updateApple() {
+        Random r = new Random();
+        do {
+            apple.x = (r.nextInt(20)) * BLOCK_SIZE;
+            apple.y = (r.nextInt(20) + 4) * BLOCK_SIZE;
+        } while (inSnake(apple));
+    }
+
+    /**
+     * check if the new apple is inside the snake
+     */
+    private boolean inSnake(Apple apple) {
+        for (Rectangle r : snake.tiles) {
+            if (r.getBounds().intersects(apple.getBounds())) {
+                return true;
             }
-            g.fillRect(r.getBounds().x, r.getBounds().y, r.getBounds().width, r.getBounds().height);
         }
+        return false;
     }
-
-    public void move() {
-        final int TICK_TIMER = 10;
-        if ((game.getKeyHandler().w || game.getKeyHandler().up) && directions != 2) {
-            directions = 0;
-        }
-        if ((game.getKeyHandler().a || game.getKeyHandler().left) && directions != 3) {
-            directions = 1;
-        }
-        if ((game.getKeyHandler().s || game.getKeyHandler().down) && directions != 0) {
-            directions = 2;
-        }
-        if ((game.getKeyHandler().d || game.getKeyHandler().right) && directions != 1) {
-            directions = 3;
-        }
-
-        if (tick > TICK_TIMER) {
-            switch (directions) {
-                case 0 -> y = y - SnakeWorld.BLOCK_SIZE;
-                case 1 -> x = x - SnakeWorld.BLOCK_SIZE;
-                case 2 -> y = y + SnakeWorld.BLOCK_SIZE;
-                case 3 -> x = x + SnakeWorld.BLOCK_SIZE;
-            }
-            tiles.add(new Rectangle(this.x, this.y, SnakeWorld.BLOCK_SIZE, SnakeWorld.BLOCK_SIZE));
-            tick = 0;
-            waitForStart();
-        } else {
-            tick++;
-        }
-    }
-
-    public void waitForStart() {
-        if (start >= 3) {
-            if (!appleCollected) {
-                tiles.remove(0);
-            } else {
-                appleCollected = false;
-            }
-            die();
-        } else {
-            start++;
-        }
-    }
-
-    public void die() {
-        Rectangle head = tiles.get(tiles.size() - 1);
-        for (int i = 0; i < tiles.size(); i++) {
-            Rectangle rectangle = tiles.get(i);
-            if (head.getBounds().intersects(rectangle.getBounds()) && i != tiles.size() - 1) {
-                snakeWorld.gameStart = false;
-                restart();
-            }
-        }
-        Rectangle up = new Rectangle(0, 3 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
-        Rectangle down = new Rectangle(0, 27 * SnakeWorld.BLOCK_SIZE, 23 * SnakeWorld.BLOCK_SIZE, 1);
-        Rectangle left = new Rectangle(-1 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
-        Rectangle right = new Rectangle(23 * SnakeWorld.BLOCK_SIZE, 3 * SnakeWorld.BLOCK_SIZE, 1, 23 * SnakeWorld.BLOCK_SIZE);
-        if (head.getBounds().intersects(up.getBounds()) ||
-                head.getBounds().intersects(down.getBounds()) ||
-                head.getBounds().intersects(left.getBounds()) ||
-                head.getBounds().intersects(right.getBounds())) {
-            snakeWorld.gameStart = false;
-            restart();
-        }
-    }
-
-    public void restart() {
-        SnakeWorld snakeWorld = new SnakeWorld(game);
-        Worlds.setWorld(snakeWorld);
-    }
-
-    public Rectangle getBounds() {
-        return tiles.get(tiles.size() - 1);
-    }
-
 }
