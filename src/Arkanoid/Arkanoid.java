@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static Main.Constants.emulogic;
+import static java.lang.Math.PI;
 
 public class Arkanoid extends Worlds {
 
@@ -24,11 +25,11 @@ public class Arkanoid extends Worlds {
     private Rectangle player;
     private Rectangle collisionPlayer;
 
-    private int ballSpeedY = 5;
+    private final int BALL_SPEED = 5;
     private int ballSpeedX = 0;
     private int ballAngle = 0;
     private final int BALL_DIAMETER = 10;
-    private final double MAX_ANGE = 5 * Math.PI / 12;
+    private final double MAX_ANGLE = 75 * PI / 180;
     private Ball ball;
 
     private Rectangle borderL = new Rectangle(40, 50, 10, 900);
@@ -122,7 +123,6 @@ public class Arkanoid extends Worlds {
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
             calculateBorderBounce();
-            ballSpeedY = -ballSpeedY;
         }
 
         if (ball.getBounds().intersects(borderB.getBounds())) {
@@ -138,28 +138,25 @@ public class Arkanoid extends Worlds {
 
         for (Brick brick : bricks) {
             if (ball.getBounds().intersects(brick.getBounds())) {
-                ballSpeedY = -ballSpeedY;
                 brick.setHp(brick.getHp() - 1);
             }
         }
     }
 
     private void calculatePlayerBounce() {
-        int ballX = ball.x;
-        int barX = player.x;
-
         int relativeCollision = player.x - ball.x - player.width / 2;
         int normRelativeCollision = relativeCollision / (player.width / 2);
 
-        ball.setAngle(normRelativeCollision * MAX_ANGE);
+        ball.setAngle(normRelativeCollision * MAX_ANGLE);
 
-        ball.setSpeedX(Math.cos(ball.getAngle()));
-        ball.setSpeedY(-Math.sin(ball.getAngle()));
+        ball.setSpeedX(Math.cos(ball.getAngle()) * BALL_SPEED);
+        ball.setSpeedY(-Math.sin(ball.getAngle()) * BALL_SPEED);
 
     }
 
     private void calculateBorderBounce() {
-
+        ball.setSpeedX(Math.cos(PI / 2 + (PI / 2 - (ball.getAngle()))) * BALL_SPEED);
+        ball.setSpeedY(-Math.sin(PI / 2 + (PI / 2 - (ball.getAngle()))) * BALL_SPEED);
     }
 
     private void checkHp() {
