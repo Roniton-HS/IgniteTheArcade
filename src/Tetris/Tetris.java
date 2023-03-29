@@ -5,7 +5,6 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -18,7 +17,7 @@ public class Tetris extends Worlds {
     private boolean keyPressed = false;
     private boolean[] piecesUsed = new boolean[7];
     private int state = 0;
-    private ArrayList<Coordinates> currentPiece = new ArrayList<>();
+    char current;
     /*
     0:  empty
 
@@ -51,8 +50,7 @@ public class Tetris extends Worlds {
     public void tick() {
         input();
         if (!movingBlock()) {
-//            getNewBlock();
-            spawnBlock('i');
+            getNewBlock();
         }
         if (System.currentTimeMillis() - timer > 800) {
             moveDown();
@@ -74,7 +72,7 @@ public class Tetris extends Worlds {
             keyPressed = true;
         }
         if (game.getKeyHandler().w && !keyPressed) {
-            rotateI();
+            rotate();
             keyPressed = true;
         }
         if (!game.getKeyHandler().a && !game.getKeyHandler().d && !game.getKeyHandler().w) {
@@ -99,7 +97,7 @@ public class Tetris extends Worlds {
             randomInt = r.nextInt(7) + 1;
         } while (piecesUsed[randomInt - 1]);
 
-        char randomChar = switch (randomInt) {
+        current = switch (randomInt) {
             case 1 -> 'o';
             case 2 -> 'i';
             case 3 -> 's';
@@ -111,11 +109,10 @@ public class Tetris extends Worlds {
         };
 
         piecesUsed[randomInt - 1] = true;
-        spawnBlock(randomChar);
+        spawnBlock(current);
     }
 
     private void spawnBlock(char block) {
-        currentPiece.clear();
         switch (block) {
             case 'o' -> {
                 map[5][0] = 1;
@@ -159,6 +156,16 @@ public class Tetris extends Worlds {
                 map[7][0] = 6;
                 map[6][1] = 6;
             }
+        }
+    }
+
+    private void rotate() {
+        System.out.println(current);
+        switch (current) {
+            default -> {
+            }
+            case 'i' -> rotateI();
+            case 'l' -> rotateL();
         }
     }
 
@@ -214,6 +221,106 @@ public class Tetris extends Worlds {
             }
         }
     }
+
+    private void rotateL() {
+        System.out.println("jo");
+        switch (state) {
+            case 0 -> {
+                Coordinates topBlock = new Coordinates(0, 0);
+                outer:
+                for (int i = 0; i < HEIGHT; i++) {
+                    for (int j = 0; j < WIDTH; j++) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            topBlock = new Coordinates(j, i);
+                            break outer;
+                        }
+                    }
+                }
+                if (topBlock.getX() - 1 >= 0 && topBlock.getX() + 1 < WIDTH &&
+                        map[topBlock.getX() - 1][topBlock.getY() + 2] == 0 &&
+                        map[topBlock.getX() - 1][topBlock.getY() + 1] == 0 &&
+                        map[topBlock.getX() + 1][topBlock.getY() + 1] == 0) {
+                    clearMoving();
+                    map[topBlock.getX() - 1][topBlock.getY() + 2] = 4;
+                    map[topBlock.getX() - 1][topBlock.getY() + 1] = 4;
+                    map[topBlock.getX()][topBlock.getY() + 1] = 4;
+                    map[topBlock.getX() + 1][topBlock.getY() + 1] = 4;
+                    state = 1;
+                }
+            }
+
+            case 1 -> {
+                Coordinates rightMostBlock = new Coordinates(0, 0);
+                outer:
+                for (int i = 0; i < HEIGHT; i++) {
+                    for (int j = WIDTH - 1; j >= 0; j--) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            rightMostBlock = new Coordinates(j, i);
+                            break outer;
+                        }
+                    }
+                }
+                if (rightMostBlock.getY() - 2 >= 0 && rightMostBlock.getY() + 1 < HEIGHT &&
+                        map[rightMostBlock.getX() - 2][rightMostBlock.getY() - 1] == 0 &&
+                        map[rightMostBlock.getX() - 1][rightMostBlock.getY() - 1] == 0 &&
+                        map[rightMostBlock.getX() - 1][rightMostBlock.getY() + 1] == 0) {
+                    clearMoving();
+                    map[rightMostBlock.getX() - 2][rightMostBlock.getY() - 1] = 4;
+                    map[rightMostBlock.getX() - 1][rightMostBlock.getY() - 1] = 4;
+                    map[rightMostBlock.getX() - 1][rightMostBlock.getY()] = 4;
+                    map[rightMostBlock.getX() - 1][rightMostBlock.getY() + 1] = 4;
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                Coordinates topBlock = new Coordinates(0, 0);
+                outer:
+                for (int i = 0; i < HEIGHT; i++) {
+                    for (int j = 0; j < WIDTH; j++) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            topBlock = new Coordinates(j, i);
+                            break outer;
+                        }
+                    }
+                }
+                if (topBlock.getX() >= 0 && topBlock.getX() + 2 < WIDTH &&
+                        map[topBlock.getX()][topBlock.getY() + 1] == 0 &&
+                        map[topBlock.getX() + 2][topBlock.getY() + 1] == 0 &&
+                        map[topBlock.getX() + 2][topBlock.getY()] == 0) {
+                    clearMoving();
+                    map[topBlock.getX()][topBlock.getY() + 1] = 4;
+                    map[topBlock.getX() + 1][topBlock.getY() + 1] = 4;
+                    map[topBlock.getX() + 2][topBlock.getY() + 1] = 4;
+                    map[topBlock.getX() + 2][topBlock.getY()] = 4;
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                Coordinates leftMostBlock = new Coordinates(0, 0);
+                outer:
+                for (int i = HEIGHT - 1; i >= 0; i--) {
+                    for (int j = 0; j < WIDTH; j++) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            leftMostBlock = new Coordinates(j, i);
+                            break outer;
+                        }
+                    }
+                }
+                if (leftMostBlock.getY() - 1 >= 0 && leftMostBlock.getY() + 1 < HEIGHT &&
+                        map[leftMostBlock.getX() + 1][leftMostBlock.getY() - 1] == 0 &&
+                        map[leftMostBlock.getX() + 1][leftMostBlock.getY() + 1] == 0 &&
+                        map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] == 0) {
+                    clearMoving();
+                    map[leftMostBlock.getX() + 1][leftMostBlock.getY() - 1] = 4;
+                    map[leftMostBlock.getX() + 1][leftMostBlock.getY()] = 4;
+                    map[leftMostBlock.getX() + 1][leftMostBlock.getY() + 1] = 4;
+                    map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] = 4;
+                    state = 0;
+                }
+            }
+        }
+    }
+
 
     private void clearMoving() {
         for (int i = 0; i < HEIGHT; i++) {
