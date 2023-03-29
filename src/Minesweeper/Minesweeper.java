@@ -2,7 +2,6 @@ package Minesweeper;
 
 import Input.ImageLoader;
 import Input.MouseHandler;
-import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 

@@ -10,6 +10,7 @@ import Main.GameCamera;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
 import Snake.SnakeWorld;
+import Tetris.Tetris;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -52,14 +53,15 @@ public class Menu extends Worlds {
     Rectangle player = new Rectangle(PLAYER_START_X, PLAYER_START_Y, head.getWidth() * PLAYER_SIZE, head.getHeight() * PLAYER_SIZE);
 
     //levels
-    private final int PACMAN_X = 0;
-    private final int MINESWEEPER_X = 350;
-    private final int SNAKE_X = 700;
+    private final int LEVEL_OFFSET = 350;
     private final int LEVEL_Y = 340;
     private final int LEVEL_SIZE = 4;
-    Rectangle pacMan = new Rectangle(PACMAN_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle minesweeper = new Rectangle(MINESWEEPER_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle snake = new Rectangle(SNAKE_X, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle tetris = new Rectangle(-2 * LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle chess = new Rectangle(-LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle pacMan = new Rectangle(0, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle minesweeper = new Rectangle(LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle snake = new Rectangle(2*LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
+    Rectangle arkanoid = new Rectangle(3*LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
     ArrayList<Rectangle> levels = new ArrayList<>();
 
     //animations
@@ -79,6 +81,9 @@ public class Menu extends Worlds {
         levels.add(pacMan);
         levels.add(minesweeper);
         levels.add(snake);
+        levels.add(arkanoid);
+        levels.add(chess);
+        levels.add(tetris);
     }
 
     @Override
@@ -113,16 +118,6 @@ public class Menu extends Worlds {
             checkGame();
         }
 
-        if (game.getKeyHandler().c) {
-            ChessWorld chessWorld = new ChessWorld(game);
-            Worlds.setWorld(chessWorld);
-        }
-
-        if (game.getKeyHandler().b) {
-            Arkanoid arkanoid = new Arkanoid(game);
-            Worlds.setWorld(arkanoid);
-        }
-
         MouseHandler.reset();
     }
 
@@ -141,6 +136,15 @@ public class Menu extends Worlds {
         } else if (player.getBounds().intersects(snake.getBounds())) {
             SnakeWorld snakeWorld = new SnakeWorld(game);
             Worlds.setWorld(snakeWorld);
+        } else if (player.getBounds().intersects(arkanoid.getBounds())) {
+            Arkanoid arkanoid = new Arkanoid(game);
+            Worlds.setWorld(arkanoid);
+        } else if (player.getBounds().intersects(chess.getBounds())) {
+            ChessWorld chess = new ChessWorld(game);
+            Worlds.setWorld(chess);
+        }else if(player.getBounds().intersects(tetris.getBounds())){
+            Tetris tetris = new Tetris(game);
+            Worlds.setWorld(tetris);
         }
     }
 
@@ -184,26 +188,28 @@ public class Menu extends Worlds {
         //render arcade
         final int ARCADE_OFFSET_X = -88;
         final int ARCADE_OFFSET_Y = -2;
-        g.drawImage(arcadeMachine, minesweeper.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
-        g.drawImage(arcadeMachine, pacMan.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
-        g.drawImage(arcadeMachine, snake.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
-
-        //render levels
-        g.drawImage(portal, pacMan.x - off, pacMan.y, pacMan.width, pacMan.height, null);
-        g.drawImage(portal, minesweeper.x - off, minesweeper.y, minesweeper.width, minesweeper.height, null);
-        g.drawImage(portal, snake.x - off, snake.y, snake.width, snake.height, null);
+        for (Rectangle level : levels) {
+            g.drawImage(arcadeMachine, level.x + ARCADE_OFFSET_X - off, 30 + ARCADE_OFFSET_Y, arcadeMachine.getWidth() * 4, arcadeMachine.getHeight() * 4, null);
+            g.drawImage(portal, level.x - off, level.y, level.width, level.height, null);
+        }
 
         //render level names
         final float LEVEL_TEXT_SIZE = 30.F;
         final int LEVEL_TEXT_HEIGHT = -275;
+        final int TETRIS_TEXT_OFFSET = 100;
+        final int CHESS_TEXT_OFFSET = 108;
         final int PACMAN_TEXT_OFFSET = 95;
         final int MINESWEEPER_TEXT_OFFSET = 53;
         final int SNAKE_TEXT_OFFSET = 105;
+        final int ARKANOID_TEXT_OFFSET = 80;
         g.setColor(Color.WHITE);
         g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * LEVEL_TEXT_SIZE));
+        g.drawString("Tetris", tetris.x + TETRIS_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Chess", chess.x + CHESS_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
         g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Minesweeper", minesweeper.x + MINESWEEPER_TEXT_OFFSET + ARCADE_OFFSET_X - off, minesweeper.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Snake", snake.x + SNAKE_TEXT_OFFSET + ARCADE_OFFSET_X - off, snake.y + LEVEL_TEXT_HEIGHT);
+        g.drawString("Arkanoid", arkanoid.x + ARKANOID_TEXT_OFFSET + ARCADE_OFFSET_X - off, arkanoid.y + LEVEL_TEXT_HEIGHT);
 
         //render player
         final int LEG_OFFSET_X = 4;
