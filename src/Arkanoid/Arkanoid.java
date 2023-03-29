@@ -28,7 +28,8 @@ public class Arkanoid extends Worlds {
     private int ballSpeedX = 0;
     private int ballAngle = 0;
     private final int BALL_DIAMETER = 10;
-    private Rectangle ball;
+    private final double MAX_ANGE = 5 * Math.PI / 12;
+    private Ball ball;
 
     private Rectangle borderL = new Rectangle(40, 50, 10, 900);
     private Rectangle borderR = new Rectangle(450, 50, 10, 900);
@@ -50,7 +51,7 @@ public class Arkanoid extends Worlds {
     private void createGame() {
         player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), 900, PLAYER_WIDTH, 10);
         collisionPlayer = new Rectangle(player.x - PLAYER_SPEED, player.y, player.width + (2 * PLAYER_SPEED), player.height);
-        ball = new Rectangle(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, 890, BALL_DIAMETER, BALL_DIAMETER);
+        ball = new Ball(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, 890, BALL_DIAMETER, BALL_DIAMETER);
     }
 
     private void createBricks() {
@@ -112,13 +113,15 @@ public class Arkanoid extends Worlds {
     }
 
     private void moveBall() {
-        ball.y -= ballSpeedY;
+        ball.y -= ball.getSpeedX();
+        ball.y -= ball.getSpeedY();
 
         if (ball.getBounds().intersects(player.getBounds())) {
-            ballSpeedY = -ballSpeedY;
+            calculatePlayerBounce();
         }
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
+            calculateBorderBounce();
             ballSpeedY = -ballSpeedY;
         }
 
@@ -128,8 +131,7 @@ public class Arkanoid extends Worlds {
             if (lives <= 0) {
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
-            }
-            else {
+            } else {
                 reset();
             }
         }
@@ -140,6 +142,24 @@ public class Arkanoid extends Worlds {
                 brick.setHp(brick.getHp() - 1);
             }
         }
+    }
+
+    private void calculatePlayerBounce() {
+        int ballX = ball.x;
+        int barX = player.x;
+
+        int relativeCollision = player.x - ball.x - player.width / 2;
+        int normRelativeCollision = relativeCollision / (player.width / 2);
+
+        ball.setAngle(normRelativeCollision * MAX_ANGE);
+
+        ball.setSpeedX(Math.cos(ball.getAngle()));
+        ball.setSpeedY(-Math.sin(ball.getAngle()));
+
+    }
+
+    private void calculateBorderBounce() {
+
     }
 
     private void checkHp() {
