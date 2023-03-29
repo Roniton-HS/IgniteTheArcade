@@ -4,6 +4,7 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Tetris extends Worlds {
@@ -80,15 +81,13 @@ public class Tetris extends Worlds {
             }
         }
         if(full){
-            for (boolean b: piecesUsed) {
-
-            }
+            Arrays.fill(piecesUsed, false);
         }
         Random r = new Random();
         int randomInt;
         do {
             randomInt = r.nextInt(7) + 1;
-        } while (piecesUsed[randomInt]);
+        } while (piecesUsed[randomInt-1]);
 
         char randomChar = switch (randomInt) {
             case 1 -> 'o';
@@ -101,7 +100,7 @@ public class Tetris extends Worlds {
             default -> throw new IllegalStateException("Unexpected value: " + randomInt);
         };
 
-        piecesUsed[randomInt] = true;
+        piecesUsed[randomInt-1] = true;
         spawnBlock(randomChar);
     }
 
