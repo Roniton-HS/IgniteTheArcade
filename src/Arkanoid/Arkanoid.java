@@ -16,9 +16,11 @@ public class Arkanoid extends Worlds {
 
     private boolean gameStarted = false;
     private boolean gameOver = false;
+    private boolean gameWon = false;
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
+    private long gameWonTime;
 
     private final int PLAYER_SPEED = 5;
     private final int PLAYER_WIDTH = 100;
@@ -54,24 +56,52 @@ public class Arkanoid extends Worlds {
     }
 
     private void createBricks() {
-        bricks.add(new Brick(60, 60, 60, 10, 1));
-        bricks.add(new Brick(140, 60, 60, 10, 2));
-        bricks.add(new Brick(220, 60, 60, 10, 3));
-        bricks.add(new Brick(300, 60, 60, 10, 4));
+        bricks.add(new Brick(60, 60, 60, 10, 5));
+        bricks.add(new Brick(140, 60, 60, 10, 5));
+        bricks.add(new Brick(220, 60, 60, 10, 5));
+        bricks.add(new Brick(300, 60, 60, 10, 5));
         bricks.add(new Brick(380, 60, 60, 10, 5));
-    }
+        bricks.add(new Brick(60, 80, 60, 10, 4));
+        bricks.add(new Brick(140, 80, 60, 10, 4));
+        bricks.add(new Brick(220, 80, 60, 10, 4));
+        bricks.add(new Brick(300, 80, 60, 10, 4));
+        bricks.add(new Brick(380, 80, 60, 10, 4));
+        bricks.add(new Brick(60, 100, 60, 10, 3));
+        bricks.add(new Brick(140, 100, 60, 10, 3));
+        bricks.add(new Brick(220, 100, 60, 10, 3));
+        bricks.add(new Brick(300, 100, 60, 10, 3));
+        bricks.add(new Brick(380, 100, 60, 10, 3));
+        bricks.add(new Brick(60, 120, 60, 10, 2));
+        bricks.add(new Brick(140, 120, 60, 10, 2));
+        bricks.add(new Brick(220, 120, 60, 10, 2));
+        bricks.add(new Brick(300, 120, 60, 10, 2));
+        bricks.add(new Brick(380, 120, 60, 10, 2));
+        bricks.add(new Brick(60, 140, 60, 10, 1));
+        bricks.add(new Brick(140, 140, 60, 10, 1));
+        bricks.add(new Brick(220, 140, 60, 10, 1));
+        bricks.add(new Brick(300, 140, 60, 10, 1));
+        bricks.add(new Brick(380, 140, 60, 10, 1));
+        }
 
     @Override
     public void tick() {
         input();
         if (gameStarted) {
             moveBall();
-            checkHp();
+            checkBrick();
         }
         if (gameOver) {
             gameStarted = false;
             if (System.currentTimeMillis() - gameOverTime > 3000) {
                 resetGame();
+            }
+        }
+        if (gameWon) {
+            gameStarted = false;
+            if (System.currentTimeMillis() - gameWonTime > 3000) {
+                reset();
+                createBricks();
+                gameWon = false;
             }
         }
     }
@@ -190,12 +220,16 @@ public class Arkanoid extends Worlds {
         }
     }
 
-    private void checkHp() {
+    private void checkBrick() {
         for (int i = 0; i < bricks.size(); i++) {
             Brick brick = bricks.get(i);
             if (brick.getHp() <= 0) {
                 score += brick.getScore();
                 bricks.remove(brick);
+                if(bricks.size() == 0) {
+                    gameWon = true;
+                    gameWonTime = System.currentTimeMillis();
+                }
             }
         }
     }
@@ -225,6 +259,9 @@ public class Arkanoid extends Worlds {
         }
         if (gameOver) {
             renderGameOver(g);
+        }
+        if (gameWon) {
+            renderGameWon(g);
         }
     }
 
@@ -258,5 +295,14 @@ public class Arkanoid extends Worlds {
         g.drawRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
         g.setColor(Color.white);
         g.drawString("GAME OVER", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5);
+    }
+
+    private void renderGameWon(Graphics g) {
+        g.setColor(Color.red);
+        g.fillRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+        g.setColor(new Color(96, 6, 6));
+        g.drawRect(WINDOW_WIDTH / 2 - 75, WINDOW_HEIGHT / 2 - 20, 150, 40);
+        g.setColor(Color.white);
+        g.drawString("GAME WON", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5);
     }
 }
