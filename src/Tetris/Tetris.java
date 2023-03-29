@@ -160,7 +160,6 @@ public class Tetris extends Worlds {
     }
 
     private void rotate() {
-        System.out.println(current);
         switch (current) {
             default -> {
             }
@@ -223,7 +222,6 @@ public class Tetris extends Worlds {
     }
 
     private void rotateL() {
-        System.out.println("jo");
         switch (state) {
             case 0 -> {
                 Coordinates topBlock = new Coordinates(0, 0);
