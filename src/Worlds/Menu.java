@@ -9,7 +9,7 @@ import Main.Game;
 import Main.GameCamera;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
-import Snake.SnakeWorld;
+import Snake.Snake;
 import Tetris.Tetris;
 
 import java.awt.*;
@@ -134,7 +134,7 @@ public class Menu extends Worlds {
             Minesweeper mineSweeper = new Minesweeper(game, MINESWEEPER_BLOCK_SIZE, MINESWEEPER_MAP_SIZE);
             Worlds.setWorld(mineSweeper);
         } else if (player.getBounds().intersects(snake.getBounds())) {
-            SnakeWorld snakeWorld = new SnakeWorld(game);
+            Snake snakeWorld = new Snake(game);
             Worlds.setWorld(snakeWorld);
         } else if (player.getBounds().intersects(arkanoid.getBounds())) {
             Arkanoid arkanoid = new Arkanoid(game);

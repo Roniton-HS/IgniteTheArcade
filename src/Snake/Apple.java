@@ -13,10 +13,10 @@ public class Apple {
 
     public void render(Graphics g) {
         g.setColor(Color.RED);
-        g.fillRect(x, y, SnakeWorld.BLOCK_SIZE,SnakeWorld.BLOCK_SIZE);
+        g.fillRect(x, y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE);
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, SnakeWorld.BLOCK_SIZE,SnakeWorld.BLOCK_SIZE);
+        return new Rectangle(x, y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE);
     }
 }
