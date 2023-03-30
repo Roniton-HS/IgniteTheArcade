@@ -91,6 +91,7 @@ public class Tetris extends Worlds {
     PIECE SPAWNING
     ====================================================================================================================
      */
+
     /**
      * creates a random piece
      */
@@ -128,6 +129,7 @@ public class Tetris extends Worlds {
 
     /**
      * spawn a new piece
+     *
      * @param type type of piece
      */
     private void spawnPiece(char type) {
@@ -169,10 +171,10 @@ public class Tetris extends Worlds {
                 map[5][4] = 7;
             }
             case 't' -> {
-                map[5][0] = 6;
                 map[6][0] = 6;
-                map[7][0] = 6;
+                map[5][1] = 6;
                 map[6][1] = 6;
+                map[7][1] = 6;
             }
         }
     }
@@ -296,6 +298,7 @@ public class Tetris extends Worlds {
     ROTATION
     ====================================================================================================================
      */
+
     /**
      * rotates the current piece
      */
@@ -305,6 +308,10 @@ public class Tetris extends Worlds {
             }
             case 'i' -> rotateI();
             case 'l' -> rotateL();
+            case 'j' -> rotateJ();
+            case 's' -> rotateS();
+            case 'z' -> rotateZ();
+            case 't' -> rotateT();
         }
     }
 
@@ -320,13 +327,11 @@ public class Tetris extends Worlds {
                 m => a b m c
                 x
              */
-            //new cords
             x = getBlock('b'); //bottom block
             m = new Coordinates(x.getX(), x.getY() - 1);
             a = new Coordinates(m.getX() - 2, m.getY());
             b = new Coordinates(m.getX() - 1, m.getY());
             c = new Coordinates(m.getX() + 1, m.getY());
-
             if (isSpace(a, b, c)) {
                 clearMoving();
                 setBlocks(7, a, b, c, m);
@@ -339,13 +344,11 @@ public class Tetris extends Worlds {
                 x o m o => m
                            c
              */
-            //new cords
             x = getBlock('l');
             m = new Coordinates(x.getX() + 2, x.getY());
             a = new Coordinates(m.getX(), m.getY() - 2);
             b = new Coordinates(m.getX(), m.getY() - 1);
             c = new Coordinates(m.getX(), m.getY() + 1);
-
             if (isSpace(a, b, c)) {
                 clearMoving();
                 setBlocks(7, a, b, c, m);
@@ -366,13 +369,11 @@ public class Tetris extends Worlds {
                     m   => b m c
                     o o    a
                  */
-                //new cords
                 x = getBlock('t');
                 m = new Coordinates(x.getX(), x.getY() + 1);
                 a = new Coordinates(m.getX() - 1, m.getY() + 1);
                 b = new Coordinates(m.getX() - 1, m.getY());
                 c = new Coordinates(m.getX() + 1, m.getY());
-
                 if (isSpace(a, b, c)) {
                     clearMoving();
                     setBlocks(4, a, b, c, m);
@@ -427,6 +428,238 @@ public class Tetris extends Worlds {
                 if (isSpace(a, b, c)) {
                     clearMoving();
                     setBlocks(4, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateJ() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                          o
+                          m => a
+                        x o    b m c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY() - 1);
+                a = new Coordinates(m.getX() - 1, m.getY() - 1);
+                b = new Coordinates(m.getX() - 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                                b a
+                      o     =>  m
+                      o m x     c
+                 */
+                x = getBlock('r');
+                m = new Coordinates(x.getX() - 1, x.getY());
+                a = new Coordinates(m.getX() + 1, m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                /*
+                   o o
+                   m   => a m b
+                   x          c
+                 */
+                x = getBlock('b');
+                m = new Coordinates(x.getX(), x.getY() - 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                /*
+                    x m o     a
+                        o =>  m
+                            c b
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() - 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+
+    }
+
+    private void rotateS() {
+
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                      o o     a
+                    x m   =>  m b
+                                c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    System.out.println("test");
+                    clearMoving();
+                    setBlocks(2, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                        x        m c
+                        m o => a b
+                          o
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY() + 1);
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(2, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateZ() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                        x m        a
+                          o o => b m
+                                 c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() - 1, m.getY());
+                c = new Coordinates(m.getX() - 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(3, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                       x
+                     o m => a m
+                     o        b c
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(3, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateT() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                        x       a
+                      o m o =>  m b
+                                c
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                    x
+                    m o => a m b
+                    o        c
+
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                /*
+                               b
+                    x m o => a m
+                      o        c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                /*
+                      x      b
+                    o m => a m c
+                      o
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
                     state = 0;
                 }
             }
@@ -488,7 +721,7 @@ public class Tetris extends Worlds {
             //in bounds?
             if (c.getX() >= 0 && c.getX() < WIDTH && c.getY() >= 0 && c.getY() < HEIGHT) {
                 //not empty?
-                if (map[c.getX()][c.getY()] != 0) {
+                if (map[c.getX()][c.getY()] >= 8) {
                     return false;
                 }
             } else {
@@ -499,7 +732,7 @@ public class Tetris extends Worlds {
     }
 
     /**
-     * @param type type of block 0-14
+     * @param type  type of block 0-14
      * @param cords cords to place the blocks
      */
     private void setBlocks(int type, Coordinates... cords) {
@@ -558,6 +791,7 @@ public class Tetris extends Worlds {
 
     /**
      * moves all lines down by one
+     *
      * @param line last line to move
      */
     private void moveLines(int line) {
