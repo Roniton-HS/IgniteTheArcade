@@ -9,6 +9,7 @@ import java.util.Random;
 
 import static Main.Constants.emulogic;
 import static java.lang.Math.PI;
+import static java.lang.Math.abs;
 
 public class Arkanoid extends Worlds {
 
@@ -166,8 +167,8 @@ public class Arkanoid extends Worlds {
             }
         }
 
-        if (ball.getSpeedY() == 0) {
-            ball.setSpeedY(1);
+        if (abs(ball.getSpeedY()) < 1) {
+            ball.setSpeedY(-1);
         }
     }
 
@@ -253,7 +254,7 @@ public class Arkanoid extends Worlds {
             renderGameWon(g);
         }
         if (debug) {
-            renderAdvancedStats(g);
+            renderDebug(g);
         }
     }
 
@@ -292,11 +293,18 @@ public class Arkanoid extends Worlds {
         g.drawString("x" + lives, 420, 35);
     }
 
-    private void renderAdvancedStats(Graphics g) {
+    private void renderDebug(Graphics g) {
         g.setColor(Color.white);
-        g.drawString("X: " + ball.getSpeedX(), 50,915);
-        g.drawString("Y: " + ball.getSpeedY(), 50,930);
-        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50,945);
+        g.drawString("X: " + ball.getSpeedX(), 50, 915);
+        g.drawString("Y: " + ball.getSpeedY(), 50, 930);
+        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 945);
+
+        g.setColor(Color.black);
+        for (Brick brick : bricks) {
+            for (Rectangle border : brick.getBorders()) {
+                g.fillRect(border.x, border.y, border.width, border.height);
+            }
+        }
     }
 
     private void renderGameOver(Graphics g) {
