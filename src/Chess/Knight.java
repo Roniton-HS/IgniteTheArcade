@@ -27,20 +27,105 @@ public class Knight extends Figures {
         Moves for black pawns
          */
         if (black) {
-            if ((figuresSave[x - 1][y + 2] == null || !figuresSave[x - 1][y + 2].black) && ((x - 1) != 0 && (y + 2) != 9)) {
-                coordinates.add(new Coordinates(x - 1, y + 2));
+            if ((x - 1) > 0 && (y + 2) < 9) {
+                if (figuresSave[x - 1][y + 2] == null || !figuresSave[x - 1][y + 2].black) {
+                    coordinates.add(new Coordinates(x - 1, y + 2));
+                }
             }
 
-            if ((figuresSave[x + 1][y + 2] == null || !figuresSave[x + 1][y + 2].black) && ((x + 1) != 9 && (y + 2) != 9)) {
-                coordinates.add(new Coordinates(x + 1, y + 2));
+            if ((x + 1) < 9 && (y + 2) < 9) {
+                if (figuresSave[x + 1][y + 2] == null || !figuresSave[x + 1][y + 2].black) {
+                    coordinates.add(new Coordinates(x + 1, y + 2));
+                }
             }
 
-            if ((figuresSave[x - 1][y - 2] == null || !figuresSave[x - 1][y - 2].black) && ((x - 1) != 0 && (y - 2) != 0)) {
-                coordinates.add(new Coordinates(x - 1, y - 2));
+            if ((x - 1) > 0 && (y - 2) > 0) {
+                if (figuresSave[x - 1][y - 2] == null || !figuresSave[x - 1][y - 2].black) {
+                    coordinates.add(new Coordinates(x - 1, y - 2));
+                }
             }
 
-            if ((figuresSave[x + 1][y - 2] == null || !figuresSave[x + 1][y - 2].black) && ((x + 1) != 9 && (y - 2) != 0)) {
-                coordinates.add(new Coordinates(x + 1, y - 2));
+            if ((x + 1) < 9 && (y - 2) > 0) {
+                if (figuresSave[x + 1][y - 2] == null || !figuresSave[x + 1][y - 2].black) {
+                    coordinates.add(new Coordinates(x + 1, y - 2));
+                }
+            }
+
+            if ((x - 2) > 0 && (y - 1) > 0) {
+                if (figuresSave[x - 2][y - 1] == null || !figuresSave[x - 2][y - 1].black) {
+                    coordinates.add(new Coordinates(x - 2, y - 1));
+                }
+            }
+
+            if ((x - 2) > 0 && (y + 1) < 9) {
+                if (figuresSave[x - 2][y + 1] == null || !figuresSave[x - 2][y + 1].black) {
+                    coordinates.add(new Coordinates(x - 2, y + 1));
+                }
+            }
+
+            if ((x + 2) < 9 && (y - 1) > 0) {
+                if (figuresSave[x + 2][y - 1] == null || !figuresSave[x + 2][y - 1].black) {
+                    coordinates.add(new Coordinates(x + 2, y - 1));
+                }
+            }
+
+            if ((x + 2) < 9 && (y + 1) < 9) {
+                if (figuresSave[x + 2][y + 1] == null || !figuresSave[x + 2][y + 1].black) {
+                    coordinates.add(new Coordinates(x + 2, y + 1));
+                }
+            }
+        }
+
+        /*
+        Moves for white Knight
+         */
+        if (!black) {
+            if ((x - 1) > 0 && (y + 2) < 9) {
+                if (figuresSave[x - 1][y + 2] == null || figuresSave[x - 1][y + 2].black) {
+                    coordinates.add(new Coordinates(x - 1, y + 2));
+                }
+            }
+
+            if ((x + 1) < 9 && (y + 2) < 9) {
+                if (figuresSave[x + 1][y + 2] == null || figuresSave[x + 1][y + 2].black) {
+                    coordinates.add(new Coordinates(x + 1, y + 2));
+                }
+            }
+
+            if ((x - 1) > 0 && (y - 2) > 0) {
+                if (figuresSave[x - 1][y - 2] == null || figuresSave[x - 1][y - 2].black) {
+                    coordinates.add(new Coordinates(x - 1, y - 2));
+                }
+            }
+
+            if ((x + 1) < 9 && (y - 2) > 0) {
+                if (figuresSave[x + 1][y - 2] == null || figuresSave[x + 1][y - 2].black) {
+                    coordinates.add(new Coordinates(x + 1, y - 2));
+                }
+            }
+
+            if ((x - 2) > 0 && (y - 1) > 0) {
+                if (figuresSave[x - 2][y - 1] == null || figuresSave[x - 2][y - 1].black) {
+                    coordinates.add(new Coordinates(x - 2, y - 1));
+                }
+            }
+
+            if ((x - 2) > 0 && (y + 1) < 9) {
+                if (figuresSave[x - 2][y + 1] == null || figuresSave[x - 2][y + 1].black) {
+                    coordinates.add(new Coordinates(x - 2, y + 1));
+                }
+            }
+
+            if ((x + 2) < 9 && (y - 1) > 0) {
+                if (figuresSave[x + 2][y - 1] == null || figuresSave[x + 2][y - 1].black) {
+                    coordinates.add(new Coordinates(x + 2, y - 1));
+                }
+            }
+
+            if ((x + 2) < 9 && (y + 1) < 9) {
+                if (figuresSave[x + 2][y + 1] == null || figuresSave[x + 2][y + 1].black) {
+                    coordinates.add(new Coordinates(x + 2, y + 1));
+                }
             }
         }
     }
