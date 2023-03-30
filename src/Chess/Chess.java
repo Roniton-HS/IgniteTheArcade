@@ -27,6 +27,7 @@ public class Chess extends Worlds {
         figuresSave[2][2] = new Pawn(2, 2, false, figuresSave);
         figuresSave[4][1] = new King(4, 1, true, figuresSave);
         figuresSave[6][4] = new King(6, 4, false, figuresSave);
+        figuresSave[7][3] = new Knight(7, 3, true, figuresSave);
 
     }
 
