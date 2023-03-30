@@ -5,6 +5,7 @@ import java.awt.*;
 public class Ball extends Rectangle {
     private double speedX = 0;
     private double speedY = 5;
+    private double angle;
 
     public Ball(int x, int y, int size) {
         super(x, y, size, size);
@@ -24,5 +25,14 @@ public class Ball extends Rectangle {
 
     public void setSpeedY(double speedY) {
         this.speedY = speedY;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public Ball setAngle(double angle) {
+        this.angle = angle;
+        return this;
     }
 }

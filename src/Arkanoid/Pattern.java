@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Pattern {
 
-    private static final ArrayList<ArrayList<Brick>> patterns = new ArrayList<>();
+    private final ArrayList<ArrayList<Brick>> patterns = new ArrayList<>();
 
-    public static ArrayList<ArrayList<Brick>> getPatterns() {
+    public ArrayList<ArrayList<Brick>> getPatterns() {
         return patterns;
     }
 
-    public static void createPattern() {
+    public void createPattern() {
         patterns.add(createPattern1());
         patterns.add(createPattern2());
         patterns.add(createPattern3());
     }
 
-    private static ArrayList<Brick> createPattern1() {
+    private ArrayList<Brick> createPattern1() {
         ArrayList<Brick> list = new ArrayList<>();
         list.add(new Brick(60, 60, 60, 10, 5));
         list.add(new Brick(140, 60, 60, 10, 5));
@@ -46,7 +46,7 @@ public class Pattern {
         return list;
     }
 
-    private static ArrayList<Brick> createPattern2() {
+    private ArrayList<Brick> createPattern2() {
         ArrayList<Brick> list = new ArrayList<>();
         list.add(new Brick(60, 60, 60, 10, 5));
         list.add(new Brick(60, 80, 60, 10, 5));
@@ -67,7 +67,7 @@ public class Pattern {
         return list;
     }
 
-    private static ArrayList<Brick> createPattern3() {
+    private ArrayList<Brick> createPattern3() {
         ArrayList<Brick> list = new ArrayList<>();
         list.add(new Brick(60, 60, 60, 10, 5));
         list.add(new Brick(140, 80, 60, 10, 3));
