@@ -20,6 +20,7 @@ public class Arkanoid extends Worlds {
     private boolean gameOver = false;
     private boolean gameWon = false;
     private boolean debug = false;
+    private boolean keyPressed = false;
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
@@ -123,8 +124,12 @@ public class Arkanoid extends Worlds {
         }
 
         // toggle debug screen
-        if (game.getKeyHandler().p) {
+        if (game.getKeyHandler().p && !keyPressed) {
             debug = !debug;
+            keyPressed = true;
+        }
+        if (!game.getKeyHandler().p){
+            keyPressed = false;
         }
     }
 
