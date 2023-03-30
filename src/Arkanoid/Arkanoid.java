@@ -13,13 +13,14 @@ import static java.lang.Math.abs;
 
 public class Arkanoid extends Worlds {
 
-    private final int WINDOW_WIDTH = 500;
-    private final int WINDOW_HEIGHT = 1000;
+    private final int WINDOW_WIDTH = 490;
+    private final int WINDOW_HEIGHT = 700;
 
     private boolean gameStarted = false;
     private boolean gameOver = false;
     private boolean gameWon = false;
     private boolean debug = false;
+    private boolean keyPressed = false;
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
@@ -29,18 +30,17 @@ public class Arkanoid extends Worlds {
     private Rectangle player;
     private Rectangle collisionPlayer;
 
-    private final int BALL_SPEED = 5;
     private final int BALL_DIAMETER = 10;
-    private final double MAX_ANGLE = 75 * PI / 180;
     private Ball ball;
 
-    private final Rectangle borderL = new Rectangle(40, 50, 10, 900);
-    private final Rectangle borderR = new Rectangle(450, 50, 10, 900);
-    private final Rectangle borderT = new Rectangle(50, 40, 400, 10);
-    private final Rectangle borderB = new Rectangle(50, 950, 400, 10);
+    private final Rectangle borderL = new Rectangle(49, 0, 1, WINDOW_HEIGHT);
+    private final Rectangle borderR = new Rectangle(440, 0, 1, WINDOW_HEIGHT);
+    private final Rectangle borderT = new Rectangle(0, 49, WINDOW_WIDTH, 1);
+    private final Rectangle borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
 
     private final Pattern pattern = new Pattern();
     private ArrayList<Brick> bricks;
+    private int index;
 
     /**
      * Constructor
@@ -55,14 +55,15 @@ public class Arkanoid extends Worlds {
 
     private void createGame() {
         int PLAYER_WIDTH = 100;
-        player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), 900, PLAYER_WIDTH, 10);
+        int PLAYER_HEIGHT = 10;
+        player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), WINDOW_HEIGHT - 70 - PLAYER_HEIGHT, PLAYER_WIDTH, 10);
         collisionPlayer = new Rectangle(player.x - PLAYER_SPEED, player.y, player.width + (2 * PLAYER_SPEED), player.height);
-        ball = new Ball(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, 890, BALL_DIAMETER);
+        ball = new Ball(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, player.y - BALL_DIAMETER, BALL_DIAMETER);
     }
 
     private void createBricks() {
         Random random = new Random();
-        int index = random.nextInt(pattern.getPatterns().size());
+        index = random.nextInt(pattern.getPatterns().size());
         bricks = pattern.getPatterns().get(index);
     }
 
@@ -124,8 +125,12 @@ public class Arkanoid extends Worlds {
         }
 
         // toggle debug screen
-        if (game.getKeyHandler().p) {
+        if (game.getKeyHandler().p && !keyPressed) {
             debug = !debug;
+            keyPressed = true;
+        }
+        if (!game.getKeyHandler().p) {
+            keyPressed = false;
         }
     }
 
@@ -168,11 +173,25 @@ public class Arkanoid extends Worlds {
         }
 
         if (abs(ball.getSpeedY()) < 1) {
-            ball.setSpeedY(-1);
+            if (ball.getSpeedY() < 0) {
+                ball.setSpeedY(-1);
+            } else {
+                ball.setSpeedY(1);
+            }
+        }
+        if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0) {
+            if (ball.getSpeedX() < 0) {
+                ball.setSpeedX(-1);
+            } else {
+                ball.setSpeedX(1);
+            }
         }
     }
 
     private void calculatePlayerBounce() {
+        int BALL_SPEED = 5;
+        double MAX_ANGLE = 75 * PI / 180;
+
         int relativeCollision = -(player.x - ball.x + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
 
@@ -226,7 +245,7 @@ public class Arkanoid extends Worlds {
 
     private void reset() {
         ball.x = player.x + player.width / 2 - BALL_DIAMETER / 2;
-        ball.y = 890;
+        ball.y = player.y - BALL_DIAMETER;
         ball.setSpeedX(0);
         ball.setSpeedY(5);
     }
@@ -242,11 +261,15 @@ public class Arkanoid extends Worlds {
     @Override
     public void render(Graphics g) {
         renderBackground(g);
-        renderPlayer(g);
         renderStats(g);
+
+        renderPlayer(g);
+        ball.render(g);
+
         for (Brick brick : bricks) {
             brick.render(g);
         }
+
         if (gameOver) {
             renderGameOver(g);
         }
@@ -256,6 +279,9 @@ public class Arkanoid extends Worlds {
         if (debug) {
             renderDebug(g);
         }
+
+        // render borders for debug purposes
+        //renderBorder(g);
     }
 
     private void renderBackground(Graphics g) {
@@ -263,41 +289,36 @@ public class Arkanoid extends Worlds {
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         g.setColor(new Color(26, 26, 26));
-        for (int i = 0; i < 3; i++) {
-            g.drawRect(47 + i, 47 + i, WINDOW_WIDTH - 94 - (2 * i), WINDOW_HEIGHT - 94 - (2 * i));
-        }
+        g.fillRect(WINDOW_WIDTH / 2 - 198, WINDOW_HEIGHT / 2 - 303, 396, 606);
 
         g.setColor(Color.GRAY);
-        g.fillRect(50, 50, WINDOW_WIDTH - 100, WINDOW_HEIGHT - 100);
+        g.fillRect(WINDOW_WIDTH / 2 - 195, WINDOW_HEIGHT / 2 - 300, 390, 600);
     }
 
     private void renderPlayer(Graphics g) {
-        g.setColor(new Color(233, 0, 185));
+        g.setColor(new Color(148, 0, 118));
         g.fillRect(player.x, player.y, player.width, player.height);
 
-        g.setColor(new Color(148, 0, 118));
-        for (int i = 0; i < 3; i++) {
-            g.drawRect(player.x + i, player.y + i, player.width - 2 * i, player.height - 2 * i);
-        }
-
-        g.setColor(Color.white);
-        g.fillOval(ball.x, ball.y, ball.width, ball.height);
+        g.setColor(new Color(233, 0, 185));
+        g.fillRect(player.x + 3, player.y + 3, player.width - 6, player.height - 6);
     }
 
     private void renderStats(Graphics g) {
         g.setColor(Color.white);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 15.0F));
-        g.drawString("Score:" + score, 50, 35);
+        g.drawString("Score:" + score, WINDOW_WIDTH / 2 - 198, 35);
 
-        g.fillOval(400, 15, 20, 20);
-        g.drawString("x" + lives, 420, 35);
+        g.fillOval(392, 15, 20, 20);
+        g.drawString("x" + lives, 412, 35);
     }
 
     private void renderDebug(Graphics g) {
-        g.setColor(Color.white);
-        g.drawString("X: " + ball.getSpeedX(), 50, 915);
-        g.drawString("Y: " + ball.getSpeedY(), 50, 930);
-        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 945);
+        g.setColor(Color.orange);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
+        g.drawString("Pattern: " + index, 50, 663);
+        g.drawString("X: " + ball.getSpeedX(), 50, 673);
+        g.drawString("Y: " + ball.getSpeedY(), 50, 683);
+        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 693);
 
         g.setColor(Color.black);
         for (Brick brick : bricks) {
@@ -327,5 +348,13 @@ public class Arkanoid extends Worlds {
 
         g.setColor(Color.white);
         g.drawString("GAME WON", WINDOW_WIDTH / 2 - 60, WINDOW_HEIGHT / 2 + 5);
+    }
+
+    private void renderBorder(Graphics g) {
+        g.setColor(Color.red);
+        g.fillRect(borderT.x, borderT.y, borderT.width, borderT.height);
+        g.fillRect(borderB.x, borderB.y, borderB.width, borderB.height);
+        g.fillRect(borderL.x, borderL.y, borderL.width, borderL.height);
+        g.fillRect(borderR.x, borderR.y, borderR.width, borderR.height);
     }
 }
