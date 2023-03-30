@@ -29,9 +29,7 @@ public class Arkanoid extends Worlds {
     private Rectangle player;
     private Rectangle collisionPlayer;
 
-    private final int BALL_SPEED = 5;
     private final int BALL_DIAMETER = 10;
-    private final double MAX_ANGLE = 75 * PI / 180;
     private Ball ball;
 
     private final Rectangle borderL = new Rectangle(40, 50, 10, 900);
@@ -41,6 +39,7 @@ public class Arkanoid extends Worlds {
 
     private final Pattern pattern = new Pattern();
     private ArrayList<Brick> bricks;
+    private int index;
 
     /**
      * Constructor
@@ -62,7 +61,7 @@ public class Arkanoid extends Worlds {
 
     private void createBricks() {
         Random random = new Random();
-        int index = random.nextInt(pattern.getPatterns().size());
+        index = random.nextInt(pattern.getPatterns().size());
         bricks = pattern.getPatterns().get(index);
     }
 
@@ -168,11 +167,25 @@ public class Arkanoid extends Worlds {
         }
 
         if (abs(ball.getSpeedY()) < 1) {
-            ball.setSpeedY(-1);
+            if (ball.getSpeedY() < 0) {
+                ball.setSpeedY(-1);
+            } else {
+                ball.setSpeedY(1);
+            }
+        }
+        if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0) {
+            if (ball.getSpeedX() < 0) {
+                ball.setSpeedX(-1);
+            } else {
+                ball.setSpeedX(1);
+            }
         }
     }
 
     private void calculatePlayerBounce() {
+        int BALL_SPEED = 5;
+        double MAX_ANGLE = 75 * PI / 180;
+
         int relativeCollision = -(player.x - ball.x + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
 
@@ -295,6 +308,7 @@ public class Arkanoid extends Worlds {
 
     private void renderDebug(Graphics g) {
         g.setColor(Color.white);
+        g.drawString("Pattern: " + index, 50, 900);
         g.drawString("X: " + ball.getSpeedX(), 50, 915);
         g.drawString("Y: " + ball.getSpeedY(), 50, 930);
         g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 945);
