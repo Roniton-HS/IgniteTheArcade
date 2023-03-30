@@ -35,4 +35,9 @@ public class Ball extends Rectangle {
         this.angle = angle;
         return this;
     }
+
+    public void render(Graphics g) {
+        g.setColor(Color.white);
+        g.fillOval(x, y, width, height);
+    }
 }
