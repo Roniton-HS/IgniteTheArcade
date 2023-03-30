@@ -57,13 +57,12 @@ public class Pattern {
         list.add(new Brick(140, 100, 60, 10, 4));
         list.add(new Brick(140, 120, 60, 10, 4));
         list.add(new Brick(140, 140, 60, 10, 4));
-        list.add(new Brick(220, 140, 60, 10, 3));
         list.add(new Brick(220, 100, 60, 10, 3));
         list.add(new Brick(220, 120, 60, 10, 3));
+        list.add(new Brick(220, 140, 60, 10, 3));
+        list.add(new Brick(300, 120, 60, 10, 2));
         list.add(new Brick(300, 140, 60, 10, 2));
-        list.add(new Brick(300, 140, 60, 10, 2));
-        list.add(new Brick(300, 140, 60, 10, 1));
-        list.add(new Brick(300, 140, 60, 10, 1));
+        list.add(new Brick(380, 140, 60, 10, 1));
         return list;
     }
 
