@@ -313,11 +313,12 @@ public class Arkanoid extends Worlds {
     }
 
     private void renderDebug(Graphics g) {
-        g.setColor(Color.white);
-        g.drawString("Pattern: " + index, 50, 900);
-        g.drawString("X: " + ball.getSpeedX(), 50, 915);
-        g.drawString("Y: " + ball.getSpeedY(), 50, 930);
-        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 945);
+        g.setColor(Color.orange);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
+        g.drawString("Pattern: " + index, 50, 663);
+        g.drawString("X: " + ball.getSpeedX(), 50, 673);
+        g.drawString("Y: " + ball.getSpeedY(), 50, 683);
+        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 693);
 
         g.setColor(Color.black);
         for (Brick brick : bricks) {
