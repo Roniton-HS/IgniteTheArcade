@@ -23,11 +23,43 @@ public class Chess extends Worlds {
     public Chess(Game game) {
         super(game);
         game.getDisplay().resize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
-        figuresSave[1][1] = new Pawn(1, 1, true, figuresSave);
-        figuresSave[2][2] = new Pawn(2, 2, false, figuresSave);
-        figuresSave[4][1] = new King(4, 1, true, figuresSave);
-        figuresSave[6][4] = new King(6, 4, false, figuresSave);
 
+        //Pawn Spawn
+        for (int i = 1; i < 9; i++) {
+            figuresSave[i][2] = new Pawn(i, 2, true, figuresSave);
+        }
+        for (int i = 1; i < 9; i++) {
+            figuresSave[i][7] = new Pawn(i, 7, false, figuresSave);
+        }
+
+        //Rook Spawn
+        figuresSave[1][1] = new Rook(1, 1, true, figuresSave);
+        figuresSave[8][1] = new Rook(8, 1, true, figuresSave);
+
+        figuresSave[1][8] = new Rook(1, 8, false, figuresSave);
+        figuresSave[8][8] = new Rook(8, 8, false, figuresSave);
+
+        //Knight Spawn
+        figuresSave[2][1] = new Knight(2, 1, true, figuresSave);
+        figuresSave[7][1] = new Knight(7, 1, true, figuresSave);
+
+        figuresSave[2][8] = new Knight(2, 8, false, figuresSave);
+        figuresSave[7][8] = new Knight(7, 8, false, figuresSave);
+
+        //Bishop Spawn
+        figuresSave[3][1] = new Bishop(3, 1, true, figuresSave);
+        figuresSave[6][1] = new Bishop(6, 1, true, figuresSave);
+
+        figuresSave[3][8] = new Bishop(3, 8, false, figuresSave);
+        figuresSave[6][8] = new Bishop(6, 8, false, figuresSave);
+
+        //Queen Spawn
+        figuresSave[4][1] = new Queen(4,1,true, figuresSave);
+        figuresSave[4][8] = new Queen(4,8,false,figuresSave);
+
+        //King Spawn
+        figuresSave[5][1] = new King(5,1,true, figuresSave);
+        figuresSave[5][8] = new King(5,8,false,figuresSave);
     }
 
     @Override
