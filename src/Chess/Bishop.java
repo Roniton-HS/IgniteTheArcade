@@ -24,21 +24,146 @@ public class Bishop extends Figures {
         coordinates.clear();
 
         /*
-        Moves for black rooks
+        Moves for black bishops
          */
         if (black) {
+            int j = x;
+
             for (int i = y + 1; i < 9; i++) { //down left
-                for (int j = x - 1; j > 0; j--) {
-                    if (figuresSave[j][i] == null || !figuresSave[j][i].black) {
-                        coordinates.add(new Coordinates(j, i));
-                        if (figuresSave[j][i] != null) {
-                            break;
-                        }
-                    } else {
+                if (j >= 2) {
+                    j = j - 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || !figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
                         break;
                     }
+                } else {
+                    break;
                 }
+            }
+            j = x;
+            for (int i = y + 1; i < 9; i++) { //down right
+                if (j <= 7) {
+                    j = j + 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || !figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
 
+            j = x;
+            for (int i = y - 1; i > 0; i--) { //up right
+                if (j <= 7) {
+                    j = j + 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || !figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            j = x;
+            for (int i = y - 1; i > 0; i--) { //up left
+                if (j >= 2) {
+                    j = j - 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || !figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+
+        /*
+        Moves for white bishops
+         */
+        if (!black) {
+            int j = x;
+
+            for (int i = y + 1; i < 9; i++) { //down left
+                if (j >= 2) {
+                    j = j - 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            j = x;
+            for (int i = y + 1; i < 9; i++) { //down right
+                if (j <= 7) {
+                    j = j + 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            j = x;
+            for (int i = y - 1; i > 0; i--) { //up right
+                if (j <= 7) {
+                    j = j + 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            j = x;
+            for (int i = y - 1; i > 0; i--) { //up left
+                if (j >= 2) {
+                    j = j - 1;
+                } else {
+                    break;
+                }
+                if (figuresSave[j][i] == null || figuresSave[j][i].black) {
+                    coordinates.add(new Coordinates(j, i));
+                    if (figuresSave[j][i] != null) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
             }
         }
     }
