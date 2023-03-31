@@ -31,7 +31,7 @@ public class Minesweeper extends Worlds {
         this.mapSize = mapSize;
         map = new int[mapSize][mapSize];
         clicked = new int[mapSize][mapSize];
-        winCount = mapSize * mapSize - mapSize * mapSize / 10;
+        winCount = mapSize * mapSize - mapSize * mapSize / 6;
         initBombs();
         initNum();
     }
