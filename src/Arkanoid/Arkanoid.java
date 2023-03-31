@@ -195,11 +195,11 @@ public class Arkanoid extends Worlds {
         int relativeCollision = -(player.x - ball.x + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
 
-        ball.setAngle(normRelativeCollision * MAX_ANGLE);
+        double angle = normRelativeCollision * MAX_ANGLE;
 
         ball.y = player.y - ball.height;
-        ball.setSpeedX(-Math.sin(ball.getAngle()) * BALL_SPEED);
-        ball.setSpeedY(Math.cos(ball.getAngle()) * BALL_SPEED);
+        ball.setSpeedX(-Math.sin(angle) * BALL_SPEED);
+        ball.setSpeedY(Math.cos(angle) * BALL_SPEED);
     }
 
     private void checkBrickBorder(Brick brick) {
