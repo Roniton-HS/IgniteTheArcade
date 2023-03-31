@@ -8,16 +8,20 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
+import static Main.Constants.emulogic;
+
 public class Tetris extends Worlds {
     private final int WIDTH = 10;
     private final int HEIGHT = 20;
     private int[][] map = new int[WIDTH][HEIGHT];
-    private final int BLOCK_SIZE = 25;
+    private final int BLOCK_SIZE = 40;
     private long timer = System.currentTimeMillis();
     private boolean keyPressed = false;
     private boolean[] piecesUsed = new boolean[7];
     private int state = 0;
-    char current;
+    char current = getNewPiece();
+    char next = getNewPiece();
+    int score = 0;
     /*
     0:  empty
 
@@ -53,7 +57,7 @@ public class Tetris extends Worlds {
     public void tick() {
         input();
         if (!movingBlock()) {
-            getNewPiece();
+            spawnPiece();
         }
         if (System.currentTimeMillis() - timer > 800) {
             moveDown();
@@ -95,7 +99,7 @@ public class Tetris extends Worlds {
     /**
      * creates a random piece
      */
-    private void getNewPiece() {
+    private char getNewPiece() {
         boolean full = true;
         for (boolean b : piecesUsed) {
             if (!b) {
@@ -112,7 +116,7 @@ public class Tetris extends Worlds {
             randomInt = r.nextInt(7) + 1;
         } while (piecesUsed[randomInt - 1]);
 
-        current = switch (randomInt) {
+        char out = switch (randomInt) {
             case 1 -> 'o';
             case 2 -> 'i';
             case 3 -> 's';
@@ -124,16 +128,14 @@ public class Tetris extends Worlds {
         };
 
         piecesUsed[randomInt - 1] = true;
-        spawnPiece(current);
+        return out;
     }
 
     /**
      * spawn a new piece
-     *
-     * @param type type of piece
      */
-    private void spawnPiece(char type) {
-        switch (type) {
+    private void spawnPiece() {
+        switch (next) {
             case 'o' -> {
                 map[5][0] = 1;
                 map[6][0] = 1;
@@ -177,6 +179,8 @@ public class Tetris extends Worlds {
                 map[7][1] = 6;
             }
         }
+        current = next;
+        next = getNewPiece();
     }
 
     /**
@@ -525,7 +529,6 @@ public class Tetris extends Worlds {
                 b = new Coordinates(m.getX() + 1, m.getY());
                 c = new Coordinates(m.getX() + 1, m.getY() + 1);
                 if (isSpace(a, b, c)) {
-                    System.out.println("test");
                     clearMoving();
                     setBlocks(2, a, b, c, m);
                     state = 1;
@@ -774,6 +777,7 @@ public class Tetris extends Worlds {
                 }
             }
             if (line) {
+                score += 100;
                 removeLine(i);
                 moveLines(i);
             }
@@ -817,7 +821,7 @@ public class Tetris extends Worlds {
                     case 3, 10 -> g.setColor(Color.RED);
                     case 4, 11 -> g.setColor(Color.ORANGE);
                     case 5, 12 -> g.setColor(Color.CYAN);
-                    case 6, 13 -> g.setColor(new Color(211, 16, 211, 255));
+                    case 6, 13 -> g.setColor(new Color(211, 16, 211));
                     case 7, 14 -> g.setColor(new Color(77, 0, 77));
                 }
                 g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -825,5 +829,107 @@ public class Tetris extends Worlds {
                 g.drawRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
+
+        final int NEXT_POSITION_X = 13 * BLOCK_SIZE;
+        final int NEXT_POSITION_Y = 2 * BLOCK_SIZE;
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+        switch (next) {
+            default -> {
+            }
+            case 'o' -> {
+                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.YELLOW);
+                g.fillRect(x, y, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'i' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + BLOCK_SIZE / 2;
+                g.setColor(new Color(77, 0, 77));
+                g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, 4 * BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'l' -> {
+                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                g.setColor(Color.ORANGE);
+                g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
+                g.fillRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'j' -> {
+                final int x = NEXT_POSITION_X + 5 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                g.setColor(Color.CYAN);
+                g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
+                g.fillRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 's' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.GREEN);
+                g.fillRect(x + BLOCK_SIZE, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'z' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.RED);
+                g.fillRect(x, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x + BLOCK_SIZE, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 't' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(new Color(211, 16, 211));
+                g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x, y + BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+        }
+        final int SCORE_POSITION_X = 13 * BLOCK_SIZE;
+        final int SCORE_POSITION_Y = 2 * BLOCK_SIZE + 6*BLOCK_SIZE;
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+        g.drawString("Score:",SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 3 * BLOCK_SIZE / 2);
+        g.drawString(""+score,SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 5 * BLOCK_SIZE / 2);
     }
 }
