@@ -8,16 +8,20 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
+import static Main.Constants.emulogic;
+
 public class Tetris extends Worlds {
     private final int WIDTH = 10;
     private final int HEIGHT = 20;
     private int[][] map = new int[WIDTH][HEIGHT];
-    private final int BLOCK_SIZE = 25;
+    private final int BLOCK_SIZE = 40;
     private long timer = System.currentTimeMillis();
     private boolean keyPressed = false;
     private boolean[] piecesUsed = new boolean[7];
     private int state = 0;
-    char current;
+    char current = getNewPiece();
+    char next = getNewPiece();
+    int score = 0;
     /*
     0:  empty
 
@@ -46,11 +50,14 @@ public class Tetris extends Worlds {
         game.getDisplay().resize(1000, 1000);
     }
 
+    /**
+     * ticks the game
+     */
     @Override
     public void tick() {
         input();
         if (!movingBlock()) {
-            getNewBlock();
+            spawnPiece();
         }
         if (System.currentTimeMillis() - timer > 800) {
             moveDown();
@@ -59,6 +66,9 @@ public class Tetris extends Worlds {
         checkLine();
     }
 
+    /**
+     * handles mouse and keyboard input
+     */
     private void input() {
         if (game.getKeyHandler().s) {
             moveDown();
@@ -80,7 +90,16 @@ public class Tetris extends Worlds {
         }
     }
 
-    private void getNewBlock() {
+    /*
+    ====================================================================================================================
+    PIECE SPAWNING
+    ====================================================================================================================
+     */
+
+    /**
+     * creates a random piece
+     */
+    private char getNewPiece() {
         boolean full = true;
         for (boolean b : piecesUsed) {
             if (!b) {
@@ -97,7 +116,7 @@ public class Tetris extends Worlds {
             randomInt = r.nextInt(7) + 1;
         } while (piecesUsed[randomInt - 1]);
 
-        current = switch (randomInt) {
+        char out = switch (randomInt) {
             case 1 -> 'o';
             case 2 -> 'i';
             case 3 -> 's';
@@ -109,11 +128,14 @@ public class Tetris extends Worlds {
         };
 
         piecesUsed[randomInt - 1] = true;
-        spawnBlock(current);
+        return out;
     }
 
-    private void spawnBlock(char block) {
-        switch (block) {
+    /**
+     * spawn a new piece
+     */
+    private void spawnPiece() {
+        switch (next) {
             case 'o' -> {
                 map[5][0] = 1;
                 map[6][0] = 1;
@@ -151,186 +173,19 @@ public class Tetris extends Worlds {
                 map[5][4] = 7;
             }
             case 't' -> {
-                map[5][0] = 6;
                 map[6][0] = 6;
-                map[7][0] = 6;
+                map[5][1] = 6;
                 map[6][1] = 6;
+                map[7][1] = 6;
             }
         }
+        current = next;
+        next = getNewPiece();
     }
 
-    private void rotate() {
-        switch (current) {
-            default -> {
-            }
-            case 'i' -> rotateI();
-            case 'l' -> rotateL();
-        }
-    }
-
-    private void rotateI() {
-        if (state == 0) {
-            Coordinates lowestBlock = new Coordinates(0, 0);
-            outer:
-            for (int i = HEIGHT - 1; i >= 0; i--) {
-                for (int j = 0; j < WIDTH; j++) {
-                    if (map[j][i] != 0 && map[j][i] <= 7) {
-                        lowestBlock = new Coordinates(j, i);
-                        break outer;
-                    }
-                }
-            }
-            if (lowestBlock.getX() - 2 >= 0 &&
-                    lowestBlock.getX() + 1 < WIDTH &&
-                    map[lowestBlock.getX() + 1][lowestBlock.getY() - 1] == 0 &&
-                    map[lowestBlock.getX() - 1][lowestBlock.getY() - 1] == 0 &&
-                    map[lowestBlock.getX() + 1][lowestBlock.getY() - 1] == 0
-            ) {
-                clearMoving();
-                map[lowestBlock.getX() - 2][lowestBlock.getY() - 1] = 7;
-                map[lowestBlock.getX() - 1][lowestBlock.getY() - 1] = 7;
-                map[lowestBlock.getX()][lowestBlock.getY() - 1] = 7;
-                map[lowestBlock.getX() + 1][lowestBlock.getY() - 1] = 7;
-                state = 1;
-            }
-
-        } else if (state == 1) {
-            Coordinates leftMostBlock = new Coordinates(0, 0);
-            outer:
-            for (int i = 0; i < HEIGHT; i++) {
-                for (int j = 0; j < WIDTH; j++) {
-                    if (map[j][i] != 0 && map[j][i] <= 7) {
-                        leftMostBlock = new Coordinates(j, i);
-                        break outer;
-                    }
-                }
-            }
-            if (leftMostBlock.getY() - 2 >= 0 &&
-                    leftMostBlock.getY() + 1 < HEIGHT &&
-                    map[leftMostBlock.getX() + 2][leftMostBlock.getY() - 2] == 0 &&
-                    map[leftMostBlock.getX() + 2][leftMostBlock.getY() - 1] == 0 &&
-                    map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] == 0
-            ) {
-                clearMoving();
-                map[leftMostBlock.getX() + 2][leftMostBlock.getY() - 2] = 7;
-                map[leftMostBlock.getX() + 2][leftMostBlock.getY() - 1] = 7;
-                map[leftMostBlock.getX() + 2][leftMostBlock.getY()] = 7;
-                map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] = 7;
-                state = 0;
-            }
-        }
-    }
-
-    private void rotateL() {
-        switch (state) {
-            case 0 -> {
-                Coordinates topBlock = new Coordinates(0, 0);
-                outer:
-                for (int i = 0; i < HEIGHT; i++) {
-                    for (int j = 0; j < WIDTH; j++) {
-                        if (map[j][i] != 0 && map[j][i] <= 7) {
-                            topBlock = new Coordinates(j, i);
-                            break outer;
-                        }
-                    }
-                }
-                if (topBlock.getX() - 1 >= 0 && topBlock.getX() + 1 < WIDTH &&
-                        map[topBlock.getX() - 1][topBlock.getY() + 2] == 0 &&
-                        map[topBlock.getX() - 1][topBlock.getY() + 1] == 0 &&
-                        map[topBlock.getX() + 1][topBlock.getY() + 1] == 0) {
-                    clearMoving();
-                    map[topBlock.getX() - 1][topBlock.getY() + 2] = 4;
-                    map[topBlock.getX() - 1][topBlock.getY() + 1] = 4;
-                    map[topBlock.getX()][topBlock.getY() + 1] = 4;
-                    map[topBlock.getX() + 1][topBlock.getY() + 1] = 4;
-                    state = 1;
-                }
-            }
-
-            case 1 -> {
-                Coordinates rightMostBlock = new Coordinates(0, 0);
-                outer:
-                for (int i = 0; i < HEIGHT; i++) {
-                    for (int j = WIDTH - 1; j >= 0; j--) {
-                        if (map[j][i] != 0 && map[j][i] <= 7) {
-                            rightMostBlock = new Coordinates(j, i);
-                            break outer;
-                        }
-                    }
-                }
-                if (rightMostBlock.getY() - 2 >= 0 && rightMostBlock.getY() + 1 < HEIGHT &&
-                        map[rightMostBlock.getX() - 2][rightMostBlock.getY() - 1] == 0 &&
-                        map[rightMostBlock.getX() - 1][rightMostBlock.getY() - 1] == 0 &&
-                        map[rightMostBlock.getX() - 1][rightMostBlock.getY() + 1] == 0) {
-                    clearMoving();
-                    map[rightMostBlock.getX() - 2][rightMostBlock.getY() - 1] = 4;
-                    map[rightMostBlock.getX() - 1][rightMostBlock.getY() - 1] = 4;
-                    map[rightMostBlock.getX() - 1][rightMostBlock.getY()] = 4;
-                    map[rightMostBlock.getX() - 1][rightMostBlock.getY() + 1] = 4;
-                    state = 2;
-                }
-            }
-            case 2 -> {
-                Coordinates topBlock = new Coordinates(0, 0);
-                outer:
-                for (int i = 0; i < HEIGHT; i++) {
-                    for (int j = 0; j < WIDTH; j++) {
-                        if (map[j][i] != 0 && map[j][i] <= 7) {
-                            topBlock = new Coordinates(j, i);
-                            break outer;
-                        }
-                    }
-                }
-                if (topBlock.getX() >= 0 && topBlock.getX() + 2 < WIDTH &&
-                        map[topBlock.getX()][topBlock.getY() + 1] == 0 &&
-                        map[topBlock.getX() + 2][topBlock.getY() + 1] == 0 &&
-                        map[topBlock.getX() + 2][topBlock.getY()] == 0) {
-                    clearMoving();
-                    map[topBlock.getX()][topBlock.getY() + 1] = 4;
-                    map[topBlock.getX() + 1][topBlock.getY() + 1] = 4;
-                    map[topBlock.getX() + 2][topBlock.getY() + 1] = 4;
-                    map[topBlock.getX() + 2][topBlock.getY()] = 4;
-                    state = 3;
-                }
-            }
-            case 3 -> {
-                Coordinates leftMostBlock = new Coordinates(0, 0);
-                outer:
-                for (int i = HEIGHT - 1; i >= 0; i--) {
-                    for (int j = 0; j < WIDTH; j++) {
-                        if (map[j][i] != 0 && map[j][i] <= 7) {
-                            leftMostBlock = new Coordinates(j, i);
-                            break outer;
-                        }
-                    }
-                }
-                if (leftMostBlock.getY() - 1 >= 0 && leftMostBlock.getY() + 1 < HEIGHT &&
-                        map[leftMostBlock.getX() + 1][leftMostBlock.getY() - 1] == 0 &&
-                        map[leftMostBlock.getX() + 1][leftMostBlock.getY() + 1] == 0 &&
-                        map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] == 0) {
-                    clearMoving();
-                    map[leftMostBlock.getX() + 1][leftMostBlock.getY() - 1] = 4;
-                    map[leftMostBlock.getX() + 1][leftMostBlock.getY()] = 4;
-                    map[leftMostBlock.getX() + 1][leftMostBlock.getY() + 1] = 4;
-                    map[leftMostBlock.getX() + 2][leftMostBlock.getY() + 1] = 4;
-                    state = 0;
-                }
-            }
-        }
-    }
-
-
-    private void clearMoving() {
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                if (map[j][i] <= 7) {
-                    map[j][i] = 0;
-                }
-            }
-
-        }
-    }
-
+    /**
+     * @return true if there are moving blocks, false if there are no moving blocks
+     */
     private boolean movingBlock() {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -342,6 +197,11 @@ public class Tetris extends Worlds {
         return false;
     }
 
+    /*
+    ====================================================================================================================
+    MOVEMENT
+    ====================================================================================================================
+     */
     private void moveLeft() {
         if (checkLeft()) {
             for (int i = 0; i < HEIGHT; i++) {
@@ -423,6 +283,490 @@ public class Tetris extends Worlds {
         return true;
     }
 
+    /**
+     * makes all moving blocks static
+     */
+    private void makeStatic() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[j][i] <= 7 && map[j][i] != 0) {
+                    map[j][i] += 7;
+                }
+            }
+        }
+        state = 0;
+    }
+
+    /*
+    ====================================================================================================================
+    ROTATION
+    ====================================================================================================================
+     */
+
+    /**
+     * rotates the current piece
+     */
+    private void rotate() {
+        switch (current) {
+            default -> {
+            }
+            case 'i' -> rotateI();
+            case 'l' -> rotateL();
+            case 'j' -> rotateJ();
+            case 's' -> rotateS();
+            case 'z' -> rotateZ();
+            case 't' -> rotateT();
+        }
+    }
+
+    /**
+     * rotates I piece
+     */
+    private void rotateI() {
+        Coordinates x, m, a, b, c;
+        if (state == 0) {
+            /*
+                o
+                o
+                m => a b m c
+                x
+             */
+            x = getBlock('b'); //bottom block
+            m = new Coordinates(x.getX(), x.getY() - 1);
+            a = new Coordinates(m.getX() - 2, m.getY());
+            b = new Coordinates(m.getX() - 1, m.getY());
+            c = new Coordinates(m.getX() + 1, m.getY());
+            if (isSpace(a, b, c)) {
+                clearMoving();
+                setBlocks(7, a, b, c, m);
+                state = 1;
+            }
+        } else if (state == 1) {
+            /*
+                           a
+                           b
+                x o m o => m
+                           c
+             */
+            x = getBlock('l');
+            m = new Coordinates(x.getX() + 2, x.getY());
+            a = new Coordinates(m.getX(), m.getY() - 2);
+            b = new Coordinates(m.getX(), m.getY() - 1);
+            c = new Coordinates(m.getX(), m.getY() + 1);
+            if (isSpace(a, b, c)) {
+                clearMoving();
+                setBlocks(7, a, b, c, m);
+                state = 0;
+            }
+        }
+    }
+
+    /**
+     * rotates L piece
+     */
+    private void rotateL() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                    x
+                    m   => b m c
+                    o o    a
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY() + 1);
+                b = new Coordinates(m.getX() - 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(4, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                             a b
+                    o m x =>   m
+                    o          c
+                 */
+                x = getBlock('r');
+                m = new Coordinates(x.getX() - 1, x.getY());
+                a = new Coordinates(m.getX() - 1, m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(4, a, b, c, m);
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                /*
+                    o o        c
+                      m => a m b
+                      x
+                 */
+                x = getBlock('b');
+                m = new Coordinates(x.getX(), x.getY() - 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY() - 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(4, a, b, c, m);
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                /*
+                        o    a
+                    x m o => m
+                             b c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(4, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateJ() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                          o
+                          m => a
+                        x o    b m c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY() - 1);
+                a = new Coordinates(m.getX() - 1, m.getY() - 1);
+                b = new Coordinates(m.getX() - 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                                b a
+                      o     =>  m
+                      o m x     c
+                 */
+                x = getBlock('r');
+                m = new Coordinates(x.getX() - 1, x.getY());
+                a = new Coordinates(m.getX() + 1, m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                /*
+                   o o
+                   m   => a m b
+                   x          c
+                 */
+                x = getBlock('b');
+                m = new Coordinates(x.getX(), x.getY() - 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                /*
+                    x m o     a
+                        o =>  m
+                            c b
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() - 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(5, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+
+    }
+
+    private void rotateS() {
+
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                      o o     a
+                    x m   =>  m b
+                                c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(2, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                        x        m c
+                        m o => a b
+                          o
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY() + 1);
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(2, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateZ() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                        x m        a
+                          o o => b m
+                                 c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() - 1, m.getY());
+                c = new Coordinates(m.getX() - 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(3, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                       x
+                     o m => a m
+                     o        b c
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() + 1);
+                c = new Coordinates(m.getX() + 1, m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(3, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    private void rotateT() {
+        Coordinates x, m, a, b, c;
+        switch (state) {
+            case 0 -> {
+                /*
+                        x       a
+                      o m o =>  m b
+                                c
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX(), m.getY() - 1);
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 1;
+                }
+            }
+            case 1 -> {
+                /*
+                    x
+                    m o => a m b
+                    o        c
+
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX() + 1, m.getY());
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 2;
+                }
+            }
+            case 2 -> {
+                /*
+                               b
+                    x m o => a m
+                      o        c
+                 */
+                x = getBlock('l');
+                m = new Coordinates(x.getX() + 1, x.getY());
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX(), m.getY() + 1);
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 3;
+                }
+            }
+            case 3 -> {
+                /*
+                      x      b
+                    o m => a m c
+                      o
+                 */
+                x = getBlock('t');
+                m = new Coordinates(x.getX(), x.getY() + 1);
+                a = new Coordinates(m.getX() - 1, m.getY());
+                b = new Coordinates(m.getX(), m.getY() - 1);
+                c = new Coordinates(m.getX() + 1, m.getY());
+                if (isSpace(a, b, c)) {
+                    clearMoving();
+                    setBlocks(6, a, b, c, m);
+                    state = 0;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param position t -> top, b -> bottom, l -> left, r -> right
+     * @return Coordinates of the first block found
+     */
+    private Coordinates getBlock(char position) {
+        switch (position) {
+            case 't' -> {
+                for (int i = 0; i < HEIGHT; i++) {
+                    for (int j = 0; j < WIDTH; j++) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            return new Coordinates(j, i);
+                        }
+                    }
+                }
+            }
+            case 'b' -> {
+                for (int i = HEIGHT - 1; i >= 0; i--) {
+                    for (int j = 0; j < WIDTH; j++) {
+                        if (map[j][i] != 0 && map[j][i] <= 7) {
+                            return new Coordinates(j, i);
+                        }
+                    }
+                }
+            }
+            case 'l' -> {
+                for (int i = 0; i < WIDTH; i++) {
+                    for (int j = 0; j < HEIGHT; j++) {
+                        if (map[i][j] != 0 && map[i][j] <= 7) {
+                            return new Coordinates(i, j);
+                        }
+                    }
+                }
+            }
+            case 'r' -> {
+                for (int i = WIDTH - 1; i >= 0; i--) {
+                    for (int j = 0; j < HEIGHT; j++) {
+                        if (map[i][j] != 0 && map[i][j] <= 7) {
+                            return new Coordinates(i, j);
+                        }
+                    }
+                }
+            }
+        }
+        return new Coordinates(0, 0);
+    }
+
+    /**
+     * @param cords cords to check
+     * @return true if empty, false if not empty
+     */
+    private boolean isSpace(Coordinates... cords) {
+        for (Coordinates c : cords) {
+            //in bounds?
+            if (c.getX() >= 0 && c.getX() < WIDTH && c.getY() >= 0 && c.getY() < HEIGHT) {
+                //not empty?
+                if (map[c.getX()][c.getY()] >= 8) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param type  type of block 0-14
+     * @param cords cords to place the blocks
+     */
+    private void setBlocks(int type, Coordinates... cords) {
+        for (Coordinates c : cords) {
+            map[c.getX()][c.getY()] = type;
+        }
+    }
+
+    /**
+     * removes all blocks that are moving
+     */
+    private void clearMoving() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[j][i] <= 7) {
+                    map[j][i] = 0;
+                }
+            }
+
+        }
+    }
+
+    /*
+    ====================================================================================================================
+    FULL LINE
+    ====================================================================================================================
+     */
+
+    /**
+     * checks if there is a full line and removes it
+     */
     private void checkLine() {
         for (int i = 0; i < HEIGHT; i++) {
             boolean line = true;
@@ -433,18 +777,27 @@ public class Tetris extends Worlds {
                 }
             }
             if (line) {
+                score += 100;
                 removeLine(i);
                 moveLines(i);
             }
         }
     }
 
+    /**
+     * @param line line to remove
+     */
     private void removeLine(int line) {
         for (int i = 0; i < WIDTH; i++) {
             map[i][line] = 0;
         }
     }
 
+    /**
+     * moves all lines down by one
+     *
+     * @param line last line to move
+     */
     private void moveLines(int line) {
         for (int i = line; i >= 0; i--) {
             for (int j = 0; j < WIDTH; j++) {
@@ -454,17 +807,6 @@ public class Tetris extends Worlds {
                 }
             }
         }
-    }
-
-    private void makeStatic() {
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                if (map[j][i] <= 7 && map[j][i] != 0) {
-                    map[j][i] += 7;
-                }
-            }
-        }
-        state = 0;
     }
 
     @Override
@@ -479,7 +821,7 @@ public class Tetris extends Worlds {
                     case 3, 10 -> g.setColor(Color.RED);
                     case 4, 11 -> g.setColor(Color.ORANGE);
                     case 5, 12 -> g.setColor(Color.CYAN);
-                    case 6, 13 -> g.setColor(new Color(211, 16, 211, 255));
+                    case 6, 13 -> g.setColor(new Color(211, 16, 211));
                     case 7, 14 -> g.setColor(new Color(77, 0, 77));
                 }
                 g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -487,5 +829,107 @@ public class Tetris extends Worlds {
                 g.drawRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
+
+        final int NEXT_POSITION_X = 13 * BLOCK_SIZE;
+        final int NEXT_POSITION_Y = 2 * BLOCK_SIZE;
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+        switch (next) {
+            default -> {
+            }
+            case 'o' -> {
+                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.YELLOW);
+                g.fillRect(x, y, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'i' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + BLOCK_SIZE / 2;
+                g.setColor(new Color(77, 0, 77));
+                g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, 4 * BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'l' -> {
+                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                g.setColor(Color.ORANGE);
+                g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
+                g.fillRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'j' -> {
+                final int x = NEXT_POSITION_X + 5 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                g.setColor(Color.CYAN);
+                g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
+                g.fillRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 's' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.GREEN);
+                g.fillRect(x + BLOCK_SIZE, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 'z' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(Color.RED);
+                g.fillRect(x, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x + BLOCK_SIZE, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            case 't' -> {
+                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
+                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
+                g.setColor(new Color(211, 16, 211));
+                g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(x, y + BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE);
+                g.setColor(Color.BLACK);
+                g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+        }
+        final int SCORE_POSITION_X = 13 * BLOCK_SIZE;
+        final int SCORE_POSITION_Y = 2 * BLOCK_SIZE + 6*BLOCK_SIZE;
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+        g.drawString("Score:",SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 3 * BLOCK_SIZE / 2);
+        g.drawString(""+score,SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 5 * BLOCK_SIZE / 2);
     }
 }

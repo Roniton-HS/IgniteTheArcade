@@ -5,22 +5,20 @@ import java.util.ArrayList;
 
 public class Brick extends Rectangle {
     private int hp;
-    private final int score;
+    private int score;
     private final ArrayList<Rectangle> borders = new ArrayList<>();
 
     public Brick(int x, int y, int width, int height, int hp) {
         super(x, y, width, height);
         this.hp = hp;
+        setScore();
+        createBorders();
+    }
 
-        switch (hp) {
-            case 1 -> score = 100;
-            case 2 -> score = 200;
-            case 3 -> score = 400;
-            case 4 -> score = 800;
-            case 5 -> score = 1000;
-            default -> score = 0;
-        }
-
+    public Brick(int x, int y, int hp) {
+        super(x, y, 30, 15);
+        this.hp = hp;
+        setScore();
         createBorders();
     }
 
@@ -40,6 +38,17 @@ public class Brick extends Rectangle {
         return borders;
     }
 
+    private void setScore() {
+        switch (hp) {
+            case 1 -> score = 100;
+            case 2 -> score = 200;
+            case 3 -> score = 400;
+            case 4 -> score = 800;
+            case 5 -> score = 1000;
+            default -> score = 0;
+        }
+    }
+
     private void createBorders() {
         borders.add(new Rectangle(x, y, width, 1));             //border top
         borders.add(new Rectangle(x, y + height, width, 1)); //border bottom
@@ -49,16 +58,6 @@ public class Brick extends Rectangle {
 
     public void render(Graphics g) {
         switch (hp) {
-            case 1 -> g.setColor(new Color(255, 0, 56));
-            case 2 -> g.setColor(new Color(255, 248, 7));
-            case 3 -> g.setColor(new Color(17, 255, 17));
-            case 4 -> g.setColor(new Color(17, 17, 255));
-            case 5 -> g.setColor(new Color(255, 97, 0));
-            default -> g.setColor(Color.black);
-        }
-        g.fillRect(x, y, width, height);
-
-        switch (hp) {
             case 1 -> g.setColor(new Color(136, 0, 30));
             case 2 -> g.setColor(new Color(177, 172, 0));
             case 3 -> g.setColor(new Color(0, 153, 0));
@@ -66,8 +65,16 @@ public class Brick extends Rectangle {
             case 5 -> g.setColor(new Color(136, 52, 0));
             default -> g.setColor(Color.black);
         }
-        for (int i = 0; i < 3; i++) {
-            g.drawRect(x + i, y + i, width - (2 * i), height - (2 * i));
+        g.fillRect(x, y, width, height);
+
+        switch (hp) {
+            case 1 -> g.setColor(new Color(255, 0, 56));
+            case 2 -> g.setColor(new Color(255, 248, 7));
+            case 3 -> g.setColor(new Color(17, 255, 17));
+            case 4 -> g.setColor(new Color(17, 17, 255));
+            case 5 -> g.setColor(new Color(255, 97, 0));
+            default -> g.setColor(Color.black);
         }
+        g.fillRect(x + 3, y + 3, width - 6, height - 6);
     }
 }
