@@ -529,6 +529,7 @@ public class Tetris extends Worlds {
                 b = new Coordinates(m.getX() + 1, m.getY());
                 c = new Coordinates(m.getX() + 1, m.getY() + 1);
                 if (isSpace(a, b, c)) {
+
                     clearMoving();
                     setBlocks(2, a, b, c, m);
                     state = 1;
