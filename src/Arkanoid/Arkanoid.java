@@ -211,13 +211,6 @@ public class Arkanoid extends Worlds {
     }
 
     private void calculateBrickBounce(Rectangle border, int index) {
-
-        if (index == 0 || index == 1) {
-            ball.setSpeedY(-ball.getSpeedY());
-        } else {
-            ball.setSpeedX(-ball.getSpeedX());
-        }
-
         if (index == 0) {
             ball.y = border.y - ball.height;
         } else if (index == 1) {
@@ -226,6 +219,12 @@ public class Arkanoid extends Worlds {
             ball.x = border.x - ball.width;
         } else if (index == 3) {
             ball.x = border.x;
+        }
+
+        if (index == 0 || index == 1) {
+            ball.setSpeedY(-ball.getSpeedY());
+        } else {
+            ball.setSpeedX(-ball.getSpeedX());
         }
     }
 
