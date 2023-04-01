@@ -13,9 +13,9 @@ public class Pattern {
     }
 
     public void createPattern() {
-        //patterns.add(createPatternBlock());
-        //patterns.add(createPatternStair1());
-        //patterns.add(createPatternStair2());
+        patterns.add(createPatternBlock());
+        patterns.add(createPatternStair1());
+        patterns.add(createPatternStair2());
         patterns.add(createPatternSpace());
     }
 

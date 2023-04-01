@@ -1,13 +1,11 @@
 package Pong;
 
-import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
 
-import static Main.Constants.ALMOST_BLACK;
-import static Main.Constants.ALMOST_WHITE;
+import static Main.Constants.*;
 
 public class Pong extends Worlds {
     final private int WINDOW_SIZE = 510;
@@ -16,30 +14,63 @@ public class Pong extends Worlds {
     private Player playerRight;
     private Rectangle collisionPlayerLeft;
     private Rectangle collisionPlayerRight;
-    private final int PLAYER_SPEED = 5;
     private Ball ball;
-    private final int BALL_DIAMETER = 10;
+
+    private Rectangle borderL, borderR, borderT, borderB;
+
+    private boolean gameStarted = false;
 
 
     public Pong(Game game) {
         super(game);
-        game.getDisplay().resize(WINDOW_SIZE + 16, WINDOW_SIZE + 39);
+        game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
         createGame();
+        createBorders();
     }
 
     private void createGame() {
-        playerLeft = new Player(WINDOW_SIZE,false);
+        playerLeft = new Player(WINDOW_SIZE, false);
         collisionPlayerLeft = playerLeft.getCollisionPlayer();
 
-        playerRight = new Player(WINDOW_SIZE,true);
+        playerRight = new Player(WINDOW_SIZE, true);
         collisionPlayerRight = playerRight.getCollisionPlayer();
 
         ball = new Ball(WINDOW_SIZE);
     }
 
+    private void createBorders() {
+        borderL = new Rectangle(0, 0, 1, WINDOW_SIZE);
+        borderR = new Rectangle(WINDOW_SIZE, 0, 1, WINDOW_SIZE);
+        borderT = new Rectangle(0, 0, WINDOW_SIZE, 1);
+        borderB = new Rectangle(WINDOW_SIZE, 0, WINDOW_SIZE, 1);
+    }
+
     @Override
     public void tick() {
+        input();
+    }
 
+    private void input() {
+        // start game
+        if (game.getKeyHandler().space && !gameStarted) {
+            gameStarted = true;
+        }
+
+        // movement left player
+        if (game.getKeyHandler().w) {
+            playerLeft.setY(playerLeft.getY() - playerLeft.getSPEED());
+        }
+        if (game.getKeyHandler().s) {
+            playerLeft.setY(playerLeft.getY() + playerLeft.getSPEED());
+        }
+
+        // movement right player
+        if (game.getKeyHandler().up) {
+            playerRight.setY(playerRight.getY() - playerRight.getSPEED());
+        }
+        if (game.getKeyHandler().down) {
+            playerRight.setY(playerRight.getY() + playerRight.getSPEED());
+        }
     }
 
     @Override

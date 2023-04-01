@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static Main.Constants.emulogic;
+import static Main.Constants.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
@@ -39,7 +39,7 @@ public class Arkanoid extends Worlds {
     private final Rectangle borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
 
     private final Pattern pattern = new Pattern();
-    private ArrayList<Brick> bricks;
+    private ArrayList<Brick> bricks = new ArrayList<>();
     private int index;
 
     /**
@@ -47,7 +47,7 @@ public class Arkanoid extends Worlds {
      */
     public Arkanoid(Game game) {
         super(game);
-        game.getDisplay().resize(WINDOW_WIDTH + 16, WINDOW_HEIGHT + 39);
+        game.getDisplay().resize(WINDOW_WIDTH + WIN10_WIDTH_DIFF, WINDOW_HEIGHT + WIN10_HEIGHT_DIFF);
         createGame();
         pattern.createPattern();
         createBricks();
@@ -63,13 +63,11 @@ public class Arkanoid extends Worlds {
 
     private void createBricks() {
         Random random = new Random();
-
-        //int index = random.nextInt(0, getPatterns().size());
-        //bricks = getPatterns().get(index);
-
         index = random.nextInt(pattern.getPatterns().size());
-        bricks = pattern.getPatterns().get(index);
-
+        bricks.clear();
+        for (Brick brick : pattern.getPatterns().get(index)) {
+            bricks.add(new Brick(brick.x, brick.y, brick.getHp()));
+        }
     }
 
     @Override
