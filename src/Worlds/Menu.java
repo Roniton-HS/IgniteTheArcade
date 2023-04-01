@@ -9,6 +9,7 @@ import Main.Game;
 import Main.GameCamera;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
+import Pong.Pong;
 import Snake.Snake;
 import Tetris.Tetris;
 
@@ -116,6 +117,11 @@ public class Menu extends Worlds {
         //actions
         if (game.getKeyHandler().e) {
             checkGame();
+        }
+
+        if(game.getKeyHandler().b) {
+            Pong pong = new Pong(game);
+            Worlds.setWorld(pong);
         }
 
         MouseHandler.reset();
