@@ -24,28 +24,28 @@ public class Menu extends Worlds {
     private GameCamera gameCamera = new GameCamera();
 
     //portal sprites
-    private final BufferedImage portal0 = ImageLoader.loadImage("/menu/portal0.png");
-    private final BufferedImage portal1 = ImageLoader.loadImage("/menu/portal1.png");
-    private final BufferedImage portal2 = ImageLoader.loadImage("/menu/portal2.png");
-    private final BufferedImage portal3 = ImageLoader.loadImage("/menu/portal3.png");
-    private final BufferedImage portal4 = ImageLoader.loadImage("/menu/portal4.png");
+    private final BufferedImage portal0 = ImageLoader.loadImage("/menuRes/portal0.png");
+    private final BufferedImage portal1 = ImageLoader.loadImage("/menuRes/portal1.png");
+    private final BufferedImage portal2 = ImageLoader.loadImage("/menuRes/portal2.png");
+    private final BufferedImage portal3 = ImageLoader.loadImage("/menuRes/portal3.png");
+    private final BufferedImage portal4 = ImageLoader.loadImage("/menuRes/portal4.png");
     private BufferedImage portal = portal0;
 
     //head sprites
-    private final BufferedImage head0 = ImageLoader.loadImage("/menu/head0.png");
-    private final BufferedImage head1 = ImageLoader.loadImage("/menu/head1.png");
-    private final BufferedImage head2 = ImageLoader.loadImage("/menu/head2.png");
-    private final BufferedImage head3 = ImageLoader.loadImage("/menu/head3.png");
+    private final BufferedImage head0 = ImageLoader.loadImage("/menuRes/head0.png");
+    private final BufferedImage head1 = ImageLoader.loadImage("/menuRes/head1.png");
+    private final BufferedImage head2 = ImageLoader.loadImage("/menuRes/head2.png");
+    private final BufferedImage head3 = ImageLoader.loadImage("/menuRes/head3.png");
     private BufferedImage head = head0;
 
     //leg sprites
-    private final BufferedImage legsIdle = ImageLoader.loadImage("/menu/legs.png");
-    private final BufferedImage legsLeft = ImageLoader.loadImage("/menu/legLeft.png");
-    private final BufferedImage legRight = ImageLoader.loadImage("/menu/legRight.png");
+    private final BufferedImage legsIdle = ImageLoader.loadImage("/menuRes/legs.png");
+    private final BufferedImage legsLeft = ImageLoader.loadImage("/menuRes/legLeft.png");
+    private final BufferedImage legRight = ImageLoader.loadImage("/menuRes/legRight.png");
     private BufferedImage legs = legsIdle;
 
     //design sprites
-    private final BufferedImage arcadeMachine = ImageLoader.loadImage("/menu/arcadeMachine.png");
+    private final BufferedImage arcadeMachine = ImageLoader.loadImage("/menuRes/arcadeMachine.png");
 
     //player
     final int PLAYER_START_X = 474;
@@ -149,7 +149,7 @@ public class Menu extends Worlds {
             Chess chess = new Chess(game);
             Worlds.setWorld(chess);
         }else if(player.getBounds().intersects(tetris.getBounds())){
-            Tetris tetris = new Tetris(game);
+            Tetris tetris = new Tetris(game, true);
             Worlds.setWorld(tetris);
         }
     }

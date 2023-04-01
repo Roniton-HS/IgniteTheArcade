@@ -9,9 +9,9 @@ public class Queen extends Figures {
     public Queen(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/QueenBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/QueenBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/QueenWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/QueenWhite.png");
         }
     }
 }

@@ -22,14 +22,14 @@ public class Fruit {
         this.y = y;
         this.type = type;
         switch (type) {
-            case 0 -> image = ImageLoader.loadImage("/pacMan/fruit/cherry.png");
-            case 1 -> image = ImageLoader.loadImage("/pacMan/fruit/strawberry.png");
-            case 2 -> image = ImageLoader.loadImage("/pacMan/fruit/orange.png");
-            case 3 -> image = ImageLoader.loadImage("/pacMan/fruit/apple.png");
-            case 4 -> image = ImageLoader.loadImage("/pacMan/fruit/melon.png");
-            case 5 -> image = ImageLoader.loadImage("/pacMan/fruit/galaxian.png");
-            case 6 -> image = ImageLoader.loadImage("/pacMan/fruit/bell.png");
-            case 7 -> image = ImageLoader.loadImage("/pacMan/fruit/key.png");
+            case 0 -> image = ImageLoader.loadImage("/pacManRes/fruit/cherry.png");
+            case 1 -> image = ImageLoader.loadImage("/pacManRes/fruit/strawberry.png");
+            case 2 -> image = ImageLoader.loadImage("/pacManRes/fruit/orange.png");
+            case 3 -> image = ImageLoader.loadImage("/pacManRes/fruit/apple.png");
+            case 4 -> image = ImageLoader.loadImage("/pacManRes/fruit/melon.png");
+            case 5 -> image = ImageLoader.loadImage("/pacManRes/fruit/galaxian.png");
+            case 6 -> image = ImageLoader.loadImage("/pacManRes/fruit/bell.png");
+            case 7 -> image = ImageLoader.loadImage("/pacManRes/fruit/key.png");
         }
     }
 

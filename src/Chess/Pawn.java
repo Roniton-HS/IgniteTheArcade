@@ -10,9 +10,9 @@ public class Pawn extends Figures {
     public Pawn(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/PawnBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/PawnBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/PawnWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/PawnWhite.png");
         }
     }
 

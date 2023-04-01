@@ -1,6 +1,7 @@
 package Tetris;
 
 import Chess.Coordinates;
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -11,8 +12,9 @@ import java.util.Random;
 import static Main.Constants.emulogic;
 
 public class Tetris extends Worlds {
+    private final int SPAWN = 4;
     private final int WIDTH = 10;
-    private final int HEIGHT = 20;
+    private final int HEIGHT = 20 + SPAWN;
     private int[][] map = new int[WIDTH][HEIGHT];
     private final int BLOCK_SIZE = 40;
     private long timer = System.currentTimeMillis();
@@ -22,6 +24,8 @@ public class Tetris extends Worlds {
     char current = getNewPiece();
     char next = getNewPiece();
     int score = 0;
+    boolean pause;
+    private boolean lost = false;
     /*
     0:  empty
 
@@ -45,8 +49,9 @@ public class Tetris extends Worlds {
     /**
      * Constructor
      */
-    public Tetris(Game game) {
+    public Tetris(Game game, boolean pause) {
         super(game);
+        this.pause = pause;
         game.getDisplay().resize(1000, 1000);
     }
 
@@ -56,20 +61,29 @@ public class Tetris extends Worlds {
     @Override
     public void tick() {
         input();
-        if (!movingBlock()) {
-            spawnPiece();
+        if (!pause) {
+            if (!movingBlock()) {
+                spawnPiece();
+            }
+            if (System.currentTimeMillis() - timer > 800) {
+                moveDown();
+                timer = System.currentTimeMillis();
+            }
+            checkLine();
         }
-        if (System.currentTimeMillis() - timer > 800) {
-            moveDown();
-            timer = System.currentTimeMillis();
-        }
-        checkLine();
     }
 
     /**
      * handles mouse and keyboard input
      */
     private void input() {
+        if (game.getKeyHandler().enter) {
+            if (lost) {
+                restart();
+            } else {
+                pause = false;
+            }
+        }
         if (game.getKeyHandler().s) {
             moveDown();
         }
@@ -137,34 +151,35 @@ public class Tetris extends Worlds {
     private void spawnPiece() {
         switch (next) {
             case 'o' -> {
-                map[5][0] = 1;
-                map[6][0] = 1;
-                map[5][1] = 1;
-                map[6][1] = 1;
+                map[5][2] = 1;
+                map[6][2] = 1;
+                map[5][3] = 1;
+                map[6][3] = 1;
             }
             case 'l' -> {
-                map[5][0] = 4;
                 map[5][1] = 4;
                 map[5][2] = 4;
-                map[6][2] = 4;
+                map[5][3] = 4;
+                map[6][3] = 4;
             }
             case 'j' -> {
-                map[6][0] = 5;
                 map[6][1] = 5;
                 map[6][2] = 5;
-                map[5][2] = 5;
+                map[6][3] = 5;
+                map[5][3] = 5;
             }
             case 's' -> {
-                map[5][0] = 2;
-                map[6][0] = 2;
-                map[6][1] = 2;
-                map[7][1] = 2;
+                map[5][3] = 2;
+                map[6][3] = 2;
+                map[6][2] = 2;
+                map[7][2] = 2;
             }
             case 'z' -> {
-                map[5][1] = 3;
-                map[6][1] = 3;
-                map[6][0] = 3;
-                map[7][0] = 3;
+
+                map[5][2] = 3;
+                map[6][2] = 3;
+                map[6][3] = 3;
+                map[7][3] = 3;
             }
             case 'i' -> {
                 map[5][1] = 7;
@@ -173,10 +188,10 @@ public class Tetris extends Worlds {
                 map[5][4] = 7;
             }
             case 't' -> {
-                map[6][0] = 6;
-                map[5][1] = 6;
-                map[6][1] = 6;
-                map[7][1] = 6;
+                map[6][2] = 6;
+                map[5][3] = 6;
+                map[6][3] = 6;
+                map[7][3] = 6;
             }
         }
         current = next;
@@ -291,10 +306,19 @@ public class Tetris extends Worlds {
             for (int j = 0; j < WIDTH; j++) {
                 if (map[j][i] <= 7 && map[j][i] != 0) {
                     map[j][i] += 7;
+                    if (i <= 4) {
+                        pause = true;
+                        lost = true;
+                    }
                 }
             }
         }
         state = 0;
+    }
+
+    private void restart() {
+        Tetris tetris = new Tetris(game, false);
+        Worlds.setWorld(tetris);
     }
 
     /*
@@ -810,40 +834,57 @@ public class Tetris extends Worlds {
         }
     }
 
+    /*
+    ====================================================================================================================
+    FULL LINE
+    ====================================================================================================================
+     */
+
     @Override
     public void render(Graphics g) {
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0,0, 1000, 1000);
+        renderMap(g);
+        renderNextBlock(13, 2, g);
+        renderScore(13, 8, g);
+        renderStatus(g);
+    }
+
+    private void renderMap(Graphics g) {
         final int SPACING = 2 * BLOCK_SIZE;
-        for (int i = 0; i < HEIGHT; i++) {
+        for (int i = SPAWN; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 switch (map[j][i]) {
                     default -> g.setColor(Color.WHITE);
-                    case 1, 8 -> g.setColor(Color.YELLOW);
-                    case 2, 9 -> g.setColor(Color.GREEN);
-                    case 3, 10 -> g.setColor(Color.RED);
+                    case 1, 8 -> g.setColor(Constants.YELLOW);
+                    case 2, 9 -> g.setColor(Constants.GREEN);
+                    case 3, 10 -> g.setColor(Constants.RED);
                     case 4, 11 -> g.setColor(Color.ORANGE);
                     case 5, 12 -> g.setColor(Color.CYAN);
-                    case 6, 13 -> g.setColor(new Color(211, 16, 211));
-                    case 7, 14 -> g.setColor(new Color(77, 0, 77));
+                    case 6, 13 -> g.setColor(new Color(245, 18, 245));
+                    case 7, 14 -> g.setColor(Constants.BLUE);
                 }
-                g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + (i - SPAWN) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);
-                g.drawRect(SPACING + j * BLOCK_SIZE, SPACING + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                g.drawRect(SPACING + j * BLOCK_SIZE, SPACING + (i - SPAWN) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
+    }
 
-        final int NEXT_POSITION_X = 13 * BLOCK_SIZE;
-        final int NEXT_POSITION_Y = 2 * BLOCK_SIZE;
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+    private void renderNextBlock(int xPos, int yPos, Graphics g) {
+        xPos = xPos * BLOCK_SIZE;
+        yPos = yPos * BLOCK_SIZE;
+        g.setColor(Color.WHITE);
+        g.fillRect(xPos, yPos, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
         g.setColor(Color.BLACK);
-        g.drawRect(NEXT_POSITION_X, NEXT_POSITION_Y, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
+        g.drawRect(xPos, yPos, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
         switch (next) {
             default -> {
             }
             case 'o' -> {
-                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
-                g.setColor(Color.YELLOW);
+                final int x = xPos + 3 * BLOCK_SIZE / 2;
+                final int y = yPos + 3 * BLOCK_SIZE / 2;
+                g.setColor(Constants.YELLOW);
                 g.fillRect(x, y, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
@@ -852,9 +893,9 @@ public class Tetris extends Worlds {
                 g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 'i' -> {
-                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + BLOCK_SIZE / 2;
-                g.setColor(new Color(77, 0, 77));
+                final int x = xPos + 2 * BLOCK_SIZE / 2;
+                final int y = yPos + BLOCK_SIZE / 2;
+                g.setColor(Constants.BLUE);
                 g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, 4 * BLOCK_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
@@ -863,8 +904,8 @@ public class Tetris extends Worlds {
                 g.drawRect(x + BLOCK_SIZE, y + 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 'l' -> {
-                final int x = NEXT_POSITION_X + 3 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                final int x = xPos + 3 * BLOCK_SIZE / 2;
+                final int y = yPos + 2 * BLOCK_SIZE / 2;
                 g.setColor(Color.ORANGE);
                 g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
                 g.fillRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -875,8 +916,8 @@ public class Tetris extends Worlds {
                 g.drawRect(x + BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 'j' -> {
-                final int x = NEXT_POSITION_X + 5 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 2 * BLOCK_SIZE / 2;
+                final int x = xPos + 5 * BLOCK_SIZE / 2;
+                final int y = yPos + 2 * BLOCK_SIZE / 2;
                 g.setColor(Color.CYAN);
                 g.fillRect(x, y, BLOCK_SIZE, 3 * BLOCK_SIZE);
                 g.fillRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -887,9 +928,9 @@ public class Tetris extends Worlds {
                 g.drawRect(x - BLOCK_SIZE, y + 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 's' -> {
-                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
-                g.setColor(Color.GREEN);
+                final int x = xPos + 2 * BLOCK_SIZE / 2;
+                final int y = yPos + 3 * BLOCK_SIZE / 2;
+                g.setColor(Constants.GREEN);
                 g.fillRect(x + BLOCK_SIZE, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
                 g.fillRect(x, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);
@@ -899,9 +940,9 @@ public class Tetris extends Worlds {
                 g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 'z' -> {
-                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
-                g.setColor(Color.RED);
+                final int x = xPos + 2 * BLOCK_SIZE / 2;
+                final int y = yPos + 3 * BLOCK_SIZE / 2;
+                g.setColor(Constants.RED);
                 g.fillRect(x, y, 2 * BLOCK_SIZE, BLOCK_SIZE);
                 g.fillRect(x + BLOCK_SIZE, y + BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);
@@ -911,9 +952,9 @@ public class Tetris extends Worlds {
                 g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
             case 't' -> {
-                final int x = NEXT_POSITION_X + 2 * BLOCK_SIZE / 2;
-                final int y = NEXT_POSITION_Y + 3 * BLOCK_SIZE / 2;
-                g.setColor(new Color(211, 16, 211));
+                final int x = xPos + 2 * BLOCK_SIZE / 2;
+                final int y = yPos + 3 * BLOCK_SIZE / 2;
+                g.setColor(new Color(245, 18, 245));
                 g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
                 g.fillRect(x, y + BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);
@@ -923,14 +964,35 @@ public class Tetris extends Worlds {
                 g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
-        final int SCORE_POSITION_X = 13 * BLOCK_SIZE;
-        final int SCORE_POSITION_Y = 2 * BLOCK_SIZE + 6*BLOCK_SIZE;
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+    }
+
+    private void renderScore(int xPos, int yPos, Graphics g) {
+        xPos = xPos * BLOCK_SIZE;
+        yPos = yPos * BLOCK_SIZE;
+        g.setColor(Color.WHITE);
+        g.fillRect(xPos, yPos, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
         g.setColor(Color.BLACK);
-        g.drawRect(SCORE_POSITION_X, SCORE_POSITION_Y, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        g.drawRect(xPos, yPos, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
-        g.drawString("Score:",SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 3 * BLOCK_SIZE / 2);
-        g.drawString(""+score,SCORE_POSITION_X + BLOCK_SIZE, SCORE_POSITION_Y + 5 * BLOCK_SIZE / 2);
+        g.drawString("Score:", xPos + BLOCK_SIZE, yPos + 3 * BLOCK_SIZE / 2);
+        g.drawString(String.valueOf(score), xPos + BLOCK_SIZE, yPos + 5 * BLOCK_SIZE / 2);
+    }
+
+    private void renderStatus(Graphics g) {
+        g.setColor(Color.WHITE);
+        final int STATUS_PANEL_X = 550;
+        final int STATUS_PANEL_Y = 700;
+        final int OFFSET = 50;
+        if (lost) {
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 40.0F));
+            g.drawString("Game Over", STATUS_PANEL_X, STATUS_PANEL_Y);
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+            g.drawString("[Enter] to restart", STATUS_PANEL_X, STATUS_PANEL_Y + OFFSET);
+        } else if (pause) {
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 40.0F));
+            g.drawString("TETRIS", STATUS_PANEL_X, STATUS_PANEL_Y);
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+            g.drawString("[Enter] to start", STATUS_PANEL_X, STATUS_PANEL_Y + OFFSET);
+        }
     }
 }

@@ -9,9 +9,9 @@ public class Rook extends Figures {
     public Rook(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/RookBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/RookBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/RookWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/RookWhite.png");
         }
     }
 
