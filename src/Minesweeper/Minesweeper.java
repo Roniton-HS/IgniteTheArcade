@@ -20,6 +20,7 @@ public class Minesweeper extends Worlds {
     boolean gameLost = false;
     boolean gameWon = false;
     boolean firstClick = true;
+    final int BOMBS;
 
     /**
      * Constructor
@@ -31,7 +32,8 @@ public class Minesweeper extends Worlds {
         this.mapSize = mapSize;
         map = new int[mapSize][mapSize];
         clicked = new int[mapSize][mapSize];
-        winCount = mapSize * mapSize - mapSize * mapSize / 6;
+        BOMBS = mapSize * mapSize / 6;
+        winCount = mapSize * mapSize - BOMBS;
         initBombs();
         initNum();
     }
@@ -169,8 +171,7 @@ public class Minesweeper extends Worlds {
     private void initBombs() {
         Random r = new Random();
         int ranX, ranY;
-        int bombs = mapSize * mapSize / 6;
-        for (int i = 0; i < bombs; i++) {
+        for (int i = 0; i < BOMBS; i++) {
             ranX = r.nextInt(map.length);
             ranY = r.nextInt(map.length);
             if (map[ranX][ranY] != 9) {
@@ -265,8 +266,8 @@ public class Minesweeper extends Worlds {
         }
     }
 
-    private final BufferedImage bomb = ImageLoader.loadImage("/minesweeper/bomb.png");
-    private final BufferedImage flag = ImageLoader.loadImage("/minesweeper/flag.png");
+    private final BufferedImage bomb = ImageLoader.loadImage("/minesweeperRes/bomb.png");
+    private final BufferedImage flag = ImageLoader.loadImage("/minesweeperRes/flag.png");
 
     private void renderMap(Graphics g) {
         int xOff = 15;

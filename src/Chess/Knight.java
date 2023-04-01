@@ -9,9 +9,9 @@ public class Knight extends Figures {
     public Knight(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/KnightBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/KnightBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/KnightWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/KnightWhite.png");
         }
     }
 

@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Figures {
-    BufferedImage image = ImageLoader.loadImage("/chess/Black/KingBlack.png");
+    BufferedImage image = ImageLoader.loadImage("/chessRes/Black/KingBlack.png");
     final int WIDTH = image.getWidth() * 4;
     final int HEIGHT = image.getHeight() * 4;
 

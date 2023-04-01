@@ -9,9 +9,9 @@ public class Bishop extends Figures {
     public Bishop(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/BishopBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/BishopBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/BishopWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/BishopWhite.png");
         }
     }
 

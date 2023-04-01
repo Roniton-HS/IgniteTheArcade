@@ -10,9 +10,9 @@ public class King extends Figures {
     public King(int x, int y, boolean black, Figures[][] figuresSave) {
         super(x, y, black, figuresSave);
         if (black) {
-            image = ImageLoader.loadImage("/chess/Black/KingBlack.png");
+            image = ImageLoader.loadImage("/chessRes/Black/KingBlack.png");
         } else {
-            image = ImageLoader.loadImage("/chess/White/KingWhite.png");
+            image = ImageLoader.loadImage("/chessRes/White/KingWhite.png");
         }
     }
 
