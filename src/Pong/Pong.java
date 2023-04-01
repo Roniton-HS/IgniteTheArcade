@@ -1,9 +1,13 @@
 package Pong;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+
+import static Main.Constants.ALMOST_BLACK;
+import static Main.Constants.ALMOST_WHITE;
 
 public class Pong extends Worlds {
     final private int WINDOW_SIZE = 510;
@@ -48,9 +52,9 @@ public class Pong extends Worlds {
     }
 
     private void renderBackground(Graphics g) {
-        g.setColor(DISPLAY_BLACK);
+        g.setColor(ALMOST_BLACK);
         g.fillRect(0, 0, WINDOW_SIZE, WINDOW_SIZE);
-        g.setColor(DISPLAY_WHITE);
+        g.setColor(ALMOST_WHITE);
 
         final int WIDTH = 4;
         final int HEIGHT = 10;
@@ -60,7 +64,7 @@ public class Pong extends Worlds {
     }
 
     private void renderPlayer(Graphics g) {
-        g.setColor(DISPLAY_WHITE);
+        g.setColor(ALMOST_WHITE);
         g.fillRect(playerLeft.x, playerLeft.y, playerLeft.width, playerLeft.height);
         g.fillRect(playerRight.x, playerRight.y, playerRight.width, playerRight.height);
     }
