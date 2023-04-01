@@ -15,6 +15,7 @@ public class Ghost {
     private int y;
     private final int size = 38;
     public final int color;
+    private PacMan world;
 
     //phase
     private int phase; //0: scatter | 1: chase | 2: fear | 3: go to base | 4: leave base
@@ -46,8 +47,9 @@ public class Ghost {
     init
     ====================================================================================================================
     */
-    public Ghost(int x, int y, int color, Game game) {
+    public Ghost(int x, int y, int color,PacMan world, Game game) {
         this.game = game;
+        this.world = world;
         this.x = x;
         this.y = y;
         this.color = color;
@@ -77,25 +79,25 @@ public class Ghost {
             phase = 3;
             switch (color) {
                 case 1 -> {
-                    if (PacMan.ticks >= 300) {
+                    if (world.ticks >= 300) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 2 -> {
-                    if (PacMan.ticks >= 0) {
+                    if (world.ticks >= 0) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 3 -> {
-                    if (PacMan.ticks >= 900) {
+                    if (world.ticks >= 900) {
                         startInBase = false;
                         leaveBase = true;
                     }
                 }
                 case 4 -> {
-                    if (PacMan.ticks >= 600) {
+                    if (world.ticks >= 600) {
                         startInBase = false;
                         leaveBase = true;
                     }
@@ -105,10 +107,10 @@ public class Ghost {
             phase = 3;
         } else if (fear) {
 
-            if (PacMan.ticks - blinkStartTicks > 900) {
+            if (world.ticks - blinkStartTicks > 900) {
                 fear = false;
                 blink = false;
-            } else if (PacMan.ticks - blinkStartTicks > 750) {
+            } else if (world.ticks - blinkStartTicks > 750) {
                 blink = true;
             } else {
                 phase = 2;
@@ -116,19 +118,19 @@ public class Ghost {
         } else if (leaveBase) {
             phase = 4;
         } else {
-            if (PacMan.ticks >= 5040) {
+            if (world.ticks >= 5040) {
                 phase = 1; //endless chase
-            } else if (PacMan.ticks >= 4740) {
+            } else if (world.ticks >= 4740) {
                 phase = 0;
-            } else if (PacMan.ticks >= 3540) {
+            } else if (world.ticks >= 3540) {
                 phase = 1;
-            } else if (PacMan.ticks >= 3240) {
+            } else if (world.ticks >= 3240) {
                 phase = 0;
-            } else if (PacMan.ticks >= 2040) {
+            } else if (world.ticks >= 2040) {
                 phase = 1;
-            } else if (PacMan.ticks >= 1620) {
+            } else if (world.ticks >= 1620) {
                 phase = 0;
-            } else if (PacMan.ticks >= 420) {
+            } else if (world.ticks >= 420) {
                 phase = 1;
             } else {
                 phase = 0;
@@ -139,7 +141,7 @@ public class Ghost {
     public void startFear() {
         fear = true;
         blink = false;
-        blinkStartTicks = PacMan.ticks;
+        blinkStartTicks = world.ticks;
     }
 
     /*
@@ -417,33 +419,33 @@ public class Ghost {
             //update target cords
             switch (color) {
                 case 1 -> { //pink
-                    switch (PacMan.getPlayer().direction) {
+                    switch (world.getPlayer().direction) {
                         case 1 -> {
-                            targetX = PacMan.getPlayer().getX();
-                            targetY = PacMan.getPlayer().getY() - 3 * PacMan.getBlockSize();
+                            targetX = world.getPlayer().getX();
+                            targetY = world.getPlayer().getY() - 3 * PacMan.getBlockSize();
                         }
                         case 2 -> {
-                            targetX = PacMan.getPlayer().getX() - 3 * PacMan.getBlockSize();
-                            targetY = PacMan.getPlayer().getY();
+                            targetX = world.getPlayer().getX() - 3 * PacMan.getBlockSize();
+                            targetY = world.getPlayer().getY();
                         }
                         case 3 -> {
-                            targetX = PacMan.getPlayer().getX();
-                            targetY = PacMan.getPlayer().getY() + 3 * PacMan.getBlockSize();
+                            targetX = world.getPlayer().getX();
+                            targetY = world.getPlayer().getY() + 3 * PacMan.getBlockSize();
                         }
                         case 4 -> {
-                            targetX = PacMan.getPlayer().getX() + 3 * PacMan.getBlockSize();
-                            targetY = PacMan.getPlayer().getY();
+                            targetX = world.getPlayer().getX() + 3 * PacMan.getBlockSize();
+                            targetY = world.getPlayer().getY();
                         }
                     }
 
                 }
                 case 2 -> { //rot
-                    targetX = PacMan.getPlayer().getX();
-                    targetY = PacMan.getPlayer().getY();
+                    targetX = world.getPlayer().getX();
+                    targetY = world.getPlayer().getY();
                 }
                 case 3 -> { //orange
-                    if (PacMan.getPlayer().getX() < 19 * PacMan.getBlockSize() / 2) {
-                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
+                    if (world.getPlayer().getX() < 19 * PacMan.getBlockSize() / 2) {
+                        if (world.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
                             //oben links
                             targetX = 0;
                             targetY = 0;
@@ -453,7 +455,7 @@ public class Ghost {
                             targetY = 25 * PacMan.getBlockSize();
                         }
                     } else {
-                        if (PacMan.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
+                        if (world.getPlayer().getY() < 25 * PacMan.getBlockSize() / 2) {
                             //oben rechts
                             targetX = 18 * PacMan.getBlockSize();
                             targetY = 0;
@@ -466,9 +468,9 @@ public class Ghost {
                     }
                 }
                 case 4 -> { //blue
-                    Ghost ghost = PacMan.ghosts.get(1);
-                    targetX = PacMan.getPlayer().getX() + PacMan.getPlayer().getX() - ghost.getX();
-                    targetY = PacMan.getPlayer().getY() + PacMan.getPlayer().getY() - ghost.getY();
+                    Ghost ghost = world.ghosts.get(1);
+                    targetX = world.getPlayer().getX() + world.getPlayer().getX() - ghost.getX();
+                    targetY = world.getPlayer().getY() + world.getPlayer().getY() - ghost.getY();
                 }
 
             }
@@ -509,7 +511,7 @@ public class Ghost {
     }
 
     private boolean checkFree(String direction) {
-        ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
+        ArrayList<Rectangle> bounds = world.getWorldBounds();
         for (Rectangle bound : bounds) {
             if (direction.equals("up") && new Rectangle(this.x, this.y - PacMan.getBlockSize() / 2, size, 1).intersects(bound)) {
                 return false;
