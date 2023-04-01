@@ -6,8 +6,7 @@ import Worlds.Worlds;
 
 import java.awt.*;
 
-import static Main.Constants.ALMOST_BLACK;
-import static Main.Constants.ALMOST_WHITE;
+import static Main.Constants.*;
 
 public class Pong extends Worlds {
     final private int WINDOW_SIZE = 510;
@@ -23,7 +22,7 @@ public class Pong extends Worlds {
 
     public Pong(Game game) {
         super(game);
-        game.getDisplay().resize(WINDOW_SIZE + 16, WINDOW_SIZE + 39);
+        game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
         createGame();
     }
 

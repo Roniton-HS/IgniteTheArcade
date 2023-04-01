@@ -1,5 +1,6 @@
 package Arkanoid;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static Main.Constants.emulogic;
+import static Main.Constants.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
@@ -47,7 +48,7 @@ public class Arkanoid extends Worlds {
      */
     public Arkanoid(Game game) {
         super(game);
-        game.getDisplay().resize(WINDOW_WIDTH + 16, WINDOW_HEIGHT + 39);
+        game.getDisplay().resize(WINDOW_WIDTH + WIN10_WIDTH_DIFF, WINDOW_HEIGHT + WIN10_HEIGHT_DIFF);
         createGame();
         pattern.createPattern();
         createBricks();
