@@ -1,6 +1,5 @@
 package Arkanoid;
 
-import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -40,7 +39,7 @@ public class Arkanoid extends Worlds {
     private final Rectangle borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
 
     private final Pattern pattern = new Pattern();
-    private ArrayList<Brick> bricks;
+    private ArrayList<Brick> bricks = new ArrayList<>();
     private int index;
 
     /**
@@ -65,7 +64,10 @@ public class Arkanoid extends Worlds {
     private void createBricks() {
         Random random = new Random();
         index = random.nextInt(pattern.getPatterns().size());
-        bricks = pattern.getPatterns().get(index);
+        bricks.clear();
+        for (Brick brick : pattern.getPatterns().get(index)) {
+            bricks.add(new Brick(brick.x, brick.y, brick.getHp()));
+        }
     }
 
     @Override
