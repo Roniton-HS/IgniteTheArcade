@@ -12,8 +12,8 @@ import static Main.Constants.ALMOST_WHITE;
 public class Pong extends Worlds {
     final private int WINDOW_SIZE = 510;
 
-    private Rectangle playerLeft;
-    private Rectangle playerRight;
+    private Player playerLeft;
+    private Player playerRight;
     private Rectangle collisionPlayerLeft;
     private Rectangle collisionPlayerRight;
     private final int PLAYER_SPEED = 5;
@@ -28,15 +28,13 @@ public class Pong extends Worlds {
     }
 
     private void createGame() {
-        int PLAYER_WIDTH = 10;
-        int PLAYER_HEIGHT = 50;
-        playerLeft = new Rectangle(30, WINDOW_SIZE / 2 - PLAYER_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT);
-        collisionPlayerLeft = new Rectangle(playerLeft.x - PLAYER_SPEED, playerLeft.y, playerLeft.width + (2 * PLAYER_SPEED), playerLeft.height);
+        playerLeft = new Player(WINDOW_SIZE,false);
+        collisionPlayerLeft = playerLeft.getCollisionPlayer();
 
-        playerRight = new Rectangle(WINDOW_SIZE - 30 - PLAYER_WIDTH, WINDOW_SIZE / 2 - PLAYER_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT);
-        collisionPlayerRight = new Rectangle(playerRight.x - PLAYER_SPEED, playerRight.y, playerRight.width + (2 * PLAYER_SPEED), playerRight.height);
+        playerRight = new Player(WINDOW_SIZE,true);
+        collisionPlayerRight = playerRight.getCollisionPlayer();
 
-        ball = new Ball(WINDOW_SIZE / 2 - BALL_DIAMETER / 2, WINDOW_SIZE / 2 - BALL_DIAMETER / 2, BALL_DIAMETER);
+        ball = new Ball(WINDOW_SIZE);
     }
 
     @Override
@@ -64,8 +62,7 @@ public class Pong extends Worlds {
     }
 
     private void renderPlayer(Graphics g) {
-        g.setColor(ALMOST_WHITE);
-        g.fillRect(playerLeft.x, playerLeft.y, playerLeft.width, playerLeft.height);
-        g.fillRect(playerRight.x, playerRight.y, playerRight.width, playerRight.height);
+        playerLeft.render(g);
+        playerRight.render(g);
     }
 }
