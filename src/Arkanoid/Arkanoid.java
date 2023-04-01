@@ -64,13 +64,8 @@ public class Arkanoid extends Worlds {
 
     private void createBricks() {
         Random random = new Random();
-
-        //int index = random.nextInt(0, getPatterns().size());
-        //bricks = getPatterns().get(index);
-
         index = random.nextInt(pattern.getPatterns().size());
         bricks = pattern.getPatterns().get(index);
-
     }
 
     @Override
