@@ -12,38 +12,38 @@ import java.util.Random;
 import static Main.Constants.emulogic;
 
 public class Tetris extends Worlds {
+    //finals
     private final int SPAWN = 4;
     private final int WIDTH = 10;
     private final int HEIGHT = 20 + SPAWN;
-    private int[][] map = new int[WIDTH][HEIGHT];
     private final int BLOCK_SIZE = 40;
-    private long timer = System.currentTimeMillis();
-    private boolean keyPressed = false;
-    private boolean[] piecesUsed = new boolean[7];
-    private int state = 0;
-    char current = getNewPiece();
-    char next = getNewPiece();
-    int score = 0;
-    boolean pause;
+
+    //general
+    private int score = 0;
+    private boolean pause;
     private boolean lost = false;
+
+    //pieces
+    private int[][] map = new int[WIDTH][HEIGHT];
+    private long timer = System.currentTimeMillis();
+    private boolean[] piecesUsed = new boolean[7];
+    private char current = getNewPiece();
+    private char next = getNewPiece();
+    private int state = 0;
+
+    //input
+    private boolean keyPressed = false;
+
     /*
-    0:  empty
-
-    1:  static o
-    2:  static s
-    3:  static z
-    4:  static l
-    5:  static j
-    6:  static t
-    7:  static i
-
-    8:  moving o
-    9:  moving s
-    10: moving z
-    11: moving l
-    12: moving j
-    13: moving t
-    14: moving i
+    0: empty
+    1: o
+    2: s
+    3: z
+    4: l
+    5: j
+    6: t
+    7: i
+    +7 if the become static
      */
 
     /**
@@ -316,6 +316,9 @@ public class Tetris extends Worlds {
         state = 0;
     }
 
+    /**
+     * creates and set a new instance of the game
+     */
     private void restart() {
         Tetris tetris = new Tetris(game, false);
         Worlds.setWorld(tetris);
@@ -343,9 +346,6 @@ public class Tetris extends Worlds {
         }
     }
 
-    /**
-     * rotates I piece
-     */
     private void rotateI() {
         Coordinates x, m, a, b, c;
         if (state == 0) {
@@ -385,9 +385,6 @@ public class Tetris extends Worlds {
         }
     }
 
-    /**
-     * rotates L piece
-     */
     private void rotateL() {
         Coordinates x, m, a, b, c;
         switch (state) {
@@ -871,6 +868,7 @@ public class Tetris extends Worlds {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void renderNextBlock(int xPos, int yPos, Graphics g) {
         xPos = xPos * BLOCK_SIZE;
         yPos = yPos * BLOCK_SIZE;
@@ -966,6 +964,7 @@ public class Tetris extends Worlds {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void renderScore(int xPos, int yPos, Graphics g) {
         xPos = xPos * BLOCK_SIZE;
         yPos = yPos * BLOCK_SIZE;

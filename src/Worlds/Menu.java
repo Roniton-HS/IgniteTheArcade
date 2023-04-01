@@ -19,59 +19,35 @@ import java.util.ArrayList;
 
 import static Main.Constants.recursiveBold;
 
+@SuppressWarnings({"PointlessArithmeticExpression", "UnaryPlus"})
 public class Menu extends Worlds {
 
     private GameCamera gameCamera = new GameCamera();
-
-    //portal sprites
-    private final BufferedImage portal0 = ImageLoader.loadImage("/menuRes/portal0.png");
-    private final BufferedImage portal1 = ImageLoader.loadImage("/menuRes/portal1.png");
-    private final BufferedImage portal2 = ImageLoader.loadImage("/menuRes/portal2.png");
-    private final BufferedImage portal3 = ImageLoader.loadImage("/menuRes/portal3.png");
-    private final BufferedImage portal4 = ImageLoader.loadImage("/menuRes/portal4.png");
-    private BufferedImage portal = portal0;
-
-    //head sprites
-    private final BufferedImage head0 = ImageLoader.loadImage("/menuRes/head0.png");
-    private final BufferedImage head1 = ImageLoader.loadImage("/menuRes/head1.png");
-    private final BufferedImage head2 = ImageLoader.loadImage("/menuRes/head2.png");
-    private final BufferedImage head3 = ImageLoader.loadImage("/menuRes/head3.png");
-    private BufferedImage head = head0;
-
-    //leg sprites
-    private final BufferedImage legsIdle = ImageLoader.loadImage("/menuRes/legs.png");
-    private final BufferedImage legsLeft = ImageLoader.loadImage("/menuRes/legLeft.png");
-    private final BufferedImage legRight = ImageLoader.loadImage("/menuRes/legRight.png");
-    private BufferedImage legs = legsIdle;
-
-    //design sprites
-    private final BufferedImage arcadeMachine = ImageLoader.loadImage("/menuRes/arcadeMachine.png");
+    private boolean moving = false;
 
     //player
+    private BufferedImage head = ImageLoader.loadImage("/menuRes/head0.png");
     final int PLAYER_START_X = 474;
     final int PLAYER_START_Y = 410;
     final int PLAYER_SIZE = 4;
     Rectangle player = new Rectangle(PLAYER_START_X, PLAYER_START_Y, head.getWidth() * PLAYER_SIZE, head.getHeight() * PLAYER_SIZE);
 
-    //levels
+    //portals
+    private BufferedImage portal = ImageLoader.loadImage("/menuRes/portal0.png");
     private final int LEVEL_OFFSET = 350;
     private final int LEVEL_Y = 340;
     private final int LEVEL_SIZE = 4;
-    Rectangle tetris = new Rectangle(-2 * LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle chess = new Rectangle(-LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle pacMan = new Rectangle(0, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle minesweeper = new Rectangle(LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle snake = new Rectangle(2*LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    Rectangle arkanoid = new Rectangle(3*LEVEL_OFFSET, LEVEL_Y, portal.getWidth() * LEVEL_SIZE, portal.getHeight() * LEVEL_SIZE);
-    ArrayList<Rectangle> levels = new ArrayList<>();
+    private final int PORTAL_WIDTH = LEVEL_SIZE * portal.getWidth();
+    private final int PORTAL_HEIGHT = LEVEL_SIZE * portal.getHeight();
 
-    //animations
-    private int portalAnimation = 0;
-    private int portalAnimationDelay = 0;
-    private int flameAnimation;
-    private int flameAnimationDelay;
-    private boolean moving = false;
-    private int legAnimation;
+
+    ArrayList<Rectangle> levels = new ArrayList<>();
+    Rectangle tetris =      new Rectangle(-2 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
+    Rectangle chess =       new Rectangle(-1 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
+    Rectangle pacMan =      new Rectangle(+0 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
+    Rectangle minesweeper = new Rectangle(+1 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
+    Rectangle snake =       new Rectangle(+2 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
+    Rectangle arkanoid =    new Rectangle(+3 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
 
     /**
      * Constructor
@@ -119,7 +95,7 @@ public class Menu extends Worlds {
             checkGame();
         }
 
-        if(game.getKeyHandler().b) {
+        if (game.getKeyHandler().b) {
             Pong pong = new Pong(game);
             Worlds.setWorld(pong);
         }
@@ -148,37 +124,41 @@ public class Menu extends Worlds {
         } else if (player.getBounds().intersects(chess.getBounds())) {
             Chess chess = new Chess(game);
             Worlds.setWorld(chess);
-        }else if(player.getBounds().intersects(tetris.getBounds())){
+        } else if (player.getBounds().intersects(tetris.getBounds())) {
             Tetris tetris = new Tetris(game, true);
             Worlds.setWorld(tetris);
         }
     }
 
-
-    /**
-     * ticks portal animations
+    /*
+    ====================================================================================================================
+    RENDERING
+    ====================================================================================================================
      */
-    private void portalAnimation() {
-        final int ANIMATION_SLOW = 3;
-        final int SPRITES = 4;
-        switch (portalAnimation) {
-            default -> portal = portal0;
-            case 1 -> portal = portal1;
-            case 2 -> portal = portal2;
-            case 3 -> portal = portal3;
-            case 4 -> portal = portal4;
-        }
-        if (portalAnimation > SPRITES) {
-            portalAnimation = 0;
-        } else {
-            if (portalAnimationDelay > ANIMATION_SLOW) {
-                portalAnimation++;
-                portalAnimationDelay = 0;
-            } else {
-                portalAnimationDelay++;
-            }
-        }
-    }
+    private int portalAnimation = 0;
+    private int portalAnimationDelay = 0;
+    private int flameAnimation;
+    private int flameAnimationDelay;
+    private int legAnimation;
+
+    //images
+    private final BufferedImage arcadeMachine = ImageLoader.loadImage("/menuRes/arcadeMachine.png");
+    private final BufferedImage legsIdle = ImageLoader.loadImage("/menuRes/legs.png");
+    private final BufferedImage legsLeft = ImageLoader.loadImage("/menuRes/legLeft.png");
+    private final BufferedImage legRight = ImageLoader.loadImage("/menuRes/legRight.png");
+    private BufferedImage legs = legsIdle;
+
+    private final BufferedImage portal0 = portal;
+    private final BufferedImage portal1 = ImageLoader.loadImage("/menuRes/portal1.png");
+    private final BufferedImage portal2 = ImageLoader.loadImage("/menuRes/portal2.png");
+    private final BufferedImage portal3 = ImageLoader.loadImage("/menuRes/portal3.png");
+    private final BufferedImage portal4 = ImageLoader.loadImage("/menuRes/portal4.png");
+
+    //head sprites
+    private final BufferedImage head0 = head;
+    private final BufferedImage head1 = ImageLoader.loadImage("/menuRes/head1.png");
+    private final BufferedImage head2 = ImageLoader.loadImage("/menuRes/head2.png");
+    private final BufferedImage head3 = ImageLoader.loadImage("/menuRes/head3.png");
 
     @Override
     public void render(Graphics g) {
@@ -232,6 +212,31 @@ public class Menu extends Worlds {
         for (Rectangle r : levels) {
             if (player.getBounds().intersects(r.getBounds())) {
                 g.drawString("[E] to Enter", player.x + ENTER_TEXT_OFFSET_X - off, player.y + ENTER_TEXT_OFFSET_Y);
+            }
+        }
+    }
+
+    /**
+     * ticks portal animations
+     */
+    private void portalAnimation() {
+        final int ANIMATION_SLOW = 3;
+        final int SPRITES = 4;
+        switch (portalAnimation) {
+            default -> portal = portal0;
+            case 1 -> portal = portal1;
+            case 2 -> portal = portal2;
+            case 3 -> portal = portal3;
+            case 4 -> portal = portal4;
+        }
+        if (portalAnimation > SPRITES) {
+            portalAnimation = 0;
+        } else {
+            if (portalAnimationDelay > ANIMATION_SLOW) {
+                portalAnimation++;
+                portalAnimationDelay = 0;
+            } else {
+                portalAnimationDelay++;
             }
         }
     }
