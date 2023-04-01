@@ -54,9 +54,9 @@ public class Arkanoid extends Worlds {
     }
 
     private void createGame() {
-        int PLAYER_WIDTH = 100;
-        int PLAYER_HEIGHT = 10;
-        player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), WINDOW_HEIGHT - 70 - PLAYER_HEIGHT, PLAYER_WIDTH, 10);
+        final int PLAYER_WIDTH = 100;
+        final int PLAYER_HEIGHT = 10;
+        player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), WINDOW_HEIGHT - 70 - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
         collisionPlayer = new Rectangle(player.x - PLAYER_SPEED, player.y, player.width + (2 * PLAYER_SPEED), player.height);
         ball = new Ball(WINDOW_WIDTH / 2 - BALL_DIAMETER / 2, player.y - BALL_DIAMETER, BALL_DIAMETER);
     }
