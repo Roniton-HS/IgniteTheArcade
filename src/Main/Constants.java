@@ -7,6 +7,8 @@ import java.io.InputStream;
 public class Constants {
         public static final int WORLD_WIDTH = 1000;
         public static final int WORLD_HEIGHT = 1000;
+        public static final int WIN10_WIDTH_DIFF = 16;
+        public static final int WIN10_HEIGHT_DIFF = 39;
 
         public static Font emulogic;
         public static Font recursiveBold;
