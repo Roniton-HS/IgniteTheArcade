@@ -10,6 +10,7 @@ public class Player {
     private final int WIDTH = 10;
     private final int HEIGHT = 50;
     private final int SPEED = 5;
+    private int y;
 
     /**
      * creates the player for pong
@@ -24,6 +25,7 @@ public class Player {
             player = new Rectangle(windowSize - 30 - WIDTH, windowSize / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         }
         collisionPlayer = new Rectangle(player.x, windowSize / 2 - player.x - SPEED, WIDTH, HEIGHT + 2 * SPEED);
+        y = player.y;
     }
 
     public Rectangle getCollisionPlayer() {
@@ -32,6 +34,16 @@ public class Player {
 
     public int getSPEED() {
         return SPEED;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Player setY(int y) {
+        player.y = y;
+        this.y = y;
+        return this;
     }
 
     public void render(Graphics g) {
