@@ -861,7 +861,7 @@ public class Tetris extends Worlds {
                     case 3, 10 -> g.setColor(Constants.RED);
                     case 4, 11 -> g.setColor(Color.ORANGE);
                     case 5, 12 -> g.setColor(Color.CYAN);
-                    case 6, 13 -> g.setColor(new Color(245, 18, 245));
+                    case 6, 13 -> g.setColor(Constants.PINK);
                     case 7, 14 -> g.setColor(Constants.BLUE);
                 }
                 g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + (i - SPAWN) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -954,7 +954,7 @@ public class Tetris extends Worlds {
             case 't' -> {
                 final int x = xPos + 2 * BLOCK_SIZE / 2;
                 final int y = yPos + 3 * BLOCK_SIZE / 2;
-                g.setColor(new Color(245, 18, 245));
+                g.setColor(Constants.PINK);
                 g.fillRect(x + BLOCK_SIZE, y, BLOCK_SIZE, BLOCK_SIZE);
                 g.fillRect(x, y + BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);

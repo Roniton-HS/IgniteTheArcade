@@ -132,7 +132,7 @@ public class Menu extends Worlds {
      */
     private void checkGame() {
         final int MINESWEEPER_BLOCK_SIZE = 50;
-        final int MINESWEEPER_MAP_SIZE = 19;
+        final int MINESWEEPER_MAP_SIZE = 17;
         if (player.getBounds().intersects(pacMan.getBounds())) {
             PacMan pacMan = new PacMan(game);
             Worlds.setWorld(pacMan);
