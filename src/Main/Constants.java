@@ -42,4 +42,5 @@ public class Constants {
         public static final Color RED = new Color(255, 14, 66);
         public static final Color GREEN = new Color(118, 255, 0);
         public static final Color BLUE = new Color(78, 46, 250);
+        public static final Color PINK = new Color(245, 18, 245);
 }
