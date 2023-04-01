@@ -12,39 +12,39 @@ import static Main.Constants.emulogic;
 public class PacMan extends Worlds {
 
     //size of the game
-    static public final int width = 19;
-    static public final int height = 25;
-    static private final int blockSize = 38;
+    private static final int WIDTH = 19;
+    private static final int HEIGHT = 25;
+    private static final int BLOCK_SIZE = 38;
 
     //time of the game
-    public static int ticks = 0;
+    public int ticks = 0;
 
     //PacMan Player
-    static Player player;
+    Player player;
     private int hp = 3;
     private int ghostsEaten = 0;
     private int score = 0;
 
     //pause game
-    static public boolean gamePaused = false;
+    public boolean gamePaused;
     boolean spacePressed = false;
     boolean gameOver = false;
     private long gameOverTime;
 
     //Collectables
-    private static final ArrayList<Rectangle> points = new ArrayList<>(); //stores all points
-    private static final ArrayList<Rectangle> powerUps = new ArrayList<>(); //stores all powerUps
-    private static final ArrayList<Fruit> fruits = new ArrayList<>(); //stores all fruits
+    private final ArrayList<Rectangle> points = new ArrayList<>(); //stores all points
+    private final ArrayList<Rectangle> powerUps = new ArrayList<>(); //stores all powerUps
+    private final ArrayList<Fruit> fruits = new ArrayList<>(); //stores all fruits
 
     //World bounds
-    public static ArrayList<Rectangle> worldBounds = new ArrayList<>();
+    public ArrayList<Rectangle> worldBounds = new ArrayList<>();
 
     //Enemies
-    public static ArrayList<Ghost> ghosts = new ArrayList<>(); //stores all ghosts
+    public ArrayList<Ghost> ghosts = new ArrayList<>(); //stores all ghosts
 
     //teleports
-    public static final Rectangle left = new Rectangle(-2 * blockSize, 12 * blockSize, blockSize, blockSize);
-    public static final Rectangle right = new Rectangle(20 * blockSize, 12 * blockSize, blockSize, blockSize);
+    public final Rectangle left = new Rectangle(-2 * BLOCK_SIZE, 12 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+    public final Rectangle right = new Rectangle(20 * BLOCK_SIZE, 12 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 
     /*
     ====================================================================================================================
@@ -54,11 +54,11 @@ public class PacMan extends Worlds {
     public PacMan(Game game) {
         super(game);
         game.getDisplay().resize(19 * 38 + 17, 27 * 38 + 2);
-        player = new Player(9 * blockSize, 20 * blockSize, game);
-        ghosts.add(new Ghost(8 * blockSize, 11 * blockSize, 1, game));
-        ghosts.add(new Ghost(10 * blockSize, 13 * blockSize, 2, game));
-        ghosts.add(new Ghost(8 * blockSize, 14 * blockSize, 3, game));
-        ghosts.add(new Ghost(10 * blockSize, 12 * blockSize, 4, game));
+        player = new Player(9 * BLOCK_SIZE, 20 * BLOCK_SIZE, this, game);
+        ghosts.add(new Ghost(8 * BLOCK_SIZE, 11 * BLOCK_SIZE, 1, this, game));
+        ghosts.add(new Ghost(10 * BLOCK_SIZE, 13 * BLOCK_SIZE, 2, this, game));
+        ghosts.add(new Ghost(8 * BLOCK_SIZE, 14 * BLOCK_SIZE, 3, this, game));
+        ghosts.add(new Ghost(10 * BLOCK_SIZE, 12 * BLOCK_SIZE, 4, this, game));
         gamePaused = true;
         setWorldBounds();
         setPoints();
@@ -66,165 +66,165 @@ public class PacMan extends Worlds {
 
     public void setWorldBounds() {
 
-        worldBounds.add(new Rectangle(0, 0, blockSize * width, blockSize));
-        worldBounds.add(new Rectangle(0, blockSize, blockSize, blockSize * 7));
-        worldBounds.add(new Rectangle(3 * blockSize, 7 * blockSize, blockSize, 5 * blockSize));
-        worldBounds.add(new Rectangle(3 * blockSize, 13 * blockSize, blockSize, 5 * blockSize));
-        worldBounds.add(new Rectangle(0, 18 * blockSize, blockSize, 7 * blockSize));
-        worldBounds.add(new Rectangle(0, height * blockSize, blockSize * width, blockSize));
-        worldBounds.add(new Rectangle((width - 1) * blockSize, blockSize, blockSize, blockSize * 7));
-        worldBounds.add(new Rectangle((width - 4) * blockSize, 7 * blockSize, blockSize, blockSize * 5));
-        worldBounds.add(new Rectangle((width - 4) * blockSize, 13 * blockSize, blockSize, blockSize * 5));
-        worldBounds.add(new Rectangle((width - 1) * blockSize, 18 * blockSize, blockSize, blockSize * 7));
+        worldBounds.add(new Rectangle(0, 0, BLOCK_SIZE * WIDTH, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 7));
+        worldBounds.add(new Rectangle(3 * BLOCK_SIZE, 7 * BLOCK_SIZE, BLOCK_SIZE, 5 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(3 * BLOCK_SIZE, 13 * BLOCK_SIZE, BLOCK_SIZE, 5 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(0, 18 * BLOCK_SIZE, BLOCK_SIZE, 7 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(0, HEIGHT * BLOCK_SIZE, BLOCK_SIZE * WIDTH, BLOCK_SIZE));
+        worldBounds.add(new Rectangle((WIDTH - 1) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 7));
+        worldBounds.add(new Rectangle((WIDTH - 4) * BLOCK_SIZE, 7 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 5));
+        worldBounds.add(new Rectangle((WIDTH - 4) * BLOCK_SIZE, 13 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 5));
+        worldBounds.add(new Rectangle((WIDTH - 1) * BLOCK_SIZE, 18 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 7));
 
-        worldBounds.add(new Rectangle(0, 7 * blockSize, 4 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(0, 17 * blockSize, 4 * blockSize, blockSize));
-        worldBounds.add(new Rectangle((width - 4) * blockSize, 7 * blockSize, 4 * blockSize, blockSize));
-        worldBounds.add(new Rectangle((width - 4) * blockSize, 17 * blockSize, 4 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(0, 0, blockSize * width, blockSize));
+        worldBounds.add(new Rectangle(0, 7 * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(0, 17 * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle((WIDTH - 4) * BLOCK_SIZE, 7 * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle((WIDTH - 4) * BLOCK_SIZE, 17 * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(0, 0, BLOCK_SIZE * WIDTH, BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(2 * blockSize, 2 * blockSize, 2 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(2 * blockSize, 5 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(5 * blockSize, 2 * blockSize, 3 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(9 * blockSize, 2 * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(11 * blockSize, 2 * blockSize, 3 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(15 * blockSize, 2 * blockSize, 2 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(5 * blockSize, 5 * blockSize, blockSize, 7 * blockSize));
-        worldBounds.add(new Rectangle(7 * blockSize, 5 * blockSize, 5 * blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(13 * blockSize, 5 * blockSize, blockSize, 7 * blockSize));
-        worldBounds.add(new Rectangle(15 * blockSize, 5 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(9 * blockSize, 7 * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(6 * blockSize, 8 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(11 * blockSize, 8 * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(5 * blockSize, 13 * blockSize, blockSize, 5 * blockSize));
-        worldBounds.add(new Rectangle(13 * blockSize, 13 * blockSize, blockSize, 5 * blockSize));
+        worldBounds.add(new Rectangle(2 * BLOCK_SIZE, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(2 * BLOCK_SIZE, 5 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(5 * BLOCK_SIZE, 2 * BLOCK_SIZE, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(9 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(11 * BLOCK_SIZE, 2 * BLOCK_SIZE, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(15 * BLOCK_SIZE, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(5 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE, 7 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(7 * BLOCK_SIZE, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(13 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE, 7 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(15 * BLOCK_SIZE, 5 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(9 * BLOCK_SIZE, 7 * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(6 * BLOCK_SIZE, 8 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(11 * BLOCK_SIZE, 8 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(5 * BLOCK_SIZE, 13 * BLOCK_SIZE, BLOCK_SIZE, 5 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(13 * BLOCK_SIZE, 13 * BLOCK_SIZE, BLOCK_SIZE, 5 * BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(2 * blockSize, (height - 2) * blockSize, 6 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(11 * blockSize, (height - 2) * blockSize, 6 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(5 * blockSize, (height - 4) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(7 * blockSize, (height - 4) * blockSize, 5 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(9 * blockSize, (height - 3) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(13 * blockSize, (height - 4) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(15 * blockSize, (height - 5) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(17 * blockSize, (height - 4) * blockSize, blockSize, blockSize));
+        worldBounds.add(new Rectangle(2 * BLOCK_SIZE, (HEIGHT - 2) * BLOCK_SIZE, 6 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(11 * BLOCK_SIZE, (HEIGHT - 2) * BLOCK_SIZE, 6 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(5 * BLOCK_SIZE, (HEIGHT - 4) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(7 * BLOCK_SIZE, (HEIGHT - 4) * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(9 * BLOCK_SIZE, (HEIGHT - 3) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(13 * BLOCK_SIZE, (HEIGHT - 4) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(15 * BLOCK_SIZE, (HEIGHT - 5) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(17 * BLOCK_SIZE, (HEIGHT - 4) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(2 * blockSize, (height - 6) * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(3 * blockSize, (height - 5) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(blockSize, (height - 4) * blockSize, blockSize, blockSize));
-        worldBounds.add(new Rectangle(15 * blockSize, (height - 6) * blockSize, 2 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(5 * blockSize, (height - 6) * blockSize, 3 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(11 * blockSize, (height - 6) * blockSize, 3 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(2 * BLOCK_SIZE, (HEIGHT - 6) * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(3 * BLOCK_SIZE, (HEIGHT - 5) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(BLOCK_SIZE, (HEIGHT - 4) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(15 * BLOCK_SIZE, (HEIGHT - 6) * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(5 * BLOCK_SIZE, (HEIGHT - 6) * BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(11 * BLOCK_SIZE, (HEIGHT - 6) * BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(9 * blockSize, (height - 7) * blockSize, blockSize, 2 * blockSize));
-        worldBounds.add(new Rectangle(7 * blockSize, (height - 8) * blockSize, 5 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(9 * BLOCK_SIZE, (HEIGHT - 7) * BLOCK_SIZE, BLOCK_SIZE, 2 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(7 * BLOCK_SIZE, (HEIGHT - 8) * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(7 * blockSize, 10 * blockSize, blockSize, 6 * blockSize));
-        worldBounds.add(new Rectangle(11 * blockSize, 10 * blockSize, blockSize, 6 * blockSize));
-        worldBounds.add(new Rectangle(8 * blockSize, 10 * blockSize, blockSize, blockSize));
-        worldBounds.add(new Rectangle(10 * blockSize, 10 * blockSize, blockSize, blockSize));
-        worldBounds.add(new Rectangle(8 * blockSize, 15 * blockSize, 3 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(7 * BLOCK_SIZE, 10 * BLOCK_SIZE, BLOCK_SIZE, 6 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(11 * BLOCK_SIZE, 10 * BLOCK_SIZE, BLOCK_SIZE, 6 * BLOCK_SIZE));
+        worldBounds.add(new Rectangle(8 * BLOCK_SIZE, 10 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(10 * BLOCK_SIZE, 10 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(8 * BLOCK_SIZE, 15 * BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE));
 
-        worldBounds.add(new Rectangle(-2 * blockSize, 11 * blockSize, 5 * blockSize, blockSize));
-        worldBounds.add(new Rectangle(-2 * blockSize, 13 * blockSize, 5 * blockSize, blockSize));
-        worldBounds.add(new Rectangle((width - 3) * blockSize, 11 * blockSize, 5 * blockSize, blockSize));
-        worldBounds.add(new Rectangle((width - 3) * blockSize, 13 * blockSize, 5 * blockSize, blockSize));
+        worldBounds.add(new Rectangle(-2 * BLOCK_SIZE, 11 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle(-2 * BLOCK_SIZE, 13 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle((WIDTH - 3) * BLOCK_SIZE, 11 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
+        worldBounds.add(new Rectangle((WIDTH - 3) * BLOCK_SIZE, 13 * BLOCK_SIZE, 5 * BLOCK_SIZE, BLOCK_SIZE));
     }
 
 
     private void setPoints() {
-        powerUps.add(new Rectangle(50 + 16 * blockSize, 50 + 2 * blockSize, 15, 15));
-        powerUps.add(new Rectangle(50, 50 + 2 * blockSize, 15, 15));
-        powerUps.add(new Rectangle(50, 50 + 19 * blockSize, 15, 15));
-        powerUps.add(new Rectangle(50 + 16 * blockSize, 50 + 19 * blockSize, 15, 15));
+        powerUps.add(new Rectangle(50 + 16 * BLOCK_SIZE, 50 + 2 * BLOCK_SIZE, 15, 15));
+        powerUps.add(new Rectangle(50, 50 + 2 * BLOCK_SIZE, 15, 15));
+        powerUps.add(new Rectangle(50, 50 + 19 * BLOCK_SIZE, 15, 15));
+        powerUps.add(new Rectangle(50 + 16 * BLOCK_SIZE, 50 + 19 * BLOCK_SIZE, 15, 15));
         for (int i = 0; i < 17; i++) {
-            points.add(new Rectangle(55 + i * blockSize, 17 + blockSize, 5, 5));
+            points.add(new Rectangle(55 + i * BLOCK_SIZE, 17 + BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 17; i++) {
-            points.add(new Rectangle(55 + i * blockSize, 17 + 4 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + i * BLOCK_SIZE, 17 + 4 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 9; i++) {
-            points.add(new Rectangle(55 + (i + 4) * blockSize, 17 + 20 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (i + 4) * BLOCK_SIZE, 17 + 20 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 17; i++) {
-            points.add(new Rectangle(55 + i * blockSize, 17 + 24 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + i * BLOCK_SIZE, 17 + 24 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 22; i++) {
-            points.add(new Rectangle(55 + 3 * blockSize, 55 + i * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 3 * BLOCK_SIZE, 55 + i * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 22; i++) {
-            points.add(new Rectangle(55 + 13 * blockSize, 55 + i * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 13 * BLOCK_SIZE, 55 + i * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 6; i++) {
-            points.add(new Rectangle(55, 55 + i * blockSize, 5, 5));
+            points.add(new Rectangle(55, 55 + i * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 6; i++) {
-            points.add(new Rectangle(55 + 16 * blockSize, 55 + i * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 16 * BLOCK_SIZE, 55 + i * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55, 55 + (i + 18) * blockSize, 5, 5));
+            points.add(new Rectangle(55, 55 + (i + 18) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 16 * blockSize, 55 + (i + 18) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 16 * BLOCK_SIZE, 55 + (i + 18) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55, 55 + (i + 21) * blockSize, 5, 5));
+            points.add(new Rectangle(55, 55 + (i + 21) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 16 * blockSize, 55 + (i + 21) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 16 * BLOCK_SIZE, 55 + (i + 21) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 9 * blockSize, 55 + (i + 1) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 9 * BLOCK_SIZE, 55 + (i + 1) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 7 * blockSize, 55 + (i + 1) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 7 * BLOCK_SIZE, 55 + (i + 1) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 11 * blockSize, 55 + (i + 20) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 11 * BLOCK_SIZE, 55 + (i + 20) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + 5 * blockSize, 55 + (i + 20) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 5 * BLOCK_SIZE, 55 + (i + 20) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (1 + i) * blockSize, 55 + 5 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (1 + i) * BLOCK_SIZE, 55 + 5 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (14 + i) * blockSize, 55 + 5 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (14 + i) * BLOCK_SIZE, 55 + 5 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 8; i++) {
-            points.add(new Rectangle(55 + i * blockSize, 55 + 17 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + i * BLOCK_SIZE, 55 + 17 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 8; i++) {
-            points.add(new Rectangle(55 + (i + 9) * blockSize, 55 + 17 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (i + 9) * BLOCK_SIZE, 55 + 17 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(55 + blockSize, 55 + (19 + i) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + BLOCK_SIZE, 55 + (19 + i) * BLOCK_SIZE, 5, 5));
         }
-        points.add(new Rectangle(55 + 2 * blockSize, 55 + 21 * blockSize, 5, 5));
+        points.add(new Rectangle(55 + 2 * BLOCK_SIZE, 55 + 21 * BLOCK_SIZE, 5, 5));
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (6 + i) * blockSize, 55 + 21 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (6 + i) * BLOCK_SIZE, 55 + 21 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (9 + i) * blockSize, 55 + 21 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (9 + i) * BLOCK_SIZE, 55 + 21 * BLOCK_SIZE, 5, 5));
         }
-        points.add(new Rectangle(55 + 9 * blockSize, 55 + 22 * blockSize, 5, 5));
-        points.add(new Rectangle(55 + 7 * blockSize, 55 + 22 * blockSize, 5, 5));
-        points.add(new Rectangle(55 + 9 * blockSize, 55 + 18 * blockSize, 5, 5));
-        points.add(new Rectangle(55 + 7 * blockSize, 55 + 18 * blockSize, 5, 5));
+        points.add(new Rectangle(55 + 9 * BLOCK_SIZE, 55 + 22 * BLOCK_SIZE, 5, 5));
+        points.add(new Rectangle(55 + 7 * BLOCK_SIZE, 55 + 22 * BLOCK_SIZE, 5, 5));
+        points.add(new Rectangle(55 + 9 * BLOCK_SIZE, 55 + 18 * BLOCK_SIZE, 5, 5));
+        points.add(new Rectangle(55 + 7 * BLOCK_SIZE, 55 + 18 * BLOCK_SIZE, 5, 5));
         for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(55 + 15 * blockSize, 55 + (19 + i) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 15 * BLOCK_SIZE, 55 + (19 + i) * BLOCK_SIZE, 5, 5));
         }
-        points.add(new Rectangle(55 + 14 * blockSize, 55 + 21 * blockSize, 5, 5));
+        points.add(new Rectangle(55 + 14 * BLOCK_SIZE, 55 + 21 * BLOCK_SIZE, 5, 5));
         for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(55 + 5 * blockSize, 55 + (4 + i) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 5 * BLOCK_SIZE, 55 + (4 + i) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 3; i++) {
-            points.add(new Rectangle(55 + 11 * blockSize, 55 + (4 + i) * blockSize, 5, 5));
+            points.add(new Rectangle(55 + 11 * BLOCK_SIZE, 55 + (4 + i) * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (6 + i) * blockSize, 55 + 6 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (6 + i) * BLOCK_SIZE, 55 + 6 * BLOCK_SIZE, 5, 5));
         }
         for (int i = 0; i < 2; i++) {
-            points.add(new Rectangle(55 + (9 + i) * blockSize, 55 + 6 * blockSize, 5, 5));
+            points.add(new Rectangle(55 + (9 + i) * BLOCK_SIZE, 55 + 6 * BLOCK_SIZE, 5, 5));
         }
 
         int randomIndex = ThreadLocalRandom.current().nextInt(0, points.size() + 1);
@@ -263,13 +263,14 @@ public class PacMan extends Worlds {
      * tick all the ghosts
      */
     boolean slow = false;
+
     private void tickGhosts() {
         for (Ghost o : ghosts) {
-            if(o.fear){
-                if(!slow){
+            if (o.fear) {
+                if (!slow) {
                     o.tick();
                 }
-            }else {
+            } else {
                 o.tick();
             }
         }
@@ -294,9 +295,9 @@ public class PacMan extends Worlds {
      */
     private void teleport() {
         if (player.getNextBound().intersects(left.getBounds())) {
-            player.setX(player.getX() + 20 * blockSize);
+            player.setX(player.getX() + 20 * BLOCK_SIZE);
         } else if (player.getNextBound().intersects(right.getBounds())) {
-            player.setX(player.getX() - 20 * blockSize);
+            player.setX(player.getX() - 20 * BLOCK_SIZE);
         }
     }
 
@@ -304,11 +305,11 @@ public class PacMan extends Worlds {
      * reset ghosts and player
      */
     private void reset() {
-        ghosts.set(0, new Ghost(8 * blockSize, 11 * blockSize, 1, game));
-        ghosts.set(1, new Ghost(10 * blockSize, 13 * blockSize, 2, game));
-        ghosts.set(2, new Ghost(8 * blockSize, 14 * blockSize, 3, game));
-        ghosts.set(3, new Ghost(10 * blockSize, 12 * blockSize, 4, game));
-        player = new Player(9 * blockSize, 20 * blockSize, game);
+        ghosts.set(0, new Ghost(8 * BLOCK_SIZE, 11 * BLOCK_SIZE, 1, this, game));
+        ghosts.set(1, new Ghost(10 * BLOCK_SIZE, 13 * BLOCK_SIZE, 2, this, game));
+        ghosts.set(2, new Ghost(8 * BLOCK_SIZE, 14 * BLOCK_SIZE, 3, this, game));
+        ghosts.set(3, new Ghost(10 * BLOCK_SIZE, 12 * BLOCK_SIZE, 4, this, game));
+        player = new Player(9 * BLOCK_SIZE, 20 * BLOCK_SIZE, this, game);
         gamePaused = true;
         ticks = 0;
     }
@@ -356,7 +357,7 @@ public class PacMan extends Worlds {
                     ghostsEaten++;
                 } else if (!o.eaten) {
                     hp--;
-                    player.setCords(139 + 9 * blockSize, 10 + 20 * blockSize);
+                    player.setCords(139 + 9 * BLOCK_SIZE, 10 + 20 * BLOCK_SIZE);
                     player.direction = 0;
                     gamePaused = true;
                     reset();
@@ -453,11 +454,11 @@ public class PacMan extends Worlds {
         if (gameOver) {
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.RED);
-            g.drawString("Game Over", 6 + 7 * blockSize, 28 + 16 * blockSize);
+            g.drawString("Game Over", 6 + 7 * BLOCK_SIZE, 28 + 16 * BLOCK_SIZE);
         } else if (gamePaused) {
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.YELLOW);
-            g.drawString("Ready!", 8 * blockSize, 28 + 16 * blockSize);
+            g.drawString("Ready!", 8 * BLOCK_SIZE, 28 + 16 * BLOCK_SIZE);
         }
 
     }
@@ -482,7 +483,7 @@ public class PacMan extends Worlds {
 
         //hp
         for (int i = 0; i < hp; i++) {
-            g.drawImage(player.image1, 16 * blockSize + i * 36, 3, null);
+            g.drawImage(player.image1, 16 * BLOCK_SIZE + i * 36, 3, null);
         }
     }
 
@@ -510,7 +511,7 @@ public class PacMan extends Worlds {
      */
     private void renderBorders(Graphics g) {
         g.setColor(Color.black);
-        g.fillRect(0, 0, 19 * blockSize + 1, 26 * blockSize);
+        g.fillRect(0, 0, 19 * BLOCK_SIZE + 1, 26 * BLOCK_SIZE);
         g.setColor(Color.blue);
         for (Rectangle box : worldBounds) {
             g.drawRect((int) box.getX(), (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
@@ -525,50 +526,50 @@ public class PacMan extends Worlds {
     private void removeBlueLines(Graphics g) {
         g.setColor(Color.black);
 
-        g.fillRect(3 * blockSize + 1, 17 * blockSize, blockSize - 1, 1);
-        g.fillRect(15 * blockSize + 1, 17 * blockSize, blockSize - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
 
-        g.fillRect(3 * blockSize + 1, 20 * blockSize, blockSize - 1, 1);
-        g.fillRect(15 * blockSize + 1, 20 * blockSize, blockSize - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
 
-        g.fillRect(blockSize, 21 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(18 * blockSize, 21 * blockSize + 1, 1, blockSize - 1);
+        g.fillRect(BLOCK_SIZE, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(18 * BLOCK_SIZE, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
 
-        g.fillRect(5 * blockSize + 1, 23 * blockSize, blockSize - 1, 1);
-        g.fillRect(13 * blockSize + 1, 23 * blockSize, blockSize - 1, 1);
-        g.fillRect(1, 25 * blockSize, blockSize - 1, 1);
-        g.fillRect(1 + 18 * blockSize, 25 * blockSize, blockSize - 1, 1);
-        g.fillRect(9 * blockSize + 1, 22 * blockSize, blockSize - 1, 1);
-        g.fillRect(9 * blockSize + 1, 18 * blockSize, blockSize - 1, 1);
-        g.fillRect(1, 18 * blockSize, blockSize - 1, 1);
-        g.fillRect(1 + 18 * blockSize, 18 * blockSize, blockSize - 1, 1);
-        g.fillRect(3 * blockSize + 1, 8 * blockSize, blockSize - 1, 1);
-        g.fillRect(15 * blockSize + 1, 8 * blockSize, blockSize - 1, 1);
-        g.fillRect(3 * blockSize, 17 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(16 * blockSize, 17 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(3 * blockSize, 13 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(3 * blockSize, 11 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(16 * blockSize, 13 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(16 * blockSize, 11 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(3 * blockSize, 7 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(16 * blockSize, 7 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(blockSize, 7 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(18 * blockSize, 7 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(1, 7 * blockSize, blockSize - 1, 1);
-        g.fillRect(1 + 18 * blockSize, 7 * blockSize, blockSize - 1, 1);
-        g.fillRect(1, blockSize, blockSize - 1, 1);
-        g.fillRect(1 + 18 * blockSize, blockSize, blockSize - 1, 1);
-        g.fillRect(6 * blockSize, 8 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(13 * blockSize, 8 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(8 * blockSize, 10 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(11 * blockSize, 10 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(8 * blockSize, 15 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(11 * blockSize, 15 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(9 * blockSize + 1, 7 * blockSize, blockSize - 1, 1);
-        g.fillRect(0, 13 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(0, 11 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(19 * blockSize, 13 * blockSize + 1, 1, blockSize - 1);
-        g.fillRect(19 * blockSize, 11 * blockSize + 1, 1, blockSize - 1);
+        g.fillRect(5 * BLOCK_SIZE + 1, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(13 * BLOCK_SIZE + 1, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, 25 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE, 25 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(9 * BLOCK_SIZE + 1, 22 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(9 * BLOCK_SIZE + 1, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(18 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(1, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(6 * BLOCK_SIZE, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(13 * BLOCK_SIZE, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(8 * BLOCK_SIZE, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(11 * BLOCK_SIZE, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(8 * BLOCK_SIZE, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(11 * BLOCK_SIZE, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(9 * BLOCK_SIZE + 1, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(0, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(0, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(19 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(19 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
     }
 
 
@@ -577,16 +578,16 @@ public class PacMan extends Worlds {
     getters / setters
     ====================================================================================================================
      */
-    public static ArrayList<Rectangle> getWorldBounds() {
+    public ArrayList<Rectangle> getWorldBounds() {
         return worldBounds;
     }
 
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
     static public int getBlockSize() {
-        return blockSize;
+        return BLOCK_SIZE;
     }
 
     private void setFruit(int i, int type) {

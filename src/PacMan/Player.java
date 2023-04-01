@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import static Main.Constants.emulogic;
 
 public class Player {
+
     //general
     Game game;
     private int x;
     private int y;
     int width = 38;
     int height = 38;
+    private final PacMan world;
 
     //movement
     public int direction, nextDirection;
@@ -36,7 +38,8 @@ public class Player {
     Init Methods
     ====================================================================================================================
      */
-    public Player(int x, int y, Game game) {
+    public Player(int x, int y, PacMan world, Game game) {
+        this.world = world;
         this.game = game;
         this.x = x;
         this.y = y;
@@ -67,7 +70,7 @@ public class Player {
         if (game.getKeyHandler().d || game.getKeyHandler().right) {
             nextDirection = 4;
         }
-        ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
+        ArrayList<Rectangle> bounds = world.getWorldBounds();
         for (int i = 0; i < bounds.size(); i++) {
             Rectangle border = bounds.get(i);
             if (getNextBound().intersects(border)) {
@@ -108,7 +111,7 @@ public class Player {
     ====================================================================================================================
     */
     public void move() {
-        ArrayList<Rectangle> bounds = PacMan.getWorldBounds();
+        ArrayList<Rectangle> bounds = world.getWorldBounds();
         for (Rectangle bound : bounds) {
             if (getNextFrontBound().intersects(bound)) {
                 direction = 0;
@@ -193,7 +196,7 @@ public class Player {
         if (showPoints) {
             g.setColor(Color.WHITE);
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-            g.drawString("" + pointsToShow, x + 32, y);
+            g.drawString(String.valueOf(pointsToShow), x + 32, y);
             if (System.currentTimeMillis() - displayTimer > 500) {
                 showPoints = false;
             }
