@@ -24,7 +24,6 @@ public class Arkanoid extends Worlds {
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
-    private long gameWonTime;
 
     private final int PLAYER_SPEED = 5;
     private Rectangle player;
@@ -85,7 +84,7 @@ public class Arkanoid extends Worlds {
         }
         if (gameWon) {
             gameStarted = false;
-            if (System.currentTimeMillis() - gameWonTime > 3000) {
+            if (System.currentTimeMillis() - gameOverTime > 3000) {
                 reset();
                 createBricks();
                 gameWon = false;
@@ -193,7 +192,7 @@ public class Arkanoid extends Worlds {
 
     private void calculatePlayerBounce() {
         int BALL_SPEED = 5;
-        double MAX_ANGLE = 75 * PI / 180;
+        double MAX_ANGLE = (75 * PI) / 180;
 
         int relativeCollision = -(player.x - ball.x + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
@@ -239,7 +238,7 @@ public class Arkanoid extends Worlds {
                 bricks.remove(brick);
                 if (bricks.size() == 0) {
                     gameWon = true;
-                    gameWonTime = System.currentTimeMillis();
+                    gameOverTime = System.currentTimeMillis();
                 }
             }
         }
