@@ -2,6 +2,7 @@ package Minesweeper;
 
 import Input.ImageLoader;
 import Input.MouseHandler;
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -27,7 +28,7 @@ public class Minesweeper extends Worlds {
      */
     public Minesweeper(Game game, int blockSize, int mapSize) {
         super(game);
-        game.getDisplay().resize(mapSize*blockSize+2*blockSize+16, mapSize*blockSize+2*blockSize+39);
+        game.getDisplay().resize(mapSize * blockSize + 2 * blockSize + 16, mapSize * blockSize + 2 * blockSize + 39);
         this.blockSize = blockSize;
         this.mapSize = mapSize;
         map = new int[mapSize][mapSize];
@@ -57,8 +58,8 @@ public class Minesweeper extends Worlds {
      * checks mouse and keyboard input
      */
     private void input() {
-        int clickX = (MouseHandler.getClickX()-blockSize) / blockSize;
-        int clickY = (MouseHandler.getClickY()-blockSize)/ blockSize;
+        int clickX = (MouseHandler.getClickX() - blockSize) / blockSize;
+        int clickY = (MouseHandler.getClickY() - blockSize) / blockSize;
 
         if (!gameLost && !gameWon) {
             if (clickX < clicked.length && clickY < clicked.length) { //in bounds?
@@ -89,8 +90,8 @@ public class Minesweeper extends Worlds {
                 }
                 firstClick = false;
             }
-            int lClickX = (MouseHandler.getLClickX()-blockSize) / blockSize;
-            int lClickY = (MouseHandler.getLClickY()-blockSize) / blockSize;
+            int lClickX = (MouseHandler.getLClickX() - blockSize) / blockSize;
+            int lClickY = (MouseHandler.getLClickY() - blockSize) / blockSize;
             if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
                 if (clicked[lClickX][lClickY] == 2) {
                     clicked[lClickX][lClickY] = 0;
@@ -222,8 +223,11 @@ public class Minesweeper extends Worlds {
     public void render(Graphics g) {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, 2000, 2000);
+        final int BORDER_SIZE = 5;
         g.setColor(Color.WHITE);
-        g.fillRect(blockSize, blockSize, mapSize*blockSize, mapSize*blockSize);
+        g.fillRect(blockSize - BORDER_SIZE, blockSize - BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE);
+        g.setColor(Color.WHITE);
+        g.fillRect(blockSize, blockSize, mapSize * blockSize, mapSize * blockSize);
         renderMap(g);
         renderClicked(g);
 
@@ -258,7 +262,7 @@ public class Minesweeper extends Worlds {
                     g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                 } else if (clicked[j][i] == 2) {
                     g.setColor(new Color(12, 86, 135));
-                    g.fillRect(j * blockSize + blockSize, i * blockSize+blockSize, blockSize, blockSize);
+                    g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                     g.drawImage(flag, j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize, null);
                 }
                 g.setColor(Color.BLACK);
@@ -281,19 +285,19 @@ public class Minesweeper extends Worlds {
                 if (entry == 9) {
                     if (gameLost) {
                         g.setColor(new Color(209, 0, 38));
-                        g.fillRect(j * blockSize + blockSize, i * blockSize+ blockSize, blockSize, blockSize);
+                        g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                     }
                     if (gameWon) {
                         g.setColor(new Color(15, 186, 51));
-                        g.fillRect(j * blockSize+ blockSize, i * blockSize+ blockSize, blockSize, blockSize);
+                        g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                     }
-                    g.drawImage(bomb, j * blockSize+ blockSize + (int) (blockSize / 1.3 / 5.3),
-                            i * blockSize+ blockSize + (int) (blockSize / 1.3 / 5.3),
+                    g.drawImage(bomb, j * blockSize + blockSize + (int) (blockSize / 1.3 / 5.3),
+                            i * blockSize + blockSize + (int) (blockSize / 1.3 / 5.3),
                             (int) (blockSize / 1.3), (int) (blockSize / 1.3), null);
                 } else if (entry != 0) {
                     g.setColor(Color.BLACK);
                     String value = String.valueOf(entry);
-                    g.drawString(value, xOff + j * blockSize+ blockSize, yOff + i * blockSize+ blockSize);
+                    g.drawString(value, xOff + j * blockSize + blockSize, yOff + i * blockSize + blockSize);
                 }
             }
         }

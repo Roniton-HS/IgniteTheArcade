@@ -1,11 +1,13 @@
 package Snake;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
 import java.util.Random;
 
+import static Main.Constants.BLUE;
 import static Main.Constants.emulogic;
 
 public class Snake extends Worlds {
@@ -40,10 +42,13 @@ public class Snake extends Worlds {
     @Override
     public void render(Graphics g) {
         //background
-        g.setColor(new Color(31, 31, 31));
+        g.setColor(Color.darkGray);
         g.fillRect(0, 0, 1000, 1000);
-        g.setColor(new Color(63, 63, 63));
-        g.fillRect(0, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
+        g.setColor(Constants.GREEN);
+        final int BORDER_SIZE = 5;
+        g.fillRect(2*BLOCK_SIZE - BORDER_SIZE, 4 * BLOCK_SIZE - BORDER_SIZE, 19 * BLOCK_SIZE + 2*BORDER_SIZE, 21 * BLOCK_SIZE + 2*BORDER_SIZE);
+        g.setColor(Color.WHITE);
+        g.fillRect(2*BLOCK_SIZE, 4 * BLOCK_SIZE, 19 * BLOCK_SIZE, 21 * BLOCK_SIZE);
 
         snake.render(g);
         apple.render(g);
@@ -72,14 +77,13 @@ public class Snake extends Worlds {
      */
     public void renderGrid(Graphics g) {
         g.setColor(Color.BLACK);
-        for (int i = 0; i < 12; i++) {
-            g.drawRect(((2 * i)) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 23 * BLOCK_SIZE);
+        for (int i = 1; i < 11; i++) {
+            g.drawRect(((2 * i)) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 21 * BLOCK_SIZE);
         }
         for (int i = 2; i < 13; i++) {
-            g.drawRect(0, ((2 * i) + 1) * BLOCK_SIZE, 23 * BLOCK_SIZE, BLOCK_SIZE);
+            g.drawRect(2 * BLOCK_SIZE, ((2 * i)) * BLOCK_SIZE, 19 * BLOCK_SIZE, BLOCK_SIZE);
         }
-        g.setColor(Color.black);
-        g.drawRect(0, 4 * BLOCK_SIZE, 23 * BLOCK_SIZE, 23 * BLOCK_SIZE);
+        g.drawRect(2 * BLOCK_SIZE, 4 * BLOCK_SIZE, 19 * BLOCK_SIZE, 21 * BLOCK_SIZE);
     }
 
     /**
@@ -87,7 +91,7 @@ public class Snake extends Worlds {
      */
     public void renderAppleCounter(Graphics g) {
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 60.0F));
-        g.setColor(new Color(0, 145, 0));
+        g.setColor(Constants.GREEN);
         g.drawString("Score: " + snake.appleCounter, BLOCK_SIZE, 3 * BLOCK_SIZE);
     }
 
@@ -108,8 +112,8 @@ public class Snake extends Worlds {
     public void updateApple() {
         Random r = new Random();
         do {
-            apple.x = (r.nextInt(20)) * BLOCK_SIZE;
-            apple.y = (r.nextInt(20) + 4) * BLOCK_SIZE;
+            apple.x = (r.nextInt(19 - 2) + 2) * BLOCK_SIZE;
+            apple.y = (r.nextInt(21 - 4) + 4) * BLOCK_SIZE;
         } while (inSnake(apple));
     }
 
