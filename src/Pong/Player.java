@@ -37,6 +37,7 @@ public class Player extends Rectangle {
         return collisionPlayer;
     }
 
+    @SuppressWarnings("unused")
     public int getWIDTH() {
         return WIDTH;
     }
@@ -62,15 +63,6 @@ public class Player extends Rectangle {
         return left;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public Player setScore(int score) {
-        this.score = score;
-        return this;
-    }
-
     public void addPoint() {
         this.score++;
     }
@@ -79,13 +71,8 @@ public class Player extends Rectangle {
         return won;
     }
 
-    public Player setWon(boolean won) {
-        this.won = won;
-        return this;
-    }
-
     public boolean checkScore() {
-        if(score >= 99){
+        if (score >= 99) {
             won = true;
         }
         return won;
@@ -142,7 +129,7 @@ public class Player extends Rectangle {
     }
 
     public String createWon() {
-        if(left){
+        if (left) {
             return "P1 WON";
         } else {
             return "P2 WON";

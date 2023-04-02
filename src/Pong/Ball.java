@@ -8,8 +8,6 @@ import static java.lang.Math.PI;
 public class Ball extends Rectangle {
     private final Rectangle ball;
     private final int DIAMETER = 10;
-    private final double MAX_ANGLE = (75 * PI) / 180;
-    private final int SPEED = 5;
     private double speedX = 0;
     private double speedY = 0;
     private int x;
@@ -26,11 +24,11 @@ public class Ball extends Rectangle {
     }
 
     public int getSPEED() {
-        return SPEED;
+        return 5;
     }
 
     public double getMAX_ANGLE() {
-        return MAX_ANGLE;
+        return (75 * PI) / 180;
     }
 
     public double getSpeedX() {

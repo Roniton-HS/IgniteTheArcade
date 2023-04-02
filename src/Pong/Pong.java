@@ -14,8 +14,6 @@ public class Pong extends Worlds {
 
     private Player playerLeft;
     private Player playerRight;
-    private Rectangle collisionPlayerLeft;
-    private Rectangle collisionPlayerRight;
     private Ball ball;
     private boolean directionX; // false = left, true = right
     private boolean directionY; // false = up, true = down
@@ -40,11 +38,7 @@ public class Pong extends Worlds {
 
     private void createGame() {
         playerLeft = new Player(WINDOW_SIZE, true);
-        collisionPlayerLeft = playerLeft.getCollisionPlayer();
-
         playerRight = new Player(WINDOW_SIZE, false);
-        collisionPlayerRight = playerRight.getCollisionPlayer();
-
         ball = new Ball(WINDOW_SIZE);
     }
 
