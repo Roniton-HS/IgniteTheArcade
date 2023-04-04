@@ -95,7 +95,7 @@ public class Player extends Rectangle {
             normRelativeCollision = -(relativeCollision / (player.height / 2.0));
         }
 
-        double angle = normRelativeCollision * ball.getMAX_ANGLE();
+        double angle = normRelativeCollision * ball.getMaxAngle();
 
         if (left) {
             ball.setIntX(player.x + player.width);

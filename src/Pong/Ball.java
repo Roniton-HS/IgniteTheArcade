@@ -27,7 +27,7 @@ public class Ball extends Rectangle {
         return 5;
     }
 
-    public double getMAX_ANGLE() {
+    public double getMaxAngle() {
         return (75 * PI) / 180;
     }
 
