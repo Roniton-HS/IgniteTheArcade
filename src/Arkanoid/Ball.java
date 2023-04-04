@@ -2,12 +2,24 @@ package Arkanoid;
 
 import java.awt.*;
 
+import static java.lang.Math.PI;
+
 public class Ball extends Rectangle {
+    private final Rectangle ball;
+    private final int DIAMETER = 10;
     private double speedX = 0;
     private double speedY = 5;
+    private int x;
+    private int y;
 
-    public Ball(int x, int y, int size) {
-        super(x, y, size, size);
+    public Ball(int windowWidth, int playerY) {
+        ball = new Rectangle(windowWidth / 2 - DIAMETER / 2, playerY - DIAMETER, DIAMETER, DIAMETER);
+        x = ball.x;
+        y = ball.y;
+    }
+
+    public int getDIAMETER() {
+        return DIAMETER;
     }
 
     public double getSpeedX() {
@@ -26,8 +38,42 @@ public class Ball extends Rectangle {
         this.speedY = speedY;
     }
 
+    public double getMaxAngle() {
+        return (75 * PI) / 180;
+    }
+
+    public int getIntX() {
+        return x;
+    }
+
+    public void setIntX(int x) {
+        this.x = x;
+        ball.x = x;
+    }
+
+    public int getIntY() {
+        return y;
+    }
+
+    public void setIntY(int y) {
+        this.y = y;
+        ball.y = y;
+    }
+
+    public int getSpeed() {
+        return 5;
+    }
+
+    public Rectangle getBounds() {
+        return ball.getBounds();
+    }
     public void render(Graphics g) {
         g.setColor(Color.white);
-        g.fillOval(x, y, width, height);
+        g.fillOval(ball.x, ball.y, ball.width, ball.height);
+    }
+
+    public void renderBorder(Graphics g) {
+        g.setColor(Color.green);
+        g.drawRect(ball.x, ball.y, ball.width, ball.height);
     }
 }
