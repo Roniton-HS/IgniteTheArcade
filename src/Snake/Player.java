@@ -1,5 +1,6 @@
 package Snake;
 
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -36,9 +37,9 @@ public class Player {
         for (int i = 0; i < tiles.size(); i++) {
             Rectangle r = tiles.get(i);
             if (i == tiles.size() - 1) {
-                g.setColor(new Color(0, 145, 0));
+                g.setColor(new Color(0, 203, 0));
             } else {
-                g.setColor(Color.green);
+                g.setColor(Constants.GREEN);
             }
             g.fillRect(r.getBounds().x, r.getBounds().y, r.getBounds().width, r.getBounds().height);
         }
@@ -96,10 +97,10 @@ public class Player {
                 restart();
             }
         }
-        Rectangle up = new Rectangle(0, 3 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle down = new Rectangle(0, 27 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle left = new Rectangle(-1 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
-        Rectangle right = new Rectangle(23 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
+        Rectangle up = new Rectangle(2 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
+        Rectangle down = new Rectangle(2 * Snake.BLOCK_SIZE, 25 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
+        Rectangle left = new Rectangle(Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
+        Rectangle right = new Rectangle(21 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||

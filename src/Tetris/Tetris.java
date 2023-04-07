@@ -17,6 +17,7 @@ public class Tetris extends Worlds {
     private final int WIDTH = 10;
     private final int HEIGHT = 20 + SPAWN;
     private final int BLOCK_SIZE = 40;
+    final int BORDER_SIZE = 5;
 
     //general
     private int score = 0;
@@ -841,6 +842,7 @@ public class Tetris extends Worlds {
     public void render(Graphics g) {
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,0, 1000, 1000);
+
         renderMap(g);
         renderNextBlock(13, 2, g);
         renderScore(13, 8, g);
@@ -849,6 +851,8 @@ public class Tetris extends Worlds {
 
     private void renderMap(Graphics g) {
         final int SPACING = 2 * BLOCK_SIZE;
+        g.setColor(Constants.ALMOST_WHITE);
+        g.fillRect(SPACING-BORDER_SIZE, SPACING-BORDER_SIZE, WIDTH*BLOCK_SIZE+2*BORDER_SIZE, (HEIGHT-SPAWN)*BLOCK_SIZE + 2*BORDER_SIZE);
         for (int i = SPAWN; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 switch (map[j][i]) {
@@ -872,6 +876,8 @@ public class Tetris extends Worlds {
     private void renderNextBlock(int xPos, int yPos, Graphics g) {
         xPos = xPos * BLOCK_SIZE;
         yPos = yPos * BLOCK_SIZE;
+        g.setColor(Constants.ALMOST_WHITE);
+        g.fillRect(xPos-BORDER_SIZE, yPos-BORDER_SIZE, 5*BLOCK_SIZE+2*BORDER_SIZE, 5* BLOCK_SIZE+2*BORDER_SIZE);
         g.setColor(Color.WHITE);
         g.fillRect(xPos, yPos, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
         g.setColor(Color.BLACK);
@@ -968,6 +974,8 @@ public class Tetris extends Worlds {
     private void renderScore(int xPos, int yPos, Graphics g) {
         xPos = xPos * BLOCK_SIZE;
         yPos = yPos * BLOCK_SIZE;
+        g.setColor(Constants.ALMOST_WHITE);
+        g.fillRect(xPos-BORDER_SIZE, yPos-BORDER_SIZE, 5*BLOCK_SIZE+2*BORDER_SIZE, 4* BLOCK_SIZE+2*BORDER_SIZE);
         g.setColor(Color.WHITE);
         g.fillRect(xPos, yPos, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
         g.setColor(Color.BLACK);
