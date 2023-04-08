@@ -67,6 +67,7 @@ public class Ball extends Rectangle {
     public Rectangle getBounds() {
         return ball.getBounds();
     }
+
     public void render(Graphics g) {
         g.setColor(Color.white);
         g.fillOval(ball.x, ball.y, ball.width, ball.height);

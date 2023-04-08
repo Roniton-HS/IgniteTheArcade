@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static Main.Constants.*;
-import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
 public class Arkanoid extends Worlds {
@@ -28,17 +27,12 @@ public class Arkanoid extends Worlds {
     private long gameOverTime;
 
     // player variables
-    private final int PLAYER_SPEED = 5;
-    private Rectangle player;
-    private Rectangle collisionPlayer;
+    private Player player;
 
     // ball variables
     private Ball ball;
 
-    private final Rectangle borderL = new Rectangle(49, 0, 1, WINDOW_HEIGHT);
-    private final Rectangle borderR = new Rectangle(440, 0, 1, WINDOW_HEIGHT);
-    private final Rectangle borderT = new Rectangle(0, 49, WINDOW_WIDTH, 1);
-    private final Rectangle borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
+    private Rectangle borderL, borderR, borderT, borderB;
 
     // pattern variables
     private final Pattern pattern = new Pattern();
@@ -52,16 +46,21 @@ public class Arkanoid extends Worlds {
         super(game);
         game.getDisplay().resize(WINDOW_WIDTH + WIN10_WIDTH_DIFF, WINDOW_HEIGHT + WIN10_HEIGHT_DIFF);
         createGame();
+        createBorders();
         pattern.createPattern();
         createBricks();
     }
 
     private void createGame() {
-        final int PLAYER_WIDTH = 100;
-        final int PLAYER_HEIGHT = 10;
-        player = new Rectangle((WINDOW_WIDTH / 2) - (PLAYER_WIDTH / 2), WINDOW_HEIGHT - 70 - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
-        collisionPlayer = new Rectangle(player.x - PLAYER_SPEED, player.y, player.width + (2 * PLAYER_SPEED), player.height);
-        ball = new Ball(WINDOW_WIDTH, player.y);
+        player = new Player(WINDOW_WIDTH, WINDOW_HEIGHT);
+        ball = new Ball(WINDOW_WIDTH, player.getIntY());
+    }
+
+    private void createBorders() {
+        borderL = new Rectangle(49, 0, 1, WINDOW_HEIGHT);
+        borderR = new Rectangle(440, 0, 1, WINDOW_HEIGHT);
+        borderT = new Rectangle(0, 49, WINDOW_WIDTH, 1);
+        borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
     }
 
     private void createBricks() {
@@ -99,27 +98,27 @@ public class Arkanoid extends Worlds {
     private void input() {
         //bar movement
         if (game.getKeyHandler().a && !gameOver) {
-            if (collisionPlayer.getBounds().intersects(borderL.getBounds())) {
-                player.x = borderL.x + borderL.width;
-                collisionPlayer.x = player.x - PLAYER_SPEED;
+            if (player.getCollisionPlayer().getBounds().intersects(borderL.getBounds())) {
+                player.setIntX(borderL.x + borderL.width);
             } else {
-                player.x -= PLAYER_SPEED;
-                collisionPlayer.x -= PLAYER_SPEED;
+                player.setIntX(player.getIntX() - player.getSpeed());
             }
+            player.moveCollision();
+
             if (!gameStarted) {
-                ball.setIntX(player.x + player.width / 2 - ball.getDIAMETER() / 2);
+                ball.setIntX((player.getIntX() + (player.getWIDTH() / 2)) - (ball.getDIAMETER() / 2));
             }
         }
         if (game.getKeyHandler().d && !gameOver) {
-            if (collisionPlayer.getBounds().intersects(borderR.getBounds())) {
-                player.x = borderR.x - player.width;
-                collisionPlayer.x = player.x - PLAYER_SPEED;
+            if (player.getCollisionPlayer().getBounds().intersects(borderR.getBounds())) {
+                player.setIntX(borderR.x - player.getWIDTH());
             } else {
-                player.x += PLAYER_SPEED;
-                collisionPlayer.x += PLAYER_SPEED;
+                player.setIntX(player.getIntX() + player.getSpeed());
             }
+            player.moveCollision();
+
             if (!gameStarted) {
-                ball.setIntX(player.x + player.width / 2 - ball.getDIAMETER() / 2);
+                ball.setIntX((player.getIntX() + (player.getWIDTH() / 2)) - (ball.getDIAMETER() / 2));
             }
         }
 
@@ -145,7 +144,7 @@ public class Arkanoid extends Worlds {
         ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
 
         if (ball.getBounds().intersects(player.getBounds())) {
-            calculatePlayerBounce();
+            player.calculatePlayerBounce(ball);
         }
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
@@ -194,17 +193,6 @@ public class Arkanoid extends Worlds {
         }
     }
 
-    private void calculatePlayerBounce() {
-        int relativeCollision = -(player.x - (ball.getIntX()+ball.getDIAMETER()/2) + player.width / 2);
-        double normRelativeCollision = relativeCollision / (player.width / 2.0);
-
-        double angle = normRelativeCollision * ball.getMaxAngle();
-
-        ball.setIntY(player.y - ball.getDIAMETER());
-        ball.setSpeedX(-Math.sin(angle) * ball.getSpeed());
-        ball.setSpeedY(Math.cos(angle) * ball.getSpeed());
-    }
-
     private void checkBrickBorder(Brick brick) {
         for (Rectangle border : brick.getBorders()) {
             if (ball.getBounds().intersects(border.getBounds())) {
@@ -246,8 +234,8 @@ public class Arkanoid extends Worlds {
     }
 
     private void reset() {
-        ball.setIntX(player.x + player.width / 2 - ball.getDIAMETER() / 2);
-        ball.setIntY(player.y - ball.getDIAMETER());
+        ball.setIntX((player.getIntX() + (player.width / 2)) - (ball.getDIAMETER() / 2));
+        ball.setIntY(player.getIntY() - ball.getDIAMETER());
         ball.setSpeedX(0);
         ball.setSpeedY(5);
     }
@@ -265,7 +253,7 @@ public class Arkanoid extends Worlds {
         renderBackground(g);
         renderStats(g);
 
-        renderPlayer(g);
+        player.render(g);
         ball.render(g);
 
         for (Brick brick : bricks) {
@@ -297,14 +285,6 @@ public class Arkanoid extends Worlds {
         g.fillRect(WINDOW_WIDTH / 2 - 195, WINDOW_HEIGHT / 2 - 300, 390, 600);
     }
 
-    private void renderPlayer(Graphics g) {
-        g.setColor(new Color(148, 0, 118));
-        g.fillRect(player.x, player.y, player.width, player.height);
-
-        g.setColor(new Color(233, 0, 185));
-        g.fillRect(player.x + 3, player.y + 3, player.width - 6, player.height - 6);
-    }
-
     private void renderStats(Graphics g) {
         g.setColor(Color.white);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 15.0F));
@@ -330,6 +310,7 @@ public class Arkanoid extends Worlds {
         }
         renderBorder(g);
         ball.renderBorder(g);
+        player.renderBorder(g);
     }
 
     private void renderGameOver(Graphics g) {
