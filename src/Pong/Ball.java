@@ -23,7 +23,7 @@ public class Ball extends Rectangle {
         return DIAMETER;
     }
 
-    public int getSPEED() {
+    public int getSpeed() {
         return 5;
     }
 

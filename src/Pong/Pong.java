@@ -57,14 +57,14 @@ public class Pong extends Worlds {
     private void setStartSpeed() {
         final double START_ANGLE = (35 * Math.PI) / 180;
         if (!directionX) {
-            ball.setSpeedX(Math.cos(START_ANGLE) * -ball.getSPEED());
+            ball.setSpeedX(Math.cos(START_ANGLE) * -ball.getSpeed());
         } else {
-            ball.setSpeedX(Math.cos(START_ANGLE) * ball.getSPEED());
+            ball.setSpeedX(Math.cos(START_ANGLE) * ball.getSpeed());
         }
         if (!directionY) {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * -ball.getSPEED());
+            ball.setSpeedY(-Math.sin(START_ANGLE) * -ball.getSpeed());
         } else {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * ball.getSPEED());
+            ball.setSpeedY(-Math.sin(START_ANGLE) * ball.getSpeed());
         }
     }
 

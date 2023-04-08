@@ -99,12 +99,12 @@ public class Player extends Rectangle {
 
         if (left) {
             ball.setIntX(player.x + player.width);
-            ball.setSpeedX(Math.cos(angle) * ball.getSPEED());
-            ball.setSpeedY(-Math.sin(angle) * ball.getSPEED());
+            ball.setSpeedX(Math.cos(angle) * ball.getSpeed());
+            ball.setSpeedY(-Math.sin(angle) * ball.getSpeed());
         } else {
             ball.setIntX(player.x - ball.getDIAMETER());
-            ball.setSpeedX(Math.cos(angle) * -ball.getSPEED());
-            ball.setSpeedY(-Math.sin(angle) * -ball.getSPEED());
+            ball.setSpeedX(Math.cos(angle) * -ball.getSpeed());
+            ball.setSpeedY(-Math.sin(angle) * -ball.getSpeed());
         }
     }
 
