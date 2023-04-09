@@ -7,7 +7,8 @@ Collection of mini games coded in Java
 PacMan  
 Snake  
 Minesweeper  
-Arkanoid
+Arkanoid  
+Pong
 
 ## Controls
 General:  
@@ -30,6 +31,11 @@ Minesweeper:
 Arkanoid:  
 `space` start game  
 `a` `d` move left/right  
+
+Pong:  
+`space` start game  
+`w` `s` move left player  
+`up` `down` move right player
 
 ## Pictures
 PacMan:  
