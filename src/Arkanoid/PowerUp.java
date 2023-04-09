@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class PowerUp extends Rectangle {
-    private BufferedImage icon;
-    private int id;
+    private final BufferedImage icon;
+    private final int id;
 
     public PowerUp(int x, int y, BufferedImage icon, int id) {
-        super(x, y, 20, 20);
+        super(x, y, 32, 32);
         this.icon = icon;
         this.id = id;
     }
@@ -38,31 +38,49 @@ public class PowerUp extends Rectangle {
             case 0 -> actionGetSmaller(player, amount);
             case 1 -> actionGetBigger(player, amount);
             case 2 -> actionGetMoreBalls(balls);
-            default -> {}
+            case 3 -> actionFire(balls);
+            default -> {
+            }
         }
     }
 
     private void actionGetSmaller(Player player, int amount) {
-        if (player.getIntWidth() > 50){
+        if (player.getIntWidth() > 50) {
             player.changeWidth(player.getIntWidth() - amount, amount);
         }
     }
 
     private void actionGetBigger(Player player, int amount) {
-        if( player.getIntWidth() < 150){
+        if (player.getIntWidth() < 150) {
             player.changeWidth(player.getIntWidth() + amount, amount);
         }
     }
 
     private void actionGetMoreBalls(ArrayList<Ball> balls) {
-        // TODO choose random ball
-        Ball ball = balls.get(0);
-        Ball newBall = new Ball(ball);
         Random random = new Random();
+        Ball ball = balls.get(random.nextInt(balls.size()));
+        Ball newBall = new Ball(ball);
         double angle = (random.nextInt(46) * Math.PI) / 180;
-        newBall.setSpeedX(Math.cos(angle) * -ball.getSpeed());
-        newBall.setSpeedY(-Math.sin(angle) * -ball.getSpeed());
+        double speedX = Math.cos(angle) * -ball.getSpeed();
+        double speedY = -Math.sin(angle) * -ball.getSpeed();
+
+        if (random.nextBoolean()) {
+            newBall.setSpeedX(speedX);
+        } else {
+            newBall.setSpeedX(-speedX);
+        }
+        if (ball.getSpeedY()>0){
+            newBall.setSpeedY(speedY);
+        } else {
+            newBall.setSpeedY(-speedY);
+        }
         balls.add(newBall);
+    }
+
+    private void actionFire(ArrayList<Ball> balls) {
+        for (Ball ball: balls) {
+            ball.setFire(true);
+        }
     }
 
     public void render(Graphics g) {

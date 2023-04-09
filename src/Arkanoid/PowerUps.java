@@ -3,7 +3,6 @@ package Arkanoid;
 
 import Input.ImageLoader;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,12 +10,13 @@ import java.util.Arrays;
 public class PowerUps {
 
     private boolean[] valid;
-    private ArrayList<PowerUp> powerUps = new ArrayList<>();
+    private final ArrayList<PowerUp> powerUps = new ArrayList<>();
 
     // TODO create icons
-    BufferedImage iconGetSmaller = ImageLoader.loadImage("/pacManRes/fruit/apple.png");
-    BufferedImage iconGetBigger = ImageLoader.loadImage("/pacManRes/fruit/bell.png");
-    BufferedImage iconGetMoreBalls = ImageLoader.loadImage("/pacManRes/fruit/cherry.png");
+    BufferedImage iconPowerSmaller = ImageLoader.loadImage("/arkanoidRes/powerSmaller.png");
+    BufferedImage iconPowerBigger = ImageLoader.loadImage("/arkanoidRes/powerBigger.png");
+    BufferedImage iconPowerMoreBalls = ImageLoader.loadImage("/arkanoidRes/powerMoreBalls.png");
+    BufferedImage iconPowerFire = ImageLoader.loadImage("/arkanoidRes/powerFire.png");
 
     public boolean[] getValid() {
         return valid;
@@ -30,10 +30,11 @@ public class PowerUps {
         return powerUps;
     }
 
-    public void createPowerUps(){
-        powerUps.add(new PowerUp(iconGetSmaller,0));
-        powerUps.add(new PowerUp(iconGetBigger,1));
-        powerUps.add(new PowerUp(iconGetMoreBalls,2));
+    public void createPowerUps() {
+        powerUps.add(new PowerUp(iconPowerSmaller, 0));
+        powerUps.add(new PowerUp(iconPowerBigger, 1));
+        powerUps.add(new PowerUp(iconPowerMoreBalls, 2));
+        powerUps.add(new PowerUp(iconPowerFire, 3));
 
         createValid();
     }

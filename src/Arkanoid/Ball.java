@@ -2,6 +2,7 @@ package Arkanoid;
 
 import java.awt.*;
 
+import static Main.Constants.ALMOST_WHITE;
 import static java.lang.Math.PI;
 
 public class Ball extends Rectangle {
@@ -11,6 +12,7 @@ public class Ball extends Rectangle {
     private double speedY = 5;
     private int x;
     private int y;
+    private boolean fire = false;
 
     public Ball(Player player) {
         this.ball = new Rectangle((player.getIntX() + (player.getIntWidth() / 2)) - (DIAMETER / 2), player.getIntY() - DIAMETER, DIAMETER, DIAMETER);
@@ -18,10 +20,10 @@ public class Ball extends Rectangle {
         y = ball.y;
     }
 
-    public Ball(Ball ball) {
-        this.ball = new Rectangle(ball.getIntX(),ball.getIntY(), DIAMETER, DIAMETER);
-        x = ball.x;
-        y = ball.y;
+    public Ball(Ball oldBall) {
+        this.ball = new Rectangle(oldBall.getIntX(), oldBall.getIntY(), DIAMETER, DIAMETER);
+        x = oldBall.x;
+        y = oldBall.y;
     }
 
     public int getDIAMETER() {
@@ -66,6 +68,14 @@ public class Ball extends Rectangle {
         ball.y = y;
     }
 
+    public boolean isFire() {
+        return fire;
+    }
+
+    public void setFire(boolean fire) {
+        this.fire = fire;
+    }
+
     public int getSpeed() {
         return 5;
     }
@@ -75,7 +85,11 @@ public class Ball extends Rectangle {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.white);
+        if (fire) {
+            g.setColor(new Color(255, 195, 14));
+        } else {
+            g.setColor(ALMOST_WHITE);
+        }
         g.fillOval(ball.x, ball.y, ball.width, ball.height);
     }
 
