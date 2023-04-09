@@ -30,10 +30,30 @@ public class PowerUp extends Rectangle {
         return 3;
     }
 
+    public void getEffect(Player player, Ball ball) {
+        final int amount = 10;
+        switch (id) {
+            case 0 -> actionGetSmaller(player, amount);
+            case 1 -> actionGetBigger(player, amount);
+            default -> {
+            }
+        }
+    }
+
+    private void actionGetSmaller(Player player, int amount) {
+        player.changeWidth(player.getIntWidth() - amount, amount);
+    }
+
+    private void actionGetBigger(Player player, int amount) {
+        player.changeWidth(player.getIntWidth() + amount, amount);
+    }
+
     public void render(Graphics g) {
         g.drawImage(icon, x, y, width, height, null);
     }
 
     public void renderBorder(Graphics g) {
+        g.setColor(Color.cyan);
+        g.drawRect(x, y, width, height);
     }
 }

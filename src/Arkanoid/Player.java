@@ -5,14 +5,14 @@ import java.awt.*;
 public class Player extends Rectangle {
     private final Rectangle player;
     private final Rectangle collisionPlayer;
-    private final int WIDTH = 100;
+    private int intWidth = 100;
     private final int HEIGHT = 10;
     private final int SPEED = 5;
     private int x, y;
 
-    public Player(int windowWidth, int windowHeight){
-        player = new Rectangle((windowWidth / 2) - (WIDTH / 2), windowHeight - 70 - HEIGHT, WIDTH, HEIGHT);
-        collisionPlayer = new Rectangle(player.x - SPEED, player.y, WIDTH + (2 * SPEED), HEIGHT);
+    public Player(int windowWidth, int windowHeight) {
+        player = new Rectangle((windowWidth / 2) - (intWidth / 2), windowHeight - 70 - HEIGHT, intWidth, HEIGHT);
+        collisionPlayer = new Rectangle(player.x - SPEED, player.y, intWidth + (2 * SPEED), HEIGHT);
         x = player.x;
         y = player.y;
     }
@@ -21,8 +21,8 @@ public class Player extends Rectangle {
         return collisionPlayer;
     }
 
-    public int getWIDTH() {
-        return WIDTH;
+    public int getIntWidth() {
+        return intWidth;
     }
 
     @SuppressWarnings("unused")
@@ -62,7 +62,7 @@ public class Player extends Rectangle {
     }
 
     public void calculatePlayerBounce(Ball ball) {
-        int relativeCollision = -(player.x - (ball.getIntX()+ball.getDIAMETER()/2) + player.width / 2);
+        int relativeCollision = -(player.x - (ball.getIntX() + ball.getDIAMETER() / 2) + player.width / 2);
         double normRelativeCollision = relativeCollision / (player.width / 2.0);
 
         double angle = normRelativeCollision * ball.getMaxAngle();
@@ -70,6 +70,23 @@ public class Player extends Rectangle {
         ball.setIntY(player.y - ball.getDIAMETER());
         ball.setSpeedX(-Math.sin(angle) * ball.getSpeed());
         ball.setSpeedY(Math.cos(angle) * ball.getSpeed());
+    }
+
+    public void changeWidth(int width, int amount) {
+        int oldWidth = player.width;
+        player.width = width;
+
+        if (oldWidth > width) {
+            player.x += amount / 2;
+        } else {
+            player.x -= amount / 2;
+        }
+
+        collisionPlayer.width = player.width + 2 * SPEED;
+        collisionPlayer.x = player.x - SPEED;
+
+        this.intWidth = player.width;
+        this.x = player.x;
     }
 
     public void render(Graphics g) {

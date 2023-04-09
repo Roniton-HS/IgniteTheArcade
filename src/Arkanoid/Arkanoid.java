@@ -113,19 +113,19 @@ public class Arkanoid extends Worlds {
             player.moveCollision();
 
             if (!gameStarted) {
-                ball.setIntX((player.getIntX() + (player.getWIDTH() / 2)) - (ball.getDIAMETER() / 2));
+                ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
             }
         }
         if (game.getKeyHandler().d && !gameOver) {
             if (player.getCollisionPlayer().getBounds().intersects(borderR.getBounds())) {
-                player.setIntX(borderR.x - player.getWIDTH());
+                player.setIntX(borderR.x - player.getIntWidth());
             } else {
                 player.setIntX(player.getIntX() + player.getSpeed());
             }
             player.moveCollision();
 
             if (!gameStarted) {
-                ball.setIntX((player.getIntX() + (player.getWIDTH() / 2)) - (ball.getDIAMETER() / 2));
+                ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
             }
         }
 
@@ -232,7 +232,7 @@ public class Arkanoid extends Worlds {
             if (brick.getHp() <= 0) {
                 score += brick.getScore();
                 bricks.remove(brick);
-                checkPowerUp();
+                spawnPowerUp();
 
                 if (bricks.size() == 0) {
                     gameWon = true;
@@ -243,15 +243,23 @@ public class Arkanoid extends Worlds {
     }
 
     private void movePowerUps() {
-        for (PowerUp power : powers) {
+        for (int i =0; i<powers.size();i++){
+            PowerUp power = powers.get(i);
             power.y += power.getSpeed();
+            if(power.getBounds().intersects(borderB.getBounds())){
+                powers.remove(power);
+            }
+            if(power.getBounds().intersects(player.getBounds())){
+                power.getEffect(player, ball);
+                powers.remove(power);
+            }
         }
     }
 
-    private void checkPowerUp() {
+    private void spawnPowerUp() {
         if (random.nextInt(10) <= 6) {
-            powerUps.setValid(0, player.getWIDTH() > 50);
-            powerUps.setValid(1, player.getWIDTH() < 150);
+            powerUps.setValid(0, player.getIntWidth() > 50);
+            powerUps.setValid(1, player.getIntWidth() < 150);
 
             boolean valid = false;
             int numberPowerUp = random.nextInt(powerUps.getValid().length);
@@ -265,7 +273,7 @@ public class Arkanoid extends Worlds {
     }
 
     private void reset() {
-        ball.setIntX((player.getIntX() + (player.getWIDTH() / 2)) - (ball.getDIAMETER() / 2));
+        ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
         ball.setIntY(player.getIntY() - ball.getDIAMETER());
         ball.setSpeedX(0);
         ball.setSpeedY(5);

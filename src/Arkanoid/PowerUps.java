@@ -15,9 +15,9 @@ public class PowerUps {
     private boolean[] valid;
     private ArrayList<PowerUp> powerUps = new ArrayList<>();
 
-    BufferedImage iconGetSmaller = ImageLoader.loadImage("/pacManRes/ghost/eyesUp.png");
-    BufferedImage iconGetBigger = ImageLoader.loadImage("/pacManRes/ghost/eyesLeft.png");
-    BufferedImage iconGetMoreBalls = ImageLoader.loadImage("/pacManRes/ghost/eyesDown.png");
+    BufferedImage iconGetSmaller = ImageLoader.loadImage("/pacManRes/fruit/apple.png");
+    BufferedImage iconGetBigger = ImageLoader.loadImage("/pacManRes/fruit/bell.png");
+    BufferedImage iconGetMoreBalls = ImageLoader.loadImage("/pacManRes/fruit/cherry.png");
 
     public boolean[] getValid() {
         return valid;
