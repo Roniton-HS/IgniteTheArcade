@@ -13,10 +13,11 @@ public class Pattern {
     }
 
     public void createPattern() {
-        patterns.add(createPatternBlock());
-        patterns.add(createPatternStair1());
-        patterns.add(createPatternStair2());
-        patterns.add(createPatternSpace());
+//        patterns.add(createPatternBlock());
+//        patterns.add(createPatternStair1());
+//        patterns.add(createPatternStair2());
+//        patterns.add(createPatternSpace());
+        patterns.add(createDebug());
     }
 
     private ArrayList<Brick> createPatternBlock() {
@@ -121,4 +122,13 @@ public class Pattern {
         return list;
     }
 
+    private ArrayList<Brick> createDebug() {
+        ArrayList<Brick> list = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 9; j++) {
+                list.add(new Brick(80 + (BRICK_WIDTH * i), 80 + (BRICK_HEIGHT * j), 1));
+            }
+        }
+        return list;
+    }
 }

@@ -40,9 +40,9 @@ public class Arkanoid extends Worlds {
     private int numberPattern;
 
     // powerUp variables
-    private final PowerUp powerUp = new PowerUp();
+    private final PowerUps powerUps = new PowerUps();
     private final Random random = new Random();
-    private ArrayList<Rectangle> powerUps = new ArrayList<>();
+    private ArrayList<PowerUp> powers = new ArrayList<>();
 
     /**
      * Constructor
@@ -54,6 +54,7 @@ public class Arkanoid extends Worlds {
         createBorders();
         pattern.createPattern();
         createBricks();
+        powerUps.createPowerUps();
     }
 
     private void createGame() {
@@ -242,23 +243,24 @@ public class Arkanoid extends Worlds {
     }
 
     private void movePowerUps() {
-        for (Rectangle power : powerUps) {
-            power.x -= powerUp.getSpeed();
+        for (PowerUp power : powers) {
+            power.y += power.getSpeed();
         }
     }
 
     private void checkPowerUp() {
         if (random.nextInt(10) == 6) {
-            powerUp.setPowerUps(0, player.getWIDTH() > 50);
-            powerUp.setPowerUps(1, player.getWIDTH() < 150);
+            powerUps.setValid(0, player.getWIDTH() > 50);
+            powerUps.setValid(1, player.getWIDTH() < 150);
 
-            boolean vaild = false;
+            boolean valid = false;
             int numberPowerUp = 0;
-            while (!vaild) {
-                numberPowerUp = random.nextInt(powerUp.getPowerUps().length);
-                vaild = powerUp.getPowerUps()[numberPowerUp];
+            while (!valid) {
+                numberPowerUp = random.nextInt(powerUps.getValid().length);
+                valid = powerUps.getValid()[numberPowerUp];
             }
-            powerUp.spawnPowerUp(numberPowerUp, ball);
+            PowerUp power = powerUps.getPowerUps().get(numberPowerUp);
+            powers.add(new PowerUp(ball.getIntX()+ball.getDIAMETER()/2-10, ball.getIntY(), power.getIcon(),power.getId()));
         }
     }
 
@@ -282,12 +284,15 @@ public class Arkanoid extends Worlds {
         renderBackground(g);
         renderStats(g);
 
-        player.render(g);
-        ball.render(g);
-
         for (Brick brick : bricks) {
             brick.render(g);
         }
+        for (PowerUp power : powers) {
+            power.render(g);
+        }
+
+        player.render(g);
+        ball.render(g);
 
         if (gameOver) {
             renderGameOver(g);
@@ -340,6 +345,9 @@ public class Arkanoid extends Worlds {
         renderBorder(g);
         ball.renderBorder(g);
         player.renderBorder(g);
+        for(PowerUp power: powers){
+            power.renderBorder(g);
+        }
     }
 
     private void renderGameOver(Graphics g) {

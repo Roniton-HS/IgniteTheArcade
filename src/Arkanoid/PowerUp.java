@@ -1,43 +1,45 @@
 package Arkanoid;
 
-
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-public class PowerUp {
+public class PowerUp extends Rectangle {
+    private BufferedImage icon;
+    private int id;
 
-    // Powerup klasse schreiben, in der das bild gespeichert wird, was es macht und so
+    public PowerUp(int x, int y, BufferedImage icon, int id) {
+        super(x, y, 20, 20);
+        this.icon = icon;
 
-    private boolean[] powerUps = new boolean[3];
+    }
 
-    public PowerUp() {
-        for (int i = 0; i < powerUps.length; i++){
-            powerUps[i] = true;
+    public PowerUp(BufferedImage icon, int id) {
+        this.icon = icon;
+        this.id = id;
+    }
+
+    public BufferedImage getIcon() {
+        return icon;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getSpeed() {
+        return 3;
+    }
+
+    public void render(Graphics g) {
+        switch (id) {
+            case 0 -> g.setColor(Color.blue);
+            case 1 -> g.setColor(Color.red);
+            case 2 -> g.setColor(Color.yellow);
+            default -> g.setColor(Color.black);
         }
+        g.fillRect(x, y, width, height);
     }
 
-    public boolean[] getPowerUps() {
-        return powerUps;
-    }
-
-    public void setPowerUps(int index, boolean value) {
-        this.powerUps[index] = value;
-    }
-
-    public int getSpeed(){
-        return 5;
-    }
-
-    public void spawnPowerUp(int powerUp, Ball ball){
-        switch (powerUp){
-            case 0 -> spawnGetSmaller(ball);
-            //case 1 -> spawngetBigger(ball);
-            //case 2 -> spawnMoreBalls(ball);
-            default -> {}
-        }
-    }
-
-    private void spawnGetSmaller(Ball ball) {
-        Rectangle powerUp = new Rectangle(ball.getIntX(), ball.getIntY(), 10,10);
-
+    public void renderBorder(Graphics g) {
     }
 }
