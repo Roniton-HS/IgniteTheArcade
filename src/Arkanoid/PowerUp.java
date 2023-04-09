@@ -10,7 +10,7 @@ public class PowerUp extends Rectangle {
     public PowerUp(int x, int y, BufferedImage icon, int id) {
         super(x, y, 20, 20);
         this.icon = icon;
-
+        this.id = id;
     }
 
     public PowerUp(BufferedImage icon, int id) {
@@ -31,13 +31,7 @@ public class PowerUp extends Rectangle {
     }
 
     public void render(Graphics g) {
-        switch (id) {
-            case 0 -> g.setColor(Color.blue);
-            case 1 -> g.setColor(Color.red);
-            case 2 -> g.setColor(Color.yellow);
-            default -> g.setColor(Color.black);
-        }
-        g.fillRect(x, y, width, height);
+        g.drawImage(icon, x, y, width, height, null);
     }
 
     public void renderBorder(Graphics g) {

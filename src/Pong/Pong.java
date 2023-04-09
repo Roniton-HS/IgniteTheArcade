@@ -7,7 +7,6 @@ import java.awt.*;
 import java.util.Random;
 
 import static Main.Constants.*;
-import static java.lang.Math.abs;
 
 public class Pong extends Worlds {
     final private int WINDOW_SIZE = 510;
@@ -169,14 +168,14 @@ public class Pong extends Worlds {
             reset();
         }
 
-        if (abs(ball.getSpeedX()) < 1) {
+        if (Math.abs(ball.getSpeedX()) < 1) {
             if (ball.getSpeedX() < 0) {
                 ball.setSpeedX(-1);
             } else {
                 ball.setSpeedX(1);
             }
         }
-        if (abs(ball.getSpeedY()) < 1) {
+        if (Math.abs(ball.getSpeedY()) < 1) {
             if (ball.getSpeedY() < 0) {
                 ball.setSpeedY(-1);
             } else {
