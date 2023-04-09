@@ -30,8 +30,8 @@ public class PowerUp {
     public void spawnPowerUp(int powerUp, Ball ball){
         switch (powerUp){
             case 0 -> spawnGetSmaller(ball);
-            case 1 -> spawngetBigger(ball);
-            case 2 -> spawnMoreBalls(ball);
+            //case 1 -> spawngetBigger(ball);
+            //case 2 -> spawnMoreBalls(ball);
             default -> {}
         }
     }
