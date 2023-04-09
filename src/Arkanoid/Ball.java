@@ -12,8 +12,14 @@ public class Ball extends Rectangle {
     private int x;
     private int y;
 
-    public Ball(int windowWidth, int playerY) {
-        ball = new Rectangle(windowWidth / 2 - DIAMETER / 2, playerY - DIAMETER, DIAMETER, DIAMETER);
+    public Ball(Player player) {
+        this.ball = new Rectangle((player.getIntX() + (player.getIntWidth() / 2)) - (DIAMETER / 2), player.getIntY() - DIAMETER, DIAMETER, DIAMETER);
+        x = ball.x;
+        y = ball.y;
+    }
+
+    public Ball(Ball ball) {
+        this.ball = new Rectangle(ball.getIntX(),ball.getIntY(), DIAMETER, DIAMETER);
         x = ball.x;
         y = ball.y;
     }

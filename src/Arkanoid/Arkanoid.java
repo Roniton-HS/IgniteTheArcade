@@ -30,7 +30,7 @@ public class Arkanoid extends Worlds {
     private Player player;
 
     // ball variables
-    private Ball ball;
+    private ArrayList<Ball> balls = new ArrayList<>();
 
     private Rectangle borderL, borderR, borderT, borderB;
 
@@ -59,7 +59,7 @@ public class Arkanoid extends Worlds {
 
     private void createGame() {
         player = new Player(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball = new Ball(WINDOW_WIDTH, player.getIntY());
+        balls.add(new Ball(player));
     }
 
     private void createBorders() {
@@ -113,7 +113,9 @@ public class Arkanoid extends Worlds {
             player.moveCollision();
 
             if (!gameStarted) {
-                ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
+                for (Ball ball : balls) {
+                    ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
+                }
             }
         }
         if (game.getKeyHandler().d && !gameOver) {
@@ -125,7 +127,9 @@ public class Arkanoid extends Worlds {
             player.moveCollision();
 
             if (!gameStarted) {
-                ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
+                for (Ball ball : balls) {
+                    ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
+                }
             }
         }
 
@@ -147,76 +151,83 @@ public class Arkanoid extends Worlds {
     }
 
     private void moveBall() {
-        ball.setIntX((int) (ball.getIntX() - ball.getSpeedX()));
-        ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
+        // TODO some balls glitched out
+        for (int i = 0; i < balls.size(); i++) {
+            Ball ball = balls.get(i);
 
-        if (ball.getBounds().intersects(player.getBounds())) {
-            player.calculatePlayerBounce(ball);
-        }
+            ball.setIntX((int) (ball.getIntX() - ball.getSpeedX()));
+            ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
 
-        if (ball.getBounds().intersects(borderT.getBounds())) {
-            ball.setIntY(borderT.y + borderT.height);
-            ball.setSpeedY(-ball.getSpeedY());
-        }
-        if (ball.getBounds().intersects(borderL.getBounds())) {
-            ball.setIntX(borderL.x + borderL.width);
-            ball.setSpeedX(-ball.getSpeedX());
-        }
-        if (ball.getBounds().intersects(borderR.getBounds())) {
-            ball.setIntX(borderR.x - ball.getDIAMETER());
-            ball.setSpeedX(-ball.getSpeedX());
-        }
-        if (ball.getBounds().intersects(borderB.getBounds())) {
-            gameStarted = false;
-            lives--;
-            if (lives <= 0) {
-                gameOver = true;
-                gameOverTime = System.currentTimeMillis();
-            } else {
-                reset();
+            if (ball.getBounds().intersects(player.getBounds())) {
+                player.calculatePlayerBounce(ball);
             }
-        }
 
-        for (Brick brick : bricks) {
-            if (ball.getBounds().intersects(brick.getBounds())) {
-                brick.setHp(brick.getHp() - 1);
-                checkBrickBorder(brick);
+            if (ball.getBounds().intersects(borderT.getBounds())) {
+                ball.setIntY(borderT.y + borderT.height);
+                ball.setSpeedY(-ball.getSpeedY());
             }
-        }
+            if (ball.getBounds().intersects(borderL.getBounds())) {
+                ball.setIntX(borderL.x + borderL.width);
+                ball.setSpeedX(-ball.getSpeedX());
+            }
+            if (ball.getBounds().intersects(borderR.getBounds())) {
+                ball.setIntX(borderR.x - ball.getDIAMETER());
+                ball.setSpeedX(-ball.getSpeedX());
+            }
+            // TODO sometimes game resets if there is one ball left
+            if (ball.getBounds().intersects(borderB.getBounds())) {
+                balls.remove(ball);
+                if (balls.size() == 0) {
+                    gameStarted = false;
+                    lives--;
+                    if (lives <= 0) {
+                        gameOver = true;
+                        gameOverTime = System.currentTimeMillis();
+                    } else {
+                        reset();
+                    }
+                }
+            }
 
-        if (abs(ball.getSpeedY()) < 1) {
-            if (ball.getSpeedY() < 0) {
-                ball.setSpeedY(-1);
-            } else {
-                ball.setSpeedY(1);
+            for (Brick brick : bricks) {
+                if (ball.getBounds().intersects(brick.getBounds())) {
+                    brick.setHp(brick.getHp() - 1);
+                    checkBrickBorder(brick, ball);
+                }
             }
-        }
-        if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0) {
-            if (ball.getSpeedX() < 0) {
-                ball.setSpeedX(-1);
-            } else {
-                ball.setSpeedX(1);
+
+            if (abs(ball.getSpeedY()) < 1) {
+                if (ball.getSpeedY() < 0) {
+                    ball.setSpeedY(-1);
+                } else {
+                    ball.setSpeedY(1);
+                }
+            }
+            if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0) {
+                if (ball.getSpeedX() < 0) {
+                    ball.setSpeedX(-1);
+                } else {
+                    ball.setSpeedX(1);
+                }
             }
         }
     }
 
-    private void checkBrickBorder(Brick brick) {
+    private void checkBrickBorder(Brick brick, Ball ball) {
         for (Rectangle border : brick.getBorders()) {
             if (ball.getBounds().intersects(border.getBounds())) {
-                calculateBrickBounce(border, brick.getBorders().indexOf(border));
+                calculateBrickBounce(border, brick.getBorders().indexOf(border), ball);
             }
         }
     }
 
-    private void calculateBrickBounce(Rectangle border, int index) {
-        if (index == 0) {
-            ball.setIntY(border.y - ball.getDIAMETER());
-        } else if (index == 1) {
-            ball.setIntY(border.y);
-        } else if (index == 2) {
-            ball.setIntX(border.x - ball.getDIAMETER());
-        } else if (index == 3) {
-            ball.setIntX(border.x);
+    private void calculateBrickBounce(Rectangle border, int index, Ball ball) {
+        switch (index) {
+            case 0 -> ball.setIntY(border.y - ball.getDIAMETER());
+            case 1 -> ball.setIntY(border.y);
+            case 2 -> ball.setIntX(border.x - ball.getDIAMETER());
+            case 3 -> ball.setIntX(border.x);
+            default -> {}
         }
 
         if (index == 0 || index == 1) {
@@ -232,7 +243,7 @@ public class Arkanoid extends Worlds {
             if (brick.getHp() <= 0) {
                 score += brick.getScore();
                 bricks.remove(brick);
-                spawnPowerUp();
+                spawnPowerUp(brick);
 
                 if (bricks.size() == 0) {
                     gameWon = true;
@@ -243,21 +254,21 @@ public class Arkanoid extends Worlds {
     }
 
     private void movePowerUps() {
-        for (int i =0; i<powers.size();i++){
+        for (int i = 0; i < powers.size(); i++) {
             PowerUp power = powers.get(i);
             power.y += power.getSpeed();
-            if(power.getBounds().intersects(borderB.getBounds())){
+            if (power.getBounds().intersects(borderB.getBounds())) {
                 powers.remove(power);
             }
-            if(power.getBounds().intersects(player.getBounds())){
-                power.getEffect(player, ball);
+            if (power.getBounds().intersects(player.getBounds())) {
+                power.getEffect(player, balls);
                 powers.remove(power);
             }
         }
     }
 
-    private void spawnPowerUp() {
-        if (random.nextInt(10) <= 6) {
+    private void spawnPowerUp(Brick brick) {
+        if (random.nextInt(10) == 6) {
             powerUps.setValid(0, player.getIntWidth() > 50);
             powerUps.setValid(1, player.getIntWidth() < 150);
 
@@ -268,18 +279,18 @@ public class Arkanoid extends Worlds {
                 valid = powerUps.getValid()[numberPowerUp];
             }
             PowerUp power = powerUps.getPowerUps().get(numberPowerUp);
-            powers.add(new PowerUp(ball.getIntX() + ball.getDIAMETER() / 2 - 10, ball.getIntY(), power.getIcon(), power.getId()));
+            powers.add(new PowerUp(brick.x + brick.width / 2 - 10, brick.y+brick.height, power.getIcon(), power.getId()));
         }
     }
 
     private void reset() {
-        ball.setIntX((player.getIntX() + (player.getIntWidth() / 2)) - (ball.getDIAMETER() / 2));
-        ball.setIntY(player.getIntY() - ball.getDIAMETER());
-        ball.setSpeedX(0);
-        ball.setSpeedY(5);
+        powers.clear();
+        balls.clear();
+        balls.add(new Ball(player));
     }
 
     private void resetGame() {
+        powers.clear();
         createGame();
         createBricks();
         lives = 3;
@@ -300,7 +311,9 @@ public class Arkanoid extends Worlds {
         }
 
         player.render(g);
-        ball.render(g);
+        for (Ball ball: balls) {
+            ball.render(g);
+        }
 
         if (gameOver) {
             renderGameOver(g);
@@ -340,9 +353,9 @@ public class Arkanoid extends Worlds {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
         g.drawString("Pattern: " + numberPattern, 50, 663);
-        g.drawString("X: " + ball.getSpeedX(), 50, 673);
-        g.drawString("Y: " + ball.getSpeedY(), 50, 683);
-        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 693);
+        g.drawString("Num balls: " + balls.size(), 50, 673);
+        //g.drawString("Y: " + ball.getSpeedY(), 50, 683);
+        //g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 693);
 
         g.setColor(Color.black);
         for (Brick brick : bricks) {
@@ -351,8 +364,10 @@ public class Arkanoid extends Worlds {
             }
         }
         renderBorder(g);
-        ball.renderBorder(g);
         player.renderBorder(g);
+        for (Ball ball: balls) {
+            ball.renderBorder(g);
+        }
         for (PowerUp power : powers) {
             power.renderBorder(g);
         }

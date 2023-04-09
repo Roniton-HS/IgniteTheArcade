@@ -10,11 +10,10 @@ import java.util.Arrays;
 
 public class PowerUps {
 
-    // Powerup klasse schreiben, in der das bild gespeichert wird, was es macht und so
-
     private boolean[] valid;
     private ArrayList<PowerUp> powerUps = new ArrayList<>();
 
+    // TODO create icons
     BufferedImage iconGetSmaller = ImageLoader.loadImage("/pacManRes/fruit/apple.png");
     BufferedImage iconGetBigger = ImageLoader.loadImage("/pacManRes/fruit/bell.png");
     BufferedImage iconGetMoreBalls = ImageLoader.loadImage("/pacManRes/fruit/cherry.png");
