@@ -87,7 +87,7 @@ public class Player extends Rectangle {
     }
 
     public void calculatePlayerBounce(Ball ball) {
-        int relativeCollision = -(player.y - ball.getIntY() + player.height / 2);
+        int relativeCollision = -(player.y - (ball.getIntY() + ball.getDIAMETER() / 2) + (player.height / 2));
         double normRelativeCollision;
         if (left) {
             normRelativeCollision = relativeCollision / (player.height / 2.0);
