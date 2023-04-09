@@ -37,7 +37,12 @@ public class Arkanoid extends Worlds {
     // pattern variables
     private final Pattern pattern = new Pattern();
     private ArrayList<Brick> bricks = new ArrayList<>();
-    private int index;
+    private int numberPattern;
+
+    // powerUp variables
+    private final PowerUp powerUp = new PowerUp();
+    private final Random random = new Random();
+    private ArrayList<Rectangle> powerUps = new ArrayList<>();
 
     /**
      * Constructor
@@ -65,9 +70,9 @@ public class Arkanoid extends Worlds {
 
     private void createBricks() {
         Random random = new Random();
-        index = random.nextInt(pattern.getPatterns().size());
+        numberPattern = random.nextInt(pattern.getPatterns().size());
         bricks.clear();
-        for (Brick brick : pattern.getPatterns().get(index)) {
+        for (Brick brick : pattern.getPatterns().get(numberPattern)) {
             bricks.add(new Brick(brick.x, brick.y, brick.getHp()));
         }
     }
@@ -78,6 +83,7 @@ public class Arkanoid extends Worlds {
         if (gameStarted) {
             moveBall();
             checkBrick();
+            movePowerUps();
         }
         if (gameOver) {
             gameStarted = false;
@@ -225,11 +231,34 @@ public class Arkanoid extends Worlds {
             if (brick.getHp() <= 0) {
                 score += brick.getScore();
                 bricks.remove(brick);
+                checkPowerUp();
+
                 if (bricks.size() == 0) {
                     gameWon = true;
                     gameOverTime = System.currentTimeMillis();
                 }
             }
+        }
+    }
+
+    private void movePowerUps() {
+        for (Rectangle power : powerUps) {
+            power.x -= powerUp.getSpeed();
+        }
+    }
+
+    private void checkPowerUp() {
+        if (random.nextInt(10) == 6) {
+            powerUp.setPowerUps(0, player.getWIDTH() > 50);
+            powerUp.setPowerUps(1, player.getWIDTH() < 150);
+
+            boolean vaild = false;
+            int numberPowerUp = 0;
+            while (!vaild) {
+                numberPowerUp = random.nextInt(powerUp.getPowerUps().length);
+                vaild = powerUp.getPowerUps()[numberPowerUp];
+            }
+            powerUp.spawnPowerUp(numberPowerUp, ball);
         }
     }
 
@@ -297,7 +326,7 @@ public class Arkanoid extends Worlds {
     private void renderDebug(Graphics g) {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-        g.drawString("Pattern: " + index, 50, 663);
+        g.drawString("Pattern: " + numberPattern, 50, 663);
         g.drawString("X: " + ball.getSpeedX(), 50, 673);
         g.drawString("Y: " + ball.getSpeedY(), 50, 683);
         g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 50, 693);
