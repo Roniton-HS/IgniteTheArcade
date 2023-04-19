@@ -4,6 +4,7 @@ import Main.Game;
 import Worlds.Worlds;
 
 import java.awt.*;
+import java.util.Random;
 
 import static Main.Constants.*;
 
@@ -12,13 +13,17 @@ public class Pong extends Worlds {
 
     private Player playerLeft;
     private Player playerRight;
-    private Rectangle collisionPlayerLeft;
-    private Rectangle collisionPlayerRight;
     private Ball ball;
+    private boolean directionX; // false = left, true = right
+    private boolean directionY; // false = up, true = down
 
     private Rectangle borderL, borderR, borderT, borderB;
 
     private boolean gameStarted = false;
+    private boolean keyPressed = false;
+    private boolean debug = false;
+    private final Random random = new Random();
+    private long gameOverTime;
 
 
     public Pong(Game game) {
@@ -26,28 +31,54 @@ public class Pong extends Worlds {
         game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
         createGame();
         createBorders();
+        createStartDirection();
+        setStartSpeed();
     }
 
     private void createGame() {
-        playerLeft = new Player(WINDOW_SIZE, false);
-        collisionPlayerLeft = playerLeft.getCollisionPlayer();
-
-        playerRight = new Player(WINDOW_SIZE, true);
-        collisionPlayerRight = playerRight.getCollisionPlayer();
-
+        playerLeft = new Player(WINDOW_SIZE, true);
+        playerRight = new Player(WINDOW_SIZE, false);
         ball = new Ball(WINDOW_SIZE);
     }
 
     private void createBorders() {
         borderL = new Rectangle(0, 0, 1, WINDOW_SIZE);
-        borderR = new Rectangle(WINDOW_SIZE, 0, 1, WINDOW_SIZE);
+        borderR = new Rectangle(WINDOW_SIZE - 1, 0, 1, WINDOW_SIZE);
         borderT = new Rectangle(0, 0, WINDOW_SIZE, 1);
-        borderB = new Rectangle(WINDOW_SIZE, 0, WINDOW_SIZE, 1);
+        borderB = new Rectangle(0, WINDOW_SIZE - 1, WINDOW_SIZE, 1);
+    }
+
+    private void createStartDirection() {
+        directionX = random.nextBoolean();
+        directionY = random.nextBoolean();
+    }
+
+    private void setStartSpeed() {
+        final double START_ANGLE = (35 * Math.PI) / 180;
+        if (!directionX) {
+            ball.setSpeedX(Math.cos(START_ANGLE) * -ball.getSpeed());
+        } else {
+            ball.setSpeedX(Math.cos(START_ANGLE) * ball.getSpeed());
+        }
+        if (!directionY) {
+            ball.setSpeedY(-Math.sin(START_ANGLE) * -ball.getSpeed());
+        } else {
+            ball.setSpeedY(-Math.sin(START_ANGLE) * ball.getSpeed());
+        }
     }
 
     @Override
     public void tick() {
         input();
+        if (gameStarted) {
+            moveBall();
+        }
+        if (playerLeft.isWon() || playerRight.isWon()) {
+            gameStarted = false;
+            if (System.currentTimeMillis() - gameOverTime > 3000) {
+                resetGame();
+            }
+        }
     }
 
     private void input() {
@@ -58,19 +89,112 @@ public class Pong extends Worlds {
 
         // movement left player
         if (game.getKeyHandler().w) {
-            playerLeft.setY(playerLeft.getY() - playerLeft.getSPEED());
+            if (playerLeft.getCollisionPlayer().getBounds().intersects(borderT.getBounds())) {
+                playerLeft.setIntY(borderT.x + borderT.height);
+            } else {
+                playerLeft.setIntY(playerLeft.getIntY() - playerLeft.getSPEED());
+            }
         }
         if (game.getKeyHandler().s) {
-            playerLeft.setY(playerLeft.getY() + playerLeft.getSPEED());
+            if (playerLeft.getCollisionPlayer().getBounds().intersects(borderB.getBounds())) {
+                playerLeft.setIntY(borderB.y - playerLeft.getHEIGHT());
+            } else {
+                playerLeft.setIntY(playerLeft.getIntY() + playerLeft.getSPEED());
+            }
         }
+        playerLeft.moveCollision();
 
         // movement right player
         if (game.getKeyHandler().up) {
-            playerRight.setY(playerRight.getY() - playerRight.getSPEED());
+            if (playerRight.getCollisionPlayer().getBounds().intersects(borderT.getBounds())) {
+                playerRight.setIntY(borderT.y + borderT.height);
+            } else {
+                playerRight.setIntY(playerRight.getIntY() - playerRight.getSPEED());
+            }
         }
         if (game.getKeyHandler().down) {
-            playerRight.setY(playerRight.getY() + playerRight.getSPEED());
+            if (playerRight.getCollisionPlayer().getBounds().intersects(borderB.getBounds())) {
+                playerRight.setIntY(borderB.y - playerRight.getHEIGHT());
+            } else {
+                playerRight.setIntY(playerRight.getIntY() + playerRight.getSPEED());
+            }
         }
+        playerRight.moveCollision();
+
+        // toggle debug screen
+        if (game.getKeyHandler().p && !keyPressed) {
+            debug = !debug;
+            keyPressed = true;
+        }
+        if (!game.getKeyHandler().p) {
+            keyPressed = false;
+        }
+    }
+
+    private void moveBall() {
+        ball.setIntX((int) (ball.getIntX() + ball.getSpeedX()));
+        ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
+
+        if (ball.getBounds().intersects(playerLeft.getBounds())) {
+            playerLeft.calculatePlayerBounce(ball);
+        }
+        if (ball.getBounds().intersects(playerRight.getBounds())) {
+            playerRight.calculatePlayerBounce(ball);
+        }
+
+        if (ball.getBounds().intersects(borderT.getBounds())) {
+            ball.setIntY(borderT.y + borderT.height);
+            ball.setSpeedY(-ball.getSpeedY());
+        }
+        if (ball.getBounds().intersects(borderB.getBounds())) {
+            ball.setIntY(borderB.y - ball.getDIAMETER());
+            ball.setSpeedY(-ball.getSpeedY());
+        }
+
+        if (ball.getBounds().intersects(borderL.getBounds())) {
+            directionX = true;
+            playerRight.addPoint();
+            if (playerRight.checkScore()) {
+                gameOverTime = System.currentTimeMillis();
+            }
+            reset();
+        }
+        if (ball.getBounds().intersects(borderR.getBounds())) {
+            directionX = false;
+            playerLeft.addPoint();
+            if (playerLeft.checkScore()) {
+                gameOverTime = System.currentTimeMillis();
+            }
+            reset();
+        }
+
+        if (Math.abs(ball.getSpeedX()) < 1) {
+            if (ball.getSpeedX() < 0) {
+                ball.setSpeedX(-1);
+            } else {
+                ball.setSpeedX(1);
+            }
+        }
+        if (Math.abs(ball.getSpeedY()) < 1) {
+            if (ball.getSpeedY() < 0) {
+                ball.setSpeedY(-1);
+            } else {
+                ball.setSpeedY(1);
+            }
+        }
+    }
+
+    private void reset() {
+        ball.setIntX(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
+        ball.setIntY(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
+        directionY = random.nextBoolean();
+        setStartSpeed();
+    }
+
+    private void resetGame() {
+        createGame();
+        createStartDirection();
+        setStartSpeed();
     }
 
     @Override
@@ -78,6 +202,16 @@ public class Pong extends Worlds {
         renderBackground(g);
         ball.render(g);
         renderPlayer(g);
+        renderScore(g);
+        if (debug) {
+            renderBorders(g);
+            renderDebug(g);
+        }
+        if (playerLeft.isWon()) {
+            renderGameOver(g, playerLeft);
+        } else if (playerRight.isWon()) {
+            renderGameOver(g, playerRight);
+        }
     }
 
     private void renderBackground(Graphics g) {
@@ -95,5 +229,43 @@ public class Pong extends Worlds {
     private void renderPlayer(Graphics g) {
         playerLeft.render(g);
         playerRight.render(g);
+    }
+
+    private void renderScore(Graphics g) {
+        g.setColor(Color.white);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 50.0F));
+        g.drawString(playerLeft.createScore(), 140, 60);
+        g.drawString(playerRight.createScore(), 263, 60);
+    }
+
+    private void renderBorders(Graphics g) {
+        g.setColor(Color.red);
+        g.drawRect(borderR.x, borderR.y, borderR.width, borderR.height);
+        g.drawRect(borderL.x, borderL.y, borderL.width, borderL.height);
+        g.drawRect(borderT.x, borderT.y, borderT.width, borderT.height);
+        g.drawRect(borderB.x, borderB.y, borderB.width, borderB.height);
+        playerLeft.renderBorder(g);
+        playerRight.renderBorder(g);
+        ball.renderBorder(g);
+    }
+
+    private void renderDebug(Graphics g) {
+        g.setColor(Color.orange);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
+        g.drawString("X: " + ball.getSpeedX(), 10, 480);
+        g.drawString("Y: " + ball.getSpeedY(), 10, 490);
+        g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 10, 500);
+    }
+
+    private void renderGameOver(Graphics g, Player player) {
+        g.setColor(new Color(10, 123, 34));
+        g.fillRect(WINDOW_SIZE / 2 - 75, WINDOW_SIZE / 2 - 20, 150, 40);
+
+        g.setColor(new Color(15, 186, 51));
+        g.fillRect(WINDOW_SIZE / 2 - 72, WINDOW_SIZE / 2 - 17, 144, 34);
+
+        g.setColor(Color.white);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 15.0F));
+        g.drawString(player.createWon(), WINDOW_SIZE / 2 - 50, WINDOW_SIZE / 2 + 5);
     }
 }

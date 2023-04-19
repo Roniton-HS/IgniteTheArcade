@@ -51,7 +51,7 @@ public class Constants {
      */
 
     public static final Color ALMOST_BLACK = new Color(9, 9, 9);
-    public static final Color ALMOST_WHITE = new Color(195, 195, 195);
+    public static final Color ALMOST_WHITE = new Color(237, 237, 237);
     public static final Color YELLOW = new Color(237, 240, 4);
     public static final Color RED = new Color(255, 14, 66);
     public static final Color GREEN = new Color(118, 255, 0);
