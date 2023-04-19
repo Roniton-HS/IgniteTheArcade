@@ -42,6 +42,7 @@ public class Menu extends Worlds {
 
 
     ArrayList<Rectangle> levels = new ArrayList<>();
+    Rectangle pong =      new Rectangle(-3 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
     Rectangle tetris =      new Rectangle(-2 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
     Rectangle chess =       new Rectangle(-1 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
     Rectangle pacMan =      new Rectangle(+0 * LEVEL_OFFSET, LEVEL_Y, PORTAL_WIDTH, PORTAL_HEIGHT);
@@ -61,6 +62,7 @@ public class Menu extends Worlds {
         levels.add(arkanoid);
         levels.add(chess);
         levels.add(tetris);
+        levels.add(pong);
     }
 
     @Override
@@ -127,6 +129,9 @@ public class Menu extends Worlds {
         } else if (player.getBounds().intersects(tetris.getBounds())) {
             Tetris tetris = new Tetris(game, true);
             Worlds.setWorld(tetris);
+        }else if (player.getBounds().intersects(pong.getBounds())) {
+            Pong pong = new Pong(game);
+            Worlds.setWorld(pong);
         }
     }
 
@@ -181,7 +186,8 @@ public class Menu extends Worlds {
 
         //render level names
         final float LEVEL_TEXT_SIZE = 30.F;
-        final int LEVEL_TEXT_HEIGHT = -275;
+        final int LEVEL_TEXT_HEIGHT = -278;
+        final int PONG_TEXT_OFFSET = 110;
         final int TETRIS_TEXT_OFFSET = 100;
         final int CHESS_TEXT_OFFSET = 108;
         final int PACMAN_TEXT_OFFSET = 95;
@@ -190,6 +196,7 @@ public class Menu extends Worlds {
         final int ARKANOID_TEXT_OFFSET = 80;
         g.setColor(Color.WHITE);
         g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * LEVEL_TEXT_SIZE));
+        g.drawString("Pong", pong.x + PONG_TEXT_OFFSET + ARCADE_OFFSET_X - off, pong.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Tetris", tetris.x + TETRIS_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
         g.drawString("Chess", chess.x + CHESS_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);
         g.drawString("PacMan", pacMan.x + PACMAN_TEXT_OFFSET + ARCADE_OFFSET_X - off, pacMan.y + LEVEL_TEXT_HEIGHT);

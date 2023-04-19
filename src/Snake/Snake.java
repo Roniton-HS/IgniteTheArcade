@@ -7,7 +7,6 @@ import Worlds.Worlds;
 import java.awt.*;
 import java.util.Random;
 
-import static Main.Constants.BLUE;
 import static Main.Constants.emulogic;
 
 public class Snake extends Worlds {
