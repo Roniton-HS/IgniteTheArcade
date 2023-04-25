@@ -3,6 +3,14 @@ package Arkanoid;
 import java.util.ArrayList;
 
 public class Pattern {
+    /**
+     * To create your own pattern crate a method in which the pattern is created and add it to the patterns list in createPattern().
+     * The standard brick size is 30x15. These values are stored in the variables BRICK_WIDTH and BRICK_HEIGHT.
+     * To create a standard brick use "new Brick(x, y, hp)", to create a custom brick use "new Brick(x, y, width, height, hp)".
+     * The borders of the game are at x = 49, x = 440, y = 49 and the player is at y = 620.
+     * Make sure that the bricks are inside this area.
+     * The hp should be greater than 0, otherwise the bricks will be created with one hp. Bricks with more than 5 hp will have the same color.
+     */
 
     private final ArrayList<ArrayList<Brick>> patterns = new ArrayList<>();
     private final int BRICK_WIDTH = 30;
@@ -13,10 +21,10 @@ public class Pattern {
     }
 
     public void createPattern() {
-//        patterns.add(createPatternBlock());
-//        patterns.add(createPatternStair1());
-//        patterns.add(createPatternStair2());
-//        patterns.add(createPatternSpace());
+        patterns.add(createPatternBlock());
+        patterns.add(createPatternStair1());
+        patterns.add(createPatternStair2());
+        patterns.add(createPatternSpace());
         patterns.add(createDebug());
     }
 

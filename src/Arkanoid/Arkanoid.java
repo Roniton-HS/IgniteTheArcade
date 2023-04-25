@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static Main.Constants.*;
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 
 public class Arkanoid extends Worlds {
 
@@ -188,9 +188,11 @@ public class Arkanoid extends Worlds {
 
             for (Brick brick : bricks) {
                 if (ball.getBounds().intersects(brick.getBounds())) {
-                    brick.setHp(brick.getHp() - 1);
                     if (!ball.isFire()) {
+                        brick.setHp(brick.getHp() - 1);
                         checkBrickBorder(brick, ball);
+                    } else {
+                        brick.setHp(0);
                     }
                 }
             }
