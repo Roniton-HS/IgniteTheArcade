@@ -8,16 +8,38 @@ public class Brick extends Rectangle {
     private int score;
     private final ArrayList<Rectangle> borders = new ArrayList<>();
 
+    /**
+     * creates a new custom brick
+     * @param x      x coordinate of the top left corner of the brick; should be 50 <= x <= 440 - width
+     * @param y      y coordinate of the top left corner of the brick; should be 50 <= x <= 620 - height
+     * @param width  width of the brick
+     * @param height height of the brick
+     * @param hp     hp of the brick
+     */
     public Brick(int x, int y, int width, int height, int hp) {
         super(x, y, width, height);
-        this.hp = hp;
+        if (hp <= 0) {
+            this.hp = 1;
+        } else {
+            this.hp = hp;
+        }
         setScore();
         createBorders();
     }
 
+    /**
+     * creates a new standard brick
+     * @param x x coordinate of the top left corner of the brick; should be 50 <= x <= 440 - 30
+     * @param y y coordinate of the top left corner of the brick; should be 50 <= x <= 620 - 15
+     * @param hp hp of the brick
+     */
     public Brick(int x, int y, int hp) {
         super(x, y, 30, 15);
-        this.hp = hp;
+        if (hp <= 0) {
+            this.hp = 1;
+        } else {
+            this.hp = hp;
+        }
         setScore();
         createBorders();
     }
