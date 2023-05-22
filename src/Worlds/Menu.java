@@ -11,6 +11,7 @@ import Minesweeper.Minesweeper;
 import PacMan.PacMan;
 import Pong.Pong;
 import Snake.Snake;
+import Snake2.Snake2;
 import Tetris.Tetris;
 
 import java.awt.*;
@@ -98,8 +99,8 @@ public class Menu extends Worlds {
         }
 
         if (game.getKeyHandler().b) {
-            Pong pong = new Pong(game);
-            Worlds.setWorld(pong);
+            Snake2 snake = new Snake2(game);
+            Worlds.setWorld(snake);
         }
 
         MouseHandler.reset();

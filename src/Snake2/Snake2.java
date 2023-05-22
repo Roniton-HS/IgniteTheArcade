@@ -9,7 +9,7 @@ import java.util.Random;
 
 import static Main.Constants.emulogic;
 
-public class Snake extends Worlds {
+public class Snake2 extends Worlds {
     public static final int BLOCK_SIZE = 32;
     public boolean gameStart = false;
 
@@ -22,7 +22,7 @@ public class Snake extends Worlds {
     /**
      * Constructor
      */
-    public Snake(Game game) {
+    public Snake2(Game game) {
         super(game);
         game.getDisplay().resize(753, 904);
     }

@@ -17,13 +17,13 @@ public class Player {
     public ArrayList<Rectangle> tiles = new ArrayList();
     public boolean appleCollected = false;
     private final Game game;
-    private final Snake snakeWorld;
+    private final Snake2 snakeWorld;
     private boolean firstPlayer;
 
     /**
      * Constructor
      */
-    public Player(int x, int y, Game game, boolean firstPlayer, Snake snakeWorld) {
+    public Player(int x, int y, Game game, boolean firstPlayer, Snake2 snakeWorld) {
         this.x = x;
         this.y = y;
         this.game = game;
@@ -80,12 +80,12 @@ public class Player {
 
         if (tick > TICK_TIMER) {
             switch (directions) {
-                case 0 -> y = y - Snake.BLOCK_SIZE;
-                case 1 -> x = x - Snake.BLOCK_SIZE;
-                case 2 -> y = y + Snake.BLOCK_SIZE;
-                case 3 -> x = x + Snake.BLOCK_SIZE;
+                case 0 -> y = y - Snake2.BLOCK_SIZE;
+                case 1 -> x = x - Snake2.BLOCK_SIZE;
+                case 2 -> y = y + Snake2.BLOCK_SIZE;
+                case 3 -> x = x + Snake2.BLOCK_SIZE;
             }
-            tiles.add(new Rectangle(this.x, this.y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE));
+            tiles.add(new Rectangle(this.x, this.y, Snake2.BLOCK_SIZE, Snake2.BLOCK_SIZE));
             tick = 0;
             waitForStart();
         } else {
@@ -144,10 +144,10 @@ public class Player {
         }
 
         //world bound check
-        Rectangle up = new Rectangle(2 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle down = new Rectangle(2 * Snake.BLOCK_SIZE, 25 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle left = new Rectangle(Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
-        Rectangle right = new Rectangle(21 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
+        Rectangle up = new Rectangle(2 * Snake2.BLOCK_SIZE, 3 * Snake2.BLOCK_SIZE, 23 * Snake2.BLOCK_SIZE, 1);
+        Rectangle down = new Rectangle(2 * Snake2.BLOCK_SIZE, 25 * Snake2.BLOCK_SIZE, 23 * Snake2.BLOCK_SIZE, 1);
+        Rectangle left = new Rectangle(Snake2.BLOCK_SIZE, 3 * Snake2.BLOCK_SIZE, 1, 23 * Snake2.BLOCK_SIZE);
+        Rectangle right = new Rectangle(21 * Snake2.BLOCK_SIZE, 3 * Snake2.BLOCK_SIZE, 1, 23 * Snake2.BLOCK_SIZE);
         if (head.getBounds().intersects(up.getBounds()) ||
                 head.getBounds().intersects(down.getBounds()) ||
                 head.getBounds().intersects(left.getBounds()) ||
@@ -163,7 +163,7 @@ public class Player {
     }
 
     public void restart() {
-        Snake snakeWorld = new Snake(game);
+        Snake2 snakeWorld = new Snake2(game);
         Worlds.setWorld(snakeWorld);
     }
 
