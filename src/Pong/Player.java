@@ -11,6 +11,7 @@ public class Player extends Rectangle {
     private final int HEIGHT = 80;
     private final int SPEED = 5;
     private int y;
+    private int x;
     private final boolean left;
     private int score = 0;
     private boolean won = false;
@@ -30,6 +31,7 @@ public class Player extends Rectangle {
             left = false;
         }
         collisionPlayer = new Rectangle(player.x, player.y - SPEED, WIDTH, HEIGHT + 2 * SPEED);
+        x = player.x;
         y = player.y;
     }
 
@@ -57,6 +59,15 @@ public class Player extends Rectangle {
     public void setIntY(int y) {
         this.y = y;
         player.y = y;
+    }
+
+    public int getIntX() {
+        return x;
+    }
+
+    public void setIntX(int x) {
+        this.x = x;
+        player.x = x;
     }
 
     public boolean isLeft() {

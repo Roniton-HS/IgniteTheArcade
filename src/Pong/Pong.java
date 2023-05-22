@@ -23,7 +23,7 @@ public class Pong extends Worlds {
     private boolean keyPressed = false;
     private boolean debug = false;
     private final Random random = new Random();
-    private long gameOverTime;
+    private long gameTime, gameOverTime;
 
 
     public Pong(Game game) {
@@ -54,16 +54,13 @@ public class Pong extends Worlds {
     }
 
     private void setStartSpeed() {
-        final double START_ANGLE = (35 * Math.PI) / 180;
+        ball.setSpeed(5);
+        ball.setSpeedY(0);
+
         if (!directionX) {
-            ball.setSpeedX(Math.cos(START_ANGLE) * -ball.getSpeed());
+            ball.setSpeedX(-5);
         } else {
-            ball.setSpeedX(Math.cos(START_ANGLE) * ball.getSpeed());
-        }
-        if (!directionY) {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * -ball.getSpeed());
-        } else {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * ball.getSpeed());
+            ball.setSpeedX(5);
         }
     }
 
@@ -72,6 +69,10 @@ public class Pong extends Worlds {
         input();
         if (gameStarted) {
             moveBall();
+            if (ball.getSpeed() < 10 && System.currentTimeMillis() - gameTime > 5000) {
+                ball.setSpeed(ball.getSpeed() + 0.5F);
+                gameTime = System.currentTimeMillis();
+            }
         }
         if (playerLeft.isWon() || playerRight.isWon()) {
             gameStarted = false;
@@ -85,6 +86,7 @@ public class Pong extends Worlds {
         // start game
         if (game.getKeyHandler().space && !gameStarted) {
             gameStarted = true;
+            gameTime = System.currentTimeMillis();
         }
 
         // movement left player
@@ -175,19 +177,26 @@ public class Pong extends Worlds {
                 ball.setSpeedX(1);
             }
         }
-        if (Math.abs(ball.getSpeedY()) < 1) {
+
+        /*if (Math.abs(ball.getSpeedY()) < 1) {
             if (ball.getSpeedY() < 0) {
                 ball.setSpeedY(-1);
             } else {
                 ball.setSpeedY(1);
             }
         }
+         */
     }
 
     private void reset() {
-        ball.setIntX(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
-        ball.setIntY(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
-        directionY = random.nextBoolean();
+        gameStarted = false;
+        if(!directionX) {
+            ball.setIntX(playerRight.getIntX() - ball.getDIAMETER());
+            ball.setIntY(playerRight.getIntY() + playerRight.getHEIGHT() / 2 - ball.getDIAMETER() / 2);
+        } else {
+            ball.setIntX(playerLeft.getIntX() + ball.getDIAMETER());
+            ball.setIntY(playerLeft.getIntY() + playerLeft.getHEIGHT() / 2 - ball.getDIAMETER() / 2);
+        }
         setStartSpeed();
     }
 
@@ -252,8 +261,10 @@ public class Pong extends Worlds {
     private void renderDebug(Graphics g) {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-        g.drawString("X: " + ball.getSpeedX(), 10, 480);
-        g.drawString("Y: " + ball.getSpeedY(), 10, 490);
+        g.drawString("X: " + ball.getIntX(), 10, 460);
+        g.drawString("Y: " + ball.getIntY(), 10, 470);
+        g.drawString("SpeedX: " + ball.getSpeedX(), 10, 480);
+        g.drawString("SpeedY: " + ball.getSpeedY(), 10, 490);
         g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 10, 500);
     }
 
