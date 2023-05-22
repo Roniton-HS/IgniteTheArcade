@@ -7,6 +7,10 @@ import static Main.Constants.ALMOST_WHITE;
 public class Player extends Rectangle {
     private final Rectangle player;
     private final Rectangle collisionPlayer;
+    private final Rectangle borderT;
+    private final Rectangle borderB;
+    private final Rectangle borderL;
+    private final Rectangle borderR;
     private final int WIDTH = 10;
     private final int HEIGHT = 80;
     private final int SPEED = 5;
@@ -31,6 +35,10 @@ public class Player extends Rectangle {
             left = false;
         }
         collisionPlayer = new Rectangle(player.x, player.y - SPEED, WIDTH, HEIGHT + 2 * SPEED);
+        borderT = new Rectangle(player.x, player.y, WIDTH, 1);
+        borderB = new Rectangle(player.x, player.y + HEIGHT, WIDTH, 1);
+        borderL = new Rectangle(player.x, player.y, 1, HEIGHT);
+        borderR = new Rectangle(player.x + WIDTH, player.y, 1, HEIGHT);
         x = player.x;
         y = player.y;
     }
@@ -38,6 +46,23 @@ public class Player extends Rectangle {
     public Rectangle getCollisionPlayer() {
         return collisionPlayer;
     }
+
+    public Rectangle getBorderT() {
+        return borderT;
+    }
+
+    public Rectangle getBorderB() {
+        return borderB;
+    }
+
+    public Rectangle getBorderL() {
+        return borderL;
+    }
+
+    public Rectangle getBorderR() {
+        return borderR;
+    }
+
 
     @SuppressWarnings("unused")
     public int getWIDTH() {
@@ -93,6 +118,13 @@ public class Player extends Rectangle {
         collisionPlayer.y = player.y - SPEED;
     }
 
+    public void moveBorders(){
+        borderT.y = player.y;
+        borderB.y = player.y + HEIGHT;
+        borderL.y = player.y;
+        borderR.y = player.y;
+    }
+
     public Rectangle getBounds() {
         return player.getBounds();
     }
@@ -129,13 +161,18 @@ public class Player extends Rectangle {
         g.drawRect(player.x, player.y, player.width, player.height);
         g.setColor(Color.cyan);
         g.drawRect(collisionPlayer.x, collisionPlayer.y, collisionPlayer.width, collisionPlayer.height);
+        g.setColor(Color.magenta);
+        g.drawRect(borderT.x, borderT.y, borderT.width, borderT.height);
+        g.drawRect(borderB.x, borderB.y, borderB.width, borderB.height);
+        g.drawRect(borderL.x, borderL.y, borderL.width, borderL.height);
+        g.drawRect(borderR.x, borderR.y, borderR.width, borderR.height);
     }
 
     public String createScore() {
         if (score <= 9) {
             return "0" + score;
         } else {
-            return "" + score;
+            return String.valueOf(score);
         }
     }
 

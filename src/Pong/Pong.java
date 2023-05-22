@@ -105,6 +105,7 @@ public class Pong extends Worlds {
             }
         }
         playerLeft.moveCollision();
+        playerLeft.moveBorders();
 
         // movement right player
         if (game.getKeyHandler().up) {
@@ -122,6 +123,7 @@ public class Pong extends Worlds {
             }
         }
         playerRight.moveCollision();
+        playerRight.moveBorders();
 
         // toggle debug screen
         if (game.getKeyHandler().p && !keyPressed) {
@@ -137,11 +139,30 @@ public class Pong extends Worlds {
         ball.setIntX((int) (ball.getIntX() + ball.getSpeedX()));
         ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
 
-        if (ball.getBounds().intersects(playerLeft.getBounds())) {
+        if (ball.getBounds().intersects(playerLeft.getBorderR().getBounds())) {
             playerLeft.calculatePlayerBounce(ball);
         }
-        if (ball.getBounds().intersects(playerRight.getBounds())) {
+
+        if (ball.getBounds().intersects(playerLeft.getBorderT().getBounds())) {
+            ball.setIntY(playerLeft.getBorderT().y + playerLeft.getBorderT().height);
+            ball.setSpeedY(-ball.getSpeedY());
+        }
+        if (ball.getBounds().intersects(playerLeft.getBorderB().getBounds())) {
+            ball.setIntY(playerLeft.getBorderB().y - ball.getDIAMETER());
+            ball.setSpeedY(-ball.getSpeedY());
+        }
+
+        if (ball.getBounds().intersects(playerRight.getBorderL().getBounds())) {
             playerRight.calculatePlayerBounce(ball);
+        }
+
+        if (ball.getBounds().intersects(playerRight.getBorderT().getBounds())) {
+            ball.setIntY(playerRight.getBorderT().y + playerRight.getBorderT().height);
+            ball.setSpeedY(-ball.getSpeedY());
+        }
+        if (ball.getBounds().intersects(playerRight.getBorderB().getBounds())) {
+            ball.setIntY(playerRight.getBorderB().y - ball.getDIAMETER());
+            ball.setSpeedY(-ball.getSpeedY());
         }
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
