@@ -8,7 +8,8 @@ PacMan
 Snake  
 Minesweeper  
 Arkanoid  
-Pong
+Pong  
+Tetris  
 
 ## Controls
 General:  
@@ -35,7 +36,13 @@ Arkanoid:
 Pong:  
 `space` start game  
 `w` `s` move left player  
-`up` `down` move right player
+`up` `down` move right player  
+
+Tetris:  
+`enter` start game  
+`a` `d` move piece left/right  
+`w` rotate piece  
+`s` move piece down  
 
 ## Pictures
 PacMan:  
