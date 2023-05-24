@@ -3,8 +3,11 @@ package Pong;
 import Main.Game;
 import Worlds.Worlds;
 
+import javax.sound.sampled.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 import static Main.Constants.*;
 
@@ -15,8 +18,6 @@ public class Pong extends Worlds {
     private Player playerRight;
     private Ball ball;
     private boolean directionX; // false = left, true = right
-    private boolean directionY; // false = up, true = down
-
     private Rectangle borderL, borderR, borderT, borderB;
 
     private boolean gameStarted = false;
@@ -24,15 +25,27 @@ public class Pong extends Worlds {
     private boolean debug = false;
     private final Random random = new Random();
     private long gameTime, gameOverTime;
+    ArrayList<String> soundPaths = new ArrayList<>();
 
 
     public Pong(Game game) {
         super(game);
         game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
+        loadSoundPaths();
         createGame();
         createBorders();
         createStartDirection();
         setStartSpeed();
+    }
+
+    private void loadSoundPaths(){
+        File folder = new File("res/sounds");
+        File[] files = folder.listFiles();
+        for (File file :
+                files) {
+            String path = "res/sounds/" + file.getName();
+            soundPaths.add(path);
+        }
     }
 
     private void createGame() {
@@ -50,7 +63,6 @@ public class Pong extends Worlds {
 
     private void createStartDirection() {
         directionX = random.nextBoolean();
-        directionY = random.nextBoolean();
     }
 
     private void setStartSpeed() {
@@ -141,37 +153,45 @@ public class Pong extends Worlds {
 
         if (ball.getBounds().intersects(playerLeft.getBorderR().getBounds())) {
             playerLeft.calculatePlayerBounce(ball);
+            playSound();
         }
 
         if (ball.getBounds().intersects(playerLeft.getBorderT().getBounds())) {
             ball.setIntY(playerLeft.getBorderT().y + playerLeft.getBorderT().height);
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
         if (ball.getBounds().intersects(playerLeft.getBorderB().getBounds())) {
             ball.setIntY(playerLeft.getBorderB().y - ball.getDIAMETER());
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
 
         if (ball.getBounds().intersects(playerRight.getBorderL().getBounds())) {
             playerRight.calculatePlayerBounce(ball);
+            playSound();
         }
 
         if (ball.getBounds().intersects(playerRight.getBorderT().getBounds())) {
             ball.setIntY(playerRight.getBorderT().y + playerRight.getBorderT().height);
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
         if (ball.getBounds().intersects(playerRight.getBorderB().getBounds())) {
             ball.setIntY(playerRight.getBorderB().y - ball.getDIAMETER());
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
             ball.setIntY(borderT.y + borderT.height);
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
         if (ball.getBounds().intersects(borderB.getBounds())) {
             ball.setIntY(borderB.y - ball.getDIAMETER());
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
 
         if (ball.getBounds().intersects(borderL.getBounds())) {
@@ -207,6 +227,20 @@ public class Pong extends Worlds {
             }
         }
          */
+    }
+
+    private void playSound() {
+        int index = random.nextInt(soundPaths.size());
+
+        new Thread(() -> {
+            try {
+                Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+                clip.open(AudioSystem.getAudioInputStream(new File(soundPaths.get(index))));
+                clip.start();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }).start();
     }
 
     private void reset() {
