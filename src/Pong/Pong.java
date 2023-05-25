@@ -3,8 +3,11 @@ package Pong;
 import Main.Game;
 import Worlds.Worlds;
 
+import javax.sound.sampled.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 import static Main.Constants.*;
 
@@ -15,24 +18,34 @@ public class Pong extends Worlds {
     private Player playerRight;
     private Ball ball;
     private boolean directionX; // false = left, true = right
-    private boolean directionY; // false = up, true = down
-
     private Rectangle borderL, borderR, borderT, borderB;
 
     private boolean gameStarted = false;
     private boolean keyPressed = false;
     private boolean debug = false;
     private final Random random = new Random();
-    private long gameOverTime;
+    private long gameTime, gameOverTime;
+    ArrayList<String> soundPaths = new ArrayList<>();
 
 
     public Pong(Game game) {
         super(game);
         game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
+        loadSoundPaths();
         createGame();
         createBorders();
         createStartDirection();
         setStartSpeed();
+    }
+
+    private void loadSoundPaths(){
+        File folder = new File("res/sounds");
+        File[] files = folder.listFiles();
+        for (File file :
+                files) {
+            String path = "res/sounds/" + file.getName();
+            soundPaths.add(path);
+        }
     }
 
     private void createGame() {
@@ -50,20 +63,16 @@ public class Pong extends Worlds {
 
     private void createStartDirection() {
         directionX = random.nextBoolean();
-        directionY = random.nextBoolean();
     }
 
     private void setStartSpeed() {
-        final double START_ANGLE = (35 * Math.PI) / 180;
+        ball.setSpeed(5);
+        ball.setSpeedY(0);
+
         if (!directionX) {
-            ball.setSpeedX(Math.cos(START_ANGLE) * -ball.getSpeed());
+            ball.setSpeedX(-5);
         } else {
-            ball.setSpeedX(Math.cos(START_ANGLE) * ball.getSpeed());
-        }
-        if (!directionY) {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * -ball.getSpeed());
-        } else {
-            ball.setSpeedY(-Math.sin(START_ANGLE) * ball.getSpeed());
+            ball.setSpeedX(5);
         }
     }
 
@@ -72,6 +81,10 @@ public class Pong extends Worlds {
         input();
         if (gameStarted) {
             moveBall();
+            if (ball.getSpeed() < 10 && System.currentTimeMillis() - gameTime > 5000) {
+                ball.setSpeed(ball.getSpeed() + 0.5F);
+                gameTime = System.currentTimeMillis();
+            }
         }
         if (playerLeft.isWon() || playerRight.isWon()) {
             gameStarted = false;
@@ -85,6 +98,7 @@ public class Pong extends Worlds {
         // start game
         if (game.getKeyHandler().space && !gameStarted) {
             gameStarted = true;
+            gameTime = System.currentTimeMillis();
         }
 
         // movement left player
@@ -103,6 +117,7 @@ public class Pong extends Worlds {
             }
         }
         playerLeft.moveCollision();
+        playerLeft.moveBorders();
 
         // movement right player
         if (game.getKeyHandler().up) {
@@ -120,6 +135,7 @@ public class Pong extends Worlds {
             }
         }
         playerRight.moveCollision();
+        playerRight.moveBorders();
 
         // toggle debug screen
         if (game.getKeyHandler().p && !keyPressed) {
@@ -135,20 +151,47 @@ public class Pong extends Worlds {
         ball.setIntX((int) (ball.getIntX() + ball.getSpeedX()));
         ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
 
-        if (ball.getBounds().intersects(playerLeft.getBounds())) {
+        if (ball.getBounds().intersects(playerLeft.getBorderR().getBounds())) {
             playerLeft.calculatePlayerBounce(ball);
+            playSound();
         }
-        if (ball.getBounds().intersects(playerRight.getBounds())) {
+
+        if (ball.getBounds().intersects(playerLeft.getBorderT().getBounds())) {
+            ball.setIntY(playerLeft.getBorderT().y + playerLeft.getBorderT().height);
+            ball.setSpeedY(-ball.getSpeedY());
+            playSound();
+        }
+        if (ball.getBounds().intersects(playerLeft.getBorderB().getBounds())) {
+            ball.setIntY(playerLeft.getBorderB().y - ball.getDIAMETER());
+            ball.setSpeedY(-ball.getSpeedY());
+            playSound();
+        }
+
+        if (ball.getBounds().intersects(playerRight.getBorderL().getBounds())) {
             playerRight.calculatePlayerBounce(ball);
+            playSound();
+        }
+
+        if (ball.getBounds().intersects(playerRight.getBorderT().getBounds())) {
+            ball.setIntY(playerRight.getBorderT().y + playerRight.getBorderT().height);
+            ball.setSpeedY(-ball.getSpeedY());
+            playSound();
+        }
+        if (ball.getBounds().intersects(playerRight.getBorderB().getBounds())) {
+            ball.setIntY(playerRight.getBorderB().y - ball.getDIAMETER());
+            ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
 
         if (ball.getBounds().intersects(borderT.getBounds())) {
             ball.setIntY(borderT.y + borderT.height);
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
         if (ball.getBounds().intersects(borderB.getBounds())) {
             ball.setIntY(borderB.y - ball.getDIAMETER());
             ball.setSpeedY(-ball.getSpeedY());
+            playSound();
         }
 
         if (ball.getBounds().intersects(borderL.getBounds())) {
@@ -175,19 +218,40 @@ public class Pong extends Worlds {
                 ball.setSpeedX(1);
             }
         }
-        if (Math.abs(ball.getSpeedY()) < 1) {
+
+        /*if (Math.abs(ball.getSpeedY()) < 1) {
             if (ball.getSpeedY() < 0) {
                 ball.setSpeedY(-1);
             } else {
                 ball.setSpeedY(1);
             }
         }
+         */
+    }
+
+    private void playSound() {
+        int index = random.nextInt(soundPaths.size());
+
+        new Thread(() -> {
+            try {
+                Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+                clip.open(AudioSystem.getAudioInputStream(new File(soundPaths.get(index))));
+                clip.start();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }).start();
     }
 
     private void reset() {
-        ball.setIntX(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
-        ball.setIntY(WINDOW_SIZE / 2 - ball.getDIAMETER() / 2);
-        directionY = random.nextBoolean();
+        gameStarted = false;
+        if(!directionX) {
+            ball.setIntX(playerRight.getIntX() - ball.getDIAMETER());
+            ball.setIntY(playerRight.getIntY() + playerRight.getHEIGHT() / 2 - ball.getDIAMETER() / 2);
+        } else {
+            ball.setIntX(playerLeft.getIntX() + ball.getDIAMETER());
+            ball.setIntY(playerLeft.getIntY() + playerLeft.getHEIGHT() / 2 - ball.getDIAMETER() / 2);
+        }
         setStartSpeed();
     }
 
@@ -252,8 +316,10 @@ public class Pong extends Worlds {
     private void renderDebug(Graphics g) {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-        g.drawString("X: " + ball.getSpeedX(), 10, 480);
-        g.drawString("Y: " + ball.getSpeedY(), 10, 490);
+        g.drawString("X: " + ball.getIntX(), 10, 460);
+        g.drawString("Y: " + ball.getIntY(), 10, 470);
+        g.drawString("SpeedX: " + ball.getSpeedX(), 10, 480);
+        g.drawString("SpeedY: " + ball.getSpeedY(), 10, 490);
         g.drawString("Speed: " + Math.sqrt(Math.pow(ball.getSpeedX(), 2) + Math.pow(ball.getSpeedY(), 2)), 10, 500);
     }
 

@@ -10,6 +10,7 @@ public class Ball extends Rectangle {
     private final int DIAMETER = 10;
     private double speedX = 0;
     private double speedY = 0;
+    private float speed;
     private int x;
     private int y;
 
@@ -17,14 +18,20 @@ public class Ball extends Rectangle {
         ball = new Rectangle(windowSize / 2 - DIAMETER / 2, windowSize / 2 - DIAMETER / 2, DIAMETER, DIAMETER);
         x = ball.x;
         y = ball.y;
+        speed = 5;
     }
 
     public int getDIAMETER() {
         return DIAMETER;
     }
 
-    public int getSpeed() {
-        return 6;
+    public float getSpeed() {
+        return speed;
+    }
+
+    public Ball setSpeed(float speed) {
+        this.speed = speed;
+        return this;
     }
 
     public double getMaxAngle() {
