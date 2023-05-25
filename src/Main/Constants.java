@@ -25,7 +25,7 @@ public class Constants {
     }
 
     public static void loadEmulogic() {
-        InputStream is = Constants.class.getResourceAsStream("/fonts/emulogic.ttf");
+        InputStream is = Constants.class.getResourceAsStream("/gitHub/emulogic.ttf");
         try {
             assert is != null;
             emulogic = Font.createFont(Font.TRUETYPE_FONT, is);

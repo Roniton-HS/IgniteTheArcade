@@ -24,7 +24,7 @@ public class Ball extends Rectangle {
     }
 
     public int getSpeed() {
-        return 5;
+        return 6;
     }
 
     public double getMaxAngle() {
