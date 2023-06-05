@@ -35,8 +35,9 @@ public class Figures {
         g.drawImage(image, ((x) * Chess.FIELD_SIZE) + 10, (y) * Chess.FIELD_SIZE, WIDTH, HEIGHT, null);
 
         if (selected) {
-            g.setColor(Color.RED);
-            drawThickRect(g, x * Chess.FIELD_SIZE, y * Chess.FIELD_SIZE, Chess.FIELD_SIZE, Chess.FIELD_SIZE, 5);
+            g.setColor(new Color(0,255,0,50));
+            g.fillRect(x*Chess.FIELD_SIZE, y*Chess.FIELD_SIZE, Chess.FIELD_SIZE, Chess.FIELD_SIZE);
+            //drawThickRect(g, x * Chess.FIELD_SIZE, y * Chess.FIELD_SIZE, Chess.FIELD_SIZE, Chess.FIELD_SIZE, 5);
             renderWhereTo(g);
         }
 
