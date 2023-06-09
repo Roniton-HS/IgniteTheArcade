@@ -3,11 +3,10 @@ package Pong;
 import Main.Game;
 import Worlds.Worlds;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Line;
+import javax.sound.sampled.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,6 +26,7 @@ public class Pong extends Worlds {
     private boolean debug = false;
     private final Random random = new Random();
     private long gameTime, gameOverTime;
+    ArrayList<Clip> sounds = new ArrayList<>();
     ArrayList<String> soundPaths = new ArrayList<>();
 
 
@@ -41,12 +41,22 @@ public class Pong extends Worlds {
     }
 
     private void loadSoundPaths() {
-        File folder = new File("res/sounds");
+        File folder = new File("res/pongSounds");
         File[] files = folder.listFiles();
-        for (File file :
-                files) {
-            String path = "res/sounds/" + file.getName();
+        assert files != null;
+        for (File file : files) {
+            String path = "res/pongSounds/" + file.getName();
             soundPaths.add(path);
+            /*
+            try {
+                Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+                clip.open(AudioSystem.getAudioInputStream(new File(path)));
+                sounds.add(clip);
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+                throw new RuntimeException(e);
+
+            }
+             */
         }
     }
 
@@ -230,9 +240,11 @@ public class Pong extends Worlds {
         }
     }
 
+    //TODO sound delay bug
+    //it seams that the fist sound is delayed bc the thread isn't stated yet.
+    //after escaping out of the game and re-enter it the first sound isn't delayed
     private void playSound() {
         int index = random.nextInt(soundPaths.size());
-
         new Thread(() -> {
             try {
                 Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
@@ -241,6 +253,16 @@ public class Pong extends Worlds {
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
+            /*
+            int index2 = random.nextInt(sounds.size());
+            Clip clip = sounds.get(index2);
+            try {
+                clip.open();
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
+            }
+            clip.start();
+             */
         }).start();
     }
 
