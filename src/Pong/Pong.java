@@ -3,11 +3,13 @@ package Pong;
 import Main.Game;
 import Worlds.Worlds;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.Line;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
-import java.io.*;
 
 import static Main.Constants.*;
 
@@ -38,7 +40,7 @@ public class Pong extends Worlds {
         setStartSpeed();
     }
 
-    private void loadSoundPaths(){
+    private void loadSoundPaths() {
         File folder = new File("res/sounds");
         File[] files = folder.listFiles();
         for (File file :
@@ -219,14 +221,13 @@ public class Pong extends Worlds {
             }
         }
 
-        /*if (Math.abs(ball.getSpeedY()) < 1) {
+        if (ball.getSpeedY() != 0 && Math.abs(ball.getSpeedY()) < 1) {
             if (ball.getSpeedY() < 0) {
                 ball.setSpeedY(-1);
             } else {
                 ball.setSpeedY(1);
             }
         }
-         */
     }
 
     private void playSound() {
@@ -245,7 +246,7 @@ public class Pong extends Worlds {
 
     private void reset() {
         gameStarted = false;
-        if(!directionX) {
+        if (!directionX) {
             ball.setIntX(playerRight.getIntX() - ball.getDIAMETER());
             ball.setIntY(playerRight.getIntY() + playerRight.getHEIGHT() / 2 - ball.getDIAMETER() / 2);
         } else {
