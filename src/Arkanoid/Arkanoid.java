@@ -216,7 +216,7 @@ public class Arkanoid extends Worlds {
 
     private void checkBalls() {
         // TODO sometimes game resets if there is one ball left
-        if (balls.size() == 0) {
+        if (balls.isEmpty()) {
             gameStarted = false;
             lives--;
             if (lives <= 0) {
@@ -261,7 +261,7 @@ public class Arkanoid extends Worlds {
                 bricks.remove(brick);
                 spawnPowerUp(brick);
 
-                if (bricks.size() == 0) {
+                if (bricks.isEmpty()) {
                     gameWon = true;
                     gameOverTime = System.currentTimeMillis();
                 }
@@ -288,7 +288,7 @@ public class Arkanoid extends Worlds {
 
     private void spawnPowerUp(Brick brick) {
         // TODO set probability
-        if (random.nextInt(10) >= 6) {
+        if (random.nextInt(10) >= 3) {
             powerUps.setValid(0, player.getIntWidth() > 50);
             powerUps.setValid(1, player.getIntWidth() < 150);
 
@@ -370,7 +370,7 @@ public class Arkanoid extends Worlds {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
         g.drawString("Pattern: " + numberPattern, 50, 663);
-        g.drawString("Num balls/pows: " + balls.size()+"/"+powers.size(), 50, 673);
+        g.drawString("Num balls/pows: " + balls.size() + "/" + powers.size(), 50, 673);
         g.drawString("Player width: " + player.getIntWidth(), 50, 683);
 
         g.setColor(Color.black);
