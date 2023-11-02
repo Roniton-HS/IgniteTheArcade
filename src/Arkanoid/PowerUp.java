@@ -33,10 +33,10 @@ public class PowerUp extends Rectangle {
     }
 
     public void getEffect(Player player, ArrayList<Ball> balls) {
-        final int amount = 10;
+        final int AMOUNT = 10;
         switch (id) {
-            case 0 -> actionGetSmaller(player, amount);
-            case 1 -> actionGetBigger(player, amount);
+            case 0 -> actionGetSmaller(player, AMOUNT);
+            case 1 -> actionGetBigger(player, AMOUNT);
             case 2 -> actionGetMoreBalls(balls);
             case 3 -> actionFire(balls);
             default -> {
