@@ -23,7 +23,11 @@ public class Snake2 extends Worlds {
      * Constructor
      */
     public Snake2(Game game) {
-        super(game);
+        super(game, "Snake2");
+    }
+
+    @Override
+    public void init() {
         game.getDisplay().resize(753, 904);
     }
 

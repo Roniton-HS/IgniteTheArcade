@@ -31,7 +31,11 @@ public class Pong extends Worlds {
 
 
     public Pong(Game game) {
-        super(game);
+        super(game, "Pong");
+    }
+
+    @Override
+    public void init() {
         game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
         loadSoundPaths();
         createGame();
@@ -40,12 +44,13 @@ public class Pong extends Worlds {
         setStartSpeed();
     }
 
+
     private void loadSoundPaths() {
-        File folder = new File("res/pongSounds");
+        File folder = new File("res/sounds/pong");
         File[] files = folder.listFiles();
         assert files != null;
         for (File file : files) {
-            String path = "res/pongSounds/" + file.getName();
+            String path = "res/sounds/pong/" + file.getName();
             soundPaths.add(path);
             /*
             try {

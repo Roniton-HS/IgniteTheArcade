@@ -8,13 +8,20 @@ public abstract class Worlds {
 
     protected Game game;
     private static Worlds currentWorld = null;
+    private final String name;
 
     /**
      * Constructor
      */
-    public Worlds(Game game) {
+    public Worlds(Game game, String name) {
         this.game = game;
+        this.name = name;
     }
+
+    /**
+     * this function is automatically called if the world is being loaded
+     */
+    public abstract void init();
 
     /**
      * sets a new world
@@ -23,6 +30,7 @@ public abstract class Worlds {
      */
     public static void setWorld(Worlds world) {
         currentWorld = world;
+        world.init();
     }
 
     /**
@@ -46,4 +54,7 @@ public abstract class Worlds {
      */
     public abstract void render(Graphics g);
 
+    public String getName() {
+        return name;
+    }
 }

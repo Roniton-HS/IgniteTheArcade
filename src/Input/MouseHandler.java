@@ -2,35 +2,46 @@ package Input;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class MouseHandler implements MouseListener{
-    private static int clickX = 10000;
-    private static int clickY = 10000;
-    private static int lClickX = 10000;
-    private static int lClickY = 10000;
+public class MouseHandler implements MouseListener, MouseMotionListener {
+    private int clickX = 10000;
+    private int clickY = 10000;
+    private int lClickX = 10000;
+    private int lClickY = 10000;
+    private int x = 10000;
+    private int y = 10000;
 
-    public static int getClickX(){
+    public int getClickX(){
         return clickX;
     }
 
-    public static int getClickY(){
+    public int getClickY(){
         return clickY;
     }
 
-    public static void reset(){
+    public void reset(){
         clickX = 10000;
         clickY = 10000;
         lClickX = 10000;
         lClickY = 10000;
     }
 
-    public static int getLClickX() {
+    public int getLClickX() {
         return lClickX;
     }
 
 
-    public static int getLClickY() {
+    public int getLClickY() {
         return lClickY;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
@@ -43,8 +54,6 @@ public class MouseHandler implements MouseListener{
         if(e.getButton() == 1){
             clickX = e.getX();
             clickY = e.getY();
-//            System.out.println(clickX);
-//            System.out.println(clickY);
         }
         if(e.getButton() == 3){
             lClickX = e.getX();
@@ -65,5 +74,16 @@ public class MouseHandler implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e){
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        x = e.getX();
+        y = e.getY();
     }
 }

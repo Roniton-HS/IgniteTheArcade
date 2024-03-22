@@ -50,7 +50,6 @@ public class Display {
 
         frame.add(canvas);
         frame.pack();
-        canvas.addMouseListener(new MouseHandler());
     }
 
     public void resize(int width, int height) {

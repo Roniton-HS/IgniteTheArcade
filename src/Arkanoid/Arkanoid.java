@@ -50,7 +50,11 @@ public class Arkanoid extends Worlds {
      * Constructor
      */
     public Arkanoid(Game game) {
-        super(game);
+        super(game, "Arkanoid");
+    }
+
+    @Override
+    public void init() {
         game.getDisplay().resize(WINDOW_WIDTH + WIN10_WIDTH_DIFF, WINDOW_HEIGHT + WIN10_HEIGHT_DIFF);
         createGame();
         createBorders();
@@ -79,6 +83,8 @@ public class Arkanoid extends Worlds {
             bricks.add(new Brick(brick.x, brick.y, brick.getHp()));
         }
     }
+
+
 
     @Override
     public void tick() {

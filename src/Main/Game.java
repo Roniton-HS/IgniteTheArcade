@@ -1,7 +1,8 @@
 package Main;
 
 import Input.KeyHandler;
-import Worlds.Menu;
+import Input.MouseHandler;
+import MainMenu.MainMenu;
 import Worlds.Worlds;
 
 import java.awt.*;
@@ -16,6 +17,7 @@ public class Game{
 
     //Input
     private KeyHandler keyHandler;
+    private MouseHandler mouseHandler;
 
     private Display display;
 
@@ -43,11 +45,20 @@ public class Game{
      * first World
      */
     private void init(){
+
+        display = new Display(title, width, height); //creates Display
+
+        //add input handler
         keyHandler = new KeyHandler();
-        display = new Display(title, width, height); //creates Main.Main.Main.Main.Main.Display
+        mouseHandler = new MouseHandler();
         display.getFrame().addKeyListener(keyHandler); //adds KeyListener
-        Menu menuWorld = new Menu(this);
-        Worlds.setWorld(menuWorld);
+        display.getCanvas().addMouseListener(mouseHandler);
+        display.getCanvas().addMouseMotionListener(mouseHandler);
+
+        //set first world
+        MainMenu mainMenu = new MainMenu(this);
+        Worlds.setWorld(mainMenu);
+
         Constants.loadFonts();
     }
 
@@ -137,13 +148,17 @@ public class Game{
     }
 
     private void input(){
-        if(keyHandler.esc){
-            Menu menuWorld = new Menu(this);
-            Worlds.setWorld(menuWorld);
+        if(keyHandler.esc && !Worlds.getWorld().getName().equals("MainMenu")){
+            MainMenu mainMenu = new MainMenu(this);
+            Worlds.setWorld(mainMenu);
         }
     }
 
     public KeyHandler getKeyHandler(){
         return keyHandler;
+    }
+
+    public MouseHandler getMouseHandler() {
+        return mouseHandler;
     }
 }

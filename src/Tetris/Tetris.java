@@ -51,8 +51,12 @@ public class Tetris extends Worlds {
      * Constructor
      */
     public Tetris(Game game, boolean pause) {
-        super(game);
+        super(game, "Tetris");
         this.pause = pause;
+    }
+
+    @Override
+    public void init() {
         game.getDisplay().resize(1000, 1000);
     }
 

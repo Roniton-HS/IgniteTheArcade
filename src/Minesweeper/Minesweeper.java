@@ -26,13 +26,17 @@ public class Minesweeper extends Worlds {
      * Constructor
      */
     public Minesweeper(Game game, int blockSize, int mapSize) {
-        super(game);
-        game.getDisplay().resize(mapSize * blockSize + 2 * blockSize + 16, mapSize * blockSize + 2 * blockSize + 39);
+        super(game, "Minesweeper");
         this.blockSize = blockSize;
         this.mapSize = mapSize;
+        BOMBS = mapSize * mapSize / 6;
+    }
+
+    @Override
+    public void init() {
+        game.getDisplay().resize(mapSize * blockSize + 2 * blockSize + 16, mapSize * blockSize + 2 * blockSize + 39);
         map = new int[mapSize][mapSize];
         clicked = new int[mapSize][mapSize];
-        BOMBS = mapSize * mapSize / 6;
         winCount = mapSize * mapSize - BOMBS;
         initBombs();
         initNum();
@@ -57,8 +61,8 @@ public class Minesweeper extends Worlds {
      * checks mouse and keyboard input
      */
     private void input() {
-        int clickX = (MouseHandler.getClickX() - blockSize) / blockSize;
-        int clickY = (MouseHandler.getClickY() - blockSize) / blockSize;
+        int clickX = (game.getMouseHandler().getClickX() - blockSize) / blockSize;
+        int clickY = (game.getMouseHandler().getClickY() - blockSize) / blockSize;
 
         if (!gameLost && !gameWon) {
             if (clickX < clicked.length && clickY < clicked.length) { //in bounds?
@@ -89,8 +93,8 @@ public class Minesweeper extends Worlds {
                 }
                 firstClick = false;
             }
-            int lClickX = (MouseHandler.getLClickX() - blockSize) / blockSize;
-            int lClickY = (MouseHandler.getLClickY() - blockSize) / blockSize;
+            int lClickX = (game.getMouseHandler().getLClickX() - blockSize) / blockSize;
+            int lClickY = (game.getMouseHandler().getLClickY() - blockSize) / blockSize;
             if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
                 if (clicked[lClickX][lClickY] == 2) {
                     clicked[lClickX][lClickY] = 0;
@@ -112,7 +116,7 @@ public class Minesweeper extends Worlds {
             }
 
         }
-        MouseHandler.reset();
+        game.getMouseHandler().reset();
     }
 
     private void bomb() {
