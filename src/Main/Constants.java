@@ -57,4 +57,8 @@ public class Constants {
     public static final Color GREEN = new Color(118, 255, 0);
     public static final Color BLUE = new Color(78, 46, 250);
     public static final Color PINK = new Color(245, 18, 245);
+    public static final Color LIGHT_BLUE = new Color(78,192,202);
+    public static final Color DARK_GREEN = new Color(85,128,34);
+    public static final Color LIGHT_GREEN = new Color(209,236,125);
+    public static final Color DARK_YELLOW = new Color(248,183,51);
 }
