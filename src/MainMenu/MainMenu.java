@@ -1,6 +1,7 @@
 package MainMenu;
 
 import Arkanoid.Arkanoid;
+import FlappyBird.FlappyBird;
 import Main.Game;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
@@ -31,8 +32,6 @@ public class MainMenu extends Worlds {
 
     @Override
     public void init() {
-        //TODO after closing a game, menu keeps the size of the game. Some buttons can be hidden.
-        //habe es mal auf die Größe von PacMan gesetzt ^^
         game.getDisplay().resize(740, 1028);
         final int MINESWEEPER_BLOCK_SIZE = 50;
         final int MINESWEEPER_MAP_SIZE = 17;
@@ -44,9 +43,10 @@ public class MainMenu extends Worlds {
         Arkanoid arkanoid = new Arkanoid(game);
         Pong pong = new Pong(game);
         Tetris tetris = new Tetris(game, true);
+        FlappyBird flappyBird = new FlappyBird(game);
 
         Worlds world;
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
             world = switch (i) {
                 default -> pacMan;
                 case 2 -> snake;
@@ -55,6 +55,7 @@ public class MainMenu extends Worlds {
                 case 5 -> arkanoid;
                 case 6 -> pong;
                 case 7 -> tetris;
+                case 8 -> flappyBird;
             };
             buttons.add(new Button(10, i*BUTTON_HEIGHT+(i-1)*OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
