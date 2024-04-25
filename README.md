@@ -6,17 +6,16 @@ Collection of mini games coded in Java
 ## Games
 PacMan  
 Snake  
+Snake (2 player)  
 Minesweeper  
 Arkanoid  
 Pong  
 Tetris  
-
+Flappy Bird  
+  
 ## Controls
 General:  
-`esc` return to main menu  
-  
-Main Menu:  
-`a` `d` move left/right  
+`esc` return to main menu    
   
 PacMan:  
 `space` start/pause game  
@@ -24,6 +23,10 @@ PacMan:
   
 Snake:  
 `up` `down` `left` `right` to move  
+
+Snake (2 player):  
+`w` `a` `s` `d` to move player 1  
+`up` `down` `left` `right` to move player 2  
   
 Minesweeper:  
 `LMB` reveal  
@@ -43,6 +46,9 @@ Tetris:
 `a` `d` move piece left/right  
 `w` rotate piece  
 `s` move piece down  
+
+Flappy Bird:  
+`space` start game/flap  
 
 ## Pictures
 PacMan:  
