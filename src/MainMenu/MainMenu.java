@@ -32,6 +32,8 @@ public class MainMenu extends Worlds {
     @Override
     public void init() {
         //TODO after closing a game, menu keeps the size of the game. Some buttons can be hidden.
+        //habe es mal auf die Größe von PacMan gesetzt ^^
+        game.getDisplay().resize(740, 1028);
         final int MINESWEEPER_BLOCK_SIZE = 50;
         final int MINESWEEPER_MAP_SIZE = 17;
         final int OFFSET = 50;
