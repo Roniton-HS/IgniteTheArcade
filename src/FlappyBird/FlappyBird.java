@@ -13,7 +13,7 @@ public class FlappyBird extends Worlds {
     final private int WINDOW_HEIGHT = 750;
     private Player player;
     private Rectangle borderB, borderT;
-    private ArrayList<Pipe> pipes = new ArrayList<>();
+    private final ArrayList<Pipe> pipes = new ArrayList<>();
     private boolean spacePressed = false;
     private boolean pPressed = false;
     private boolean gameStarted = false;
@@ -97,7 +97,7 @@ public class FlappyBird extends Worlds {
 
     private void movePlayer() {
         if (player.getSpeed() < 10) {
-            player.setSpeed(player.getSpeed() + player.getAcceleration());
+            player.setSpeed(player.getSpeed() + player.getACCELERATION());
         }
 
         player.setIntY(player.getIntY() + player.getSpeed());
@@ -196,7 +196,7 @@ public class FlappyBird extends Worlds {
         g.drawString("GAME OVER", WINDOW_WIDTH / 2 - 225, WINDOW_HEIGHT / 2 + 5);
 
         if (isHighScore){
-
+            //evtl new highscore message
         }
     }
 }

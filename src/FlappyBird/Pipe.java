@@ -1,12 +1,11 @@
 package FlappyBird;
 
-import Main.Constants;
-
 import java.awt.*;
 import java.util.Random;
 
 import static Main.Constants.*;
 
+@SuppressWarnings("unused")
 public class Pipe extends Rectangle {
     private Rectangle pipeT, pipeB;
     private Rectangle scoreBorder;
