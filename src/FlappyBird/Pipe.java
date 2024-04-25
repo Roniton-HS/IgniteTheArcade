@@ -1,6 +1,9 @@
 package FlappyBird;
 
+import Input.ImageLoader;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static Main.Constants.*;
@@ -20,6 +23,10 @@ public class Pipe extends Rectangle {
     private final int MAX_GAP = 250;
     private final Random RANDOM = new Random();
     private boolean valid = false;
+    private BufferedImage pipe_top_t = ImageLoader.loadImage("/flappyBirdRes/pipe_top_t.png");
+    private BufferedImage pipe_top_b = ImageLoader.loadImage("/flappyBirdRes/pipe_top_b.png");
+    private BufferedImage pipe_body = ImageLoader.loadImage("/flappyBirdRes/pipe_body.png");
+
 
     public Pipe(int prevX) {
         this.PREV_X = prevX;
@@ -146,10 +153,15 @@ public class Pipe extends Rectangle {
     }
 
     public void render(Graphics g) {
-        g.setColor(DARK_GREEN);
-        g.fillRect(pipeT.x, pipeT.y, pipeT.width, pipeT.height);
-        g.fillRect(pipeB.x, pipeB.y, pipeB.width, pipeB.height);
-        g.setColor(ALMOST_BLACK);
-        g.fillRect(scoreBorder.x, scoreBorder.y, scoreBorder.width, scoreBorder.height);
+
+        g.drawImage(pipe_top_t,pipeT.x-2,lengthT-pipe_top_t.getHeight(),pipe_top_t.getWidth()*2,pipe_top_t.getHeight()*2,null);
+        g.drawImage(pipe_body,pipeT.x,pipeT.y,pipe_body.getWidth()*2,lengthT-pipe_top_t.getHeight(),null);
+
+        g.drawImage(pipe_top_b,pipeB.x-2,pipeB.y,pipe_top_b.getWidth()*2,pipe_top_b.getHeight()*2,null);
+        g.drawImage(pipe_body,pipeB.x,pipeB.y+pipe_top_b.getHeight()*2,pipe_body.getWidth()*2,lengthB-pipe_top_b.getHeight()*2,null);
+
+        //g.setColor(DARK_GREEN);
+        //g.fillRect(pipeT.x, pipeT.y, pipeT.width, pipeT.height);
+        //g.fillRect(pipeB.x, pipeB.y, pipeB.width, pipeB.height);
     }
 }

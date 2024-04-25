@@ -143,6 +143,7 @@ public class FlappyBird extends Worlds {
 
     private void resetGame() {
         player.setIntY((WINDOW_HEIGHT-100)/2);
+        player.setSpeed(0);
         pipes.clear();
         createPipes();
         score = 0;
