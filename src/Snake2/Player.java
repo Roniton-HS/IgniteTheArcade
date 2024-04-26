@@ -46,7 +46,12 @@ public class Player {
                 }
 
             } else {
-                g.setColor(Constants.GREEN);
+                if (firstPlayer) {
+                    g.setColor(Constants.GREEN);
+                }else {
+                    g.setColor(Color.cyan);
+                }
+
             }
             g.fillRect(r.getBounds().x, r.getBounds().y, r.getBounds().width, r.getBounds().height);
         }

@@ -2,6 +2,7 @@ package Minesweeper;
 
 import Input.ImageLoader;
 import Input.MouseHandler;
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -224,10 +225,10 @@ public class Minesweeper extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.darkGray);
+        g.setColor(Constants.BACKGROUND);
         g.fillRect(0, 0, 2000, 2000);
         final int BORDER_SIZE = 5;
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.fillRect(blockSize - BORDER_SIZE, blockSize - BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE);
         g.setColor(Color.WHITE);
         g.fillRect(blockSize, blockSize, mapSize * blockSize, mapSize * blockSize);
@@ -261,10 +262,10 @@ public class Minesweeper extends Worlds {
         for (int i = 0; i < clicked.length; i++) {
             for (int j = 0; j < clicked.length; j++) {
                 if (clicked[j][i] == 0) {
-                    g.setColor(new Color(12, 86, 135));
+                    g.setColor(Constants.BUTTON);
                     g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                 } else if (clicked[j][i] == 2) {
-                    g.setColor(new Color(12, 86, 135));
+                    g.setColor(Constants.BUTTON);
                     g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
                     g.drawImage(flag, j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize, null);
                 }

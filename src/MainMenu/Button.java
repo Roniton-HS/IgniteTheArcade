@@ -1,6 +1,7 @@
 package MainMenu;
 
 import Input.MouseHandler;
+import Main.Constants;
 import Main.Game;
 import Worlds.Worlds;
 
@@ -51,14 +52,23 @@ public class Button {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(x, y, width, height);
-        g.setColor(Color.WHITE);
-        g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
-        g.drawString(world.getName(),x+20,y+33);
+
         if (highlighted){
-            g.setColor(new Color(255,255,255,60));
+            g.setColor(Color.BLACK);
+            g.fillRect(x+5, y+5, width, height);
+            g.setColor(Constants.BUTTON_HOVER);
+            g.fillRect(x+2, y+2, width, height);
+            g.setColor(Color.WHITE);
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+            g.drawString(world.getName(),x+22,y+35);
+        }else {
+            g.setColor(Color.BLACK);
+            g.fillRect(x+5, y+5, width, height);
+            g.setColor(Constants.BUTTON);
             g.fillRect(x, y, width, height);
+            g.setColor(Color.WHITE);
+            g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
+            g.drawString(world.getName(),x+20,y+33);
         }
     }
 

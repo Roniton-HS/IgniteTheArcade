@@ -23,7 +23,7 @@ public class Snake2 extends Worlds {
      * Constructor
      */
     public Snake2(Game game) {
-        super(game, "Snake2");
+        super(game, "Snake 2");
     }
 
     @Override

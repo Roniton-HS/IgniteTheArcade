@@ -45,10 +45,10 @@ public class Snake extends Worlds {
     @Override
     public void render(Graphics g) {
         //background
-        g.setColor(Color.darkGray);
+        g.setColor(Constants.BACKGROUND);
         g.fillRect(0, 0, 1000, 1000);
-        g.setColor(Constants.GREEN);
-        final int BORDER_SIZE = 5;
+        g.setColor(Constants.BUTTON);
+        final int BORDER_SIZE = 8;
         g.fillRect(2*BLOCK_SIZE - BORDER_SIZE, 4 * BLOCK_SIZE - BORDER_SIZE, 19 * BLOCK_SIZE + 2*BORDER_SIZE, 21 * BLOCK_SIZE + 2*BORDER_SIZE);
         g.setColor(Color.WHITE);
         g.fillRect(2*BLOCK_SIZE, 4 * BLOCK_SIZE, 19 * BLOCK_SIZE, 21 * BLOCK_SIZE);
@@ -93,9 +93,11 @@ public class Snake extends Worlds {
      * renders the score
      */
     public void renderAppleCounter(Graphics g) {
+        g.setColor(Constants.BUTTON);
+        g.fillRect(2*BLOCK_SIZE - 8,10,19 * BLOCK_SIZE + 2*8,115);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 60.0F));
-        g.setColor(Constants.GREEN);
-        g.drawString("Score: " + snake.appleCounter, BLOCK_SIZE, 3 * BLOCK_SIZE);
+        g.setColor(Color.white);
+        g.drawString("Score: " + snake.appleCounter, 100, 3 * BLOCK_SIZE);
     }
 
     /**

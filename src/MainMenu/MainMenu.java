@@ -2,6 +2,7 @@ package MainMenu;
 
 import Arkanoid.Arkanoid;
 import FlappyBird.FlappyBird;
+import Main.Constants;
 import Main.Game;
 import Minesweeper.Minesweeper;
 import PacMan.PacMan;
@@ -13,6 +14,8 @@ import Worlds.Worlds;
 
 import java.awt.*;
 import java.util.ArrayList;
+
+import static Main.Constants.emulogic;
 
 public class MainMenu extends Worlds {
 
@@ -35,7 +38,7 @@ public class MainMenu extends Worlds {
         game.getDisplay().resize(740, 1028);
         final int MINESWEEPER_BLOCK_SIZE = 50;
         final int MINESWEEPER_MAP_SIZE = 17;
-        final int OFFSET = 50;
+        final int OFFSET = 30;
         PacMan pacMan = new PacMan(game);
         Snake snake = new Snake(game);
         Snake2 snake2 = new Snake2(game);
@@ -46,18 +49,23 @@ public class MainMenu extends Worlds {
         FlappyBird flappyBird = new FlappyBird(game);
 
         Worlds world;
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < 5; i++) {
             world = switch (i) {
                 default -> pacMan;
                 case 2 -> snake;
                 case 3 -> snake2;
                 case 4 -> minesweeper;
-                case 5 -> arkanoid;
-                case 6 -> pong;
-                case 7 -> tetris;
-                case 8 -> flappyBird;
             };
-            buttons.add(new Button(10, i*BUTTON_HEIGHT+(i-1)*OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(25, i*BUTTON_HEIGHT+(i-1)*OFFSET+350, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+        }
+        for (int i = 1; i < 5; i++) {
+            world = switch (i) {
+                default -> arkanoid;
+                case 2 -> pong;
+                case 3 -> tetris;
+                case 4 -> flappyBird;
+            };
+            buttons.add(new Button(395, i*BUTTON_HEIGHT+(i-1)*OFFSET+350, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
     }
 
@@ -70,6 +78,15 @@ public class MainMenu extends Worlds {
 
     @Override
     public void render(Graphics g) {
+        g.setColor(new Color(203, 203, 203));
+        g.fillRect(0,0,1000, 1000);
+        g.setColor(Color.BLACK);
+        g.fillRect(20,130,700,100);
+        g.setColor(Constants.BUTTON);
+        g.fillRect(15,125,700,100);
+        g.setColor(Color.WHITE);
+        g.setFont(emulogic.deriveFont(emulogic.getSize() * 40.0F));
+        g.drawString("Ignite The Arcade", 22, 190);
         for (Button b : buttons) {
             b.render(g);
         }
