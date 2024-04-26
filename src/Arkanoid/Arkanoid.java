@@ -84,14 +84,11 @@ public class Arkanoid extends Worlds {
         }
     }
 
-
-
     @Override
     public void tick() {
         input();
         if (gameStarted) {
             moveBall();
-            checkBrick();
             movePowerUps();
             if (System.currentTimeMillis() - fireTime > 10000) {
                 for (Ball ball : balls) {
@@ -192,7 +189,8 @@ public class Arkanoid extends Worlds {
                 checkBalls();
             }
 
-            for (Brick brick : bricks) {
+            for (int j = 0; j < bricks.size(); j++) {
+                Brick brick = bricks.get(j);
                 if (ball.getBounds().intersects(brick.getBounds())) {
                     if (!ball.isFire()) {
                         brick.setHp(brick.getHp() - 1);
@@ -200,6 +198,7 @@ public class Arkanoid extends Worlds {
                     } else {
                         brick.setHp(0);
                     }
+                    checkBrick(brick, ball);
                 }
             }
 
@@ -259,18 +258,21 @@ public class Arkanoid extends Worlds {
         }
     }
 
-    private void checkBrick() {
-        for (int i = 0; i < bricks.size(); i++) {
-            Brick brick = bricks.get(i);
-            if (brick.getHp() <= 0) {
-                score += brick.getScore();
-                bricks.remove(brick);
-                spawnPowerUp(brick);
+    private void checkBrick(Brick brick, Ball ball) {
+        if (brick.getHp() <= 0) {
+            score += brick.getScore();
+            bricks.remove(brick);
 
-                if (bricks.isEmpty()) {
-                    gameWon = true;
-                    gameOverTime = System.currentTimeMillis();
-                }
+            if (ball.isFire()){
+                spawnPowerUp(brick,5);
+            }
+            else {
+                spawnPowerUp(brick, 20);
+            }
+
+            if (bricks.isEmpty()) {
+                gameWon = true;
+                gameOverTime = System.currentTimeMillis();
             }
         }
     }
@@ -292,9 +294,8 @@ public class Arkanoid extends Worlds {
         }
     }
 
-    private void spawnPowerUp(Brick brick) {
-        // TODO set probability
-        if (random.nextInt(10) >= 3) {
+    private void spawnPowerUp(Brick brick, int probability) {
+        if (random.nextInt(100) <= probability) {
             powerUps.setValid(0, player.getIntWidth() > 50);
             powerUps.setValid(1, player.getIntWidth() < 150);
 
