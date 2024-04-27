@@ -69,10 +69,10 @@ public class Arkanoid extends Worlds {
     }
 
     private void createBorders() {
-        borderL = new Rectangle(49, 0, 1, WINDOW_HEIGHT);
-        borderR = new Rectangle(440, 0, 1, WINDOW_HEIGHT);
-        borderT = new Rectangle(0, 49, WINDOW_WIDTH, 1);
-        borderB = new Rectangle(0, 651, WINDOW_WIDTH, 1);
+        borderL = new Rectangle(40, 0, 10, WINDOW_HEIGHT);
+        borderR = new Rectangle(440, 0, 10, WINDOW_HEIGHT);
+        borderT = new Rectangle(0, 40, WINDOW_WIDTH, 10);
+        borderB = new Rectangle(0, 650, WINDOW_WIDTH, 10);
     }
 
     private void createBricks() {
@@ -376,9 +376,9 @@ public class Arkanoid extends Worlds {
     private void renderDebug(Graphics g) {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-        g.drawString("Pattern: " + numberPattern, 50, 663);
-        g.drawString("Num balls/pows: " + balls.size() + "/" + powers.size(), 50, 673);
-        g.drawString("Player width: " + player.getIntWidth(), 50, 683);
+        g.drawString("Pattern: " + numberPattern, 50, 673);
+        g.drawString("Num balls/pows: " + balls.size() + "/" + powers.size(), 50, 683);
+        g.drawString("Player width: " + player.getIntWidth(), 50, 693);
 
         g.setColor(Color.black);
         for (Brick brick : bricks) {
