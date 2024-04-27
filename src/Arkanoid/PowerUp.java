@@ -1,5 +1,7 @@
 package Arkanoid;
 
+import jdk.jfr.consumer.RecordedClass;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -32,11 +34,11 @@ public class PowerUp extends Rectangle {
         return 3;
     }
 
-    public void getEffect(Player player, ArrayList<Ball> balls) {
+    public void getEffect(Player player, ArrayList<Ball> balls, ArrayList<Rectangle> borders) {
         final int AMOUNT = 10;
         switch (id) {
             case 0 -> actionGetSmaller(player, AMOUNT);
-            case 1 -> actionGetBigger(player, AMOUNT);
+            case 1 -> actionGetBigger(player, AMOUNT, borders);
             case 2 -> actionGetMoreBalls(balls);
             case 3 -> actionFire(balls);
             default -> {
@@ -50,8 +52,14 @@ public class PowerUp extends Rectangle {
         }
     }
 
-    private void actionGetBigger(Player player, int amount) {
+    private void actionGetBigger(Player player, int amount, ArrayList<Rectangle> borders) {
         if (player.getIntWidth() < 150) {
+            if (player.getCollisionPlayer().getBounds().intersects(borders.get(0).getBounds())) {
+                player.setIntX(player.getIntX() + amount / 2);
+            } else if (player.getCollisionPlayer().getBounds().intersects(borders.get(1).getBounds())) {
+                player.setIntX((player.getIntX() - amount / 2));
+            }
+
             player.changeWidth(player.getIntWidth() + amount, amount);
         }
     }
@@ -69,7 +77,7 @@ public class PowerUp extends Rectangle {
         } else {
             newBall.setSpeedX(-speedX);
         }
-        if (ball.getSpeedY()>0){
+        if (ball.getSpeedY() > 0) {
             newBall.setSpeedY(speedY);
         } else {
             newBall.setSpeedY(-speedY);
@@ -78,7 +86,7 @@ public class PowerUp extends Rectangle {
     }
 
     private void actionFire(ArrayList<Ball> balls) {
-        for (Ball ball: balls) {
+        for (Ball ball : balls) {
             ball.setFire(true);
         }
     }

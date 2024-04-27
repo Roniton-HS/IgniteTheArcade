@@ -34,6 +34,7 @@ public class Arkanoid extends Worlds {
 
     // borders
     private Rectangle borderL, borderR, borderT, borderB;
+    private final ArrayList<Rectangle> borders = new ArrayList<>(); // contains only the left (index 0) and right (index 1) border
 
     // pattern variables
     private final Pattern pattern = new Pattern();
@@ -73,6 +74,8 @@ public class Arkanoid extends Worlds {
         borderR = new Rectangle(440, 0, 10, WINDOW_HEIGHT);
         borderT = new Rectangle(0, 40, WINDOW_WIDTH, 10);
         borderB = new Rectangle(0, 650, WINDOW_WIDTH, 10);
+        borders.add(borderL);
+        borders.add(borderR);
     }
 
     private void createBricks() {
@@ -285,7 +288,7 @@ public class Arkanoid extends Worlds {
                 powers.remove(power);
             }
             if (power.getBounds().intersects(player.getBounds())) {
-                power.getEffect(player, balls);
+                power.getEffect(player, balls, borders);
                 powers.remove(power);
                 if (power.getId() == 3) {
                     fireTime = System.currentTimeMillis();
