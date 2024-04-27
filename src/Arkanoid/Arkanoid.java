@@ -314,6 +314,7 @@ public class Arkanoid extends Worlds {
         powers.clear();
         balls.clear();
         balls.add(new Ball(player));
+        player.changeWidth(100,Math.abs(100-player.getIntWidth()));
     }
 
     private void resetGame() {
