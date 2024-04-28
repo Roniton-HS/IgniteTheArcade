@@ -22,6 +22,7 @@ public class Arkanoid extends Worlds {
     private boolean gameWon = false;
     private boolean debug = false;
     private boolean keyPressed = false;
+    private boolean keyPressedS = false;
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
@@ -31,6 +32,7 @@ public class Arkanoid extends Worlds {
 
     // ball variables
     private final ArrayList<Ball> balls = new ArrayList<>();
+    private final ArrayList<Ball> removeBalls = new ArrayList<>();
 
     // borders
     private Rectangle borderL, borderR, borderT, borderB;
@@ -161,13 +163,19 @@ public class Arkanoid extends Worlds {
         if (!game.getKeyHandler().p) {
             keyPressed = false;
         }
+
+        if(game.getKeyHandler().b && !keyPressedS){
+            PowerUp power = powerUps.getPowerUps().get(2);
+            power.getEffect(player, balls, borders);
+            keyPressedS = true;
+        }
+        if (!game.getKeyHandler().b){
+            keyPressedS = false;
+        }
     }
 
     private void moveBall() {
-        // TODO some balls glitched out
-        for (int i = 0; i < balls.size(); i++) {
-            Ball ball = balls.get(i);
-
+        for (Ball ball : balls) {
             ball.setIntX((int) (ball.getIntX() - ball.getSpeedX()));
             ball.setIntY((int) (ball.getIntY() - ball.getSpeedY()));
 
@@ -188,8 +196,14 @@ public class Arkanoid extends Worlds {
                 ball.setSpeedX(-ball.getSpeedX());
             }
             if (ball.getBounds().intersects(borderB.getBounds())) {
-                balls.remove(ball);
-                checkBalls();
+                if(!ball.getDestroy()){
+                    ball.setDestroy(true);
+                    removeBalls.add(ball);
+                    ball.setIntX(10000);
+                    ball.setIntY(10000);
+                    ball.setSpeedX(0);
+                    ball.setSpeedY(0);
+                }
             }
 
             for (int j = 0; j < bricks.size(); j++) {
@@ -205,14 +219,14 @@ public class Arkanoid extends Worlds {
                 }
             }
 
-            if (abs(ball.getSpeedY()) < 1) {
+            if (abs(ball.getSpeedY()) < 1 && !ball.getDestroy()) {
                 if (ball.getSpeedY() < 0) {
                     ball.setSpeedY(-1);
                 } else {
                     ball.setSpeedY(1);
                 }
             }
-            if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0) {
+            if (abs(ball.getSpeedX()) < 1 && ball.getSpeedX() != 0 && !ball.getDestroy()) {
                 if (ball.getSpeedX() < 0) {
                     ball.setSpeedX(-1);
                 } else {
@@ -220,11 +234,24 @@ public class Arkanoid extends Worlds {
                 }
             }
         }
+
+        /*if (!removeBalls.isEmpty()){
+            for (Ball ball:removeBalls){
+                if (ball.getDestroy()) {
+                    System.out.println(ball.getDestroy());
+                    balls.remove(ball);
+                }
+            }
+            removeBalls.clear();
+        }
+
+         */
+        checkBalls();
+        System.out.println("b:"+balls.size()+", rb:"+removeBalls.size());
     }
 
     private void checkBalls() {
-        // TODO sometimes game resets if there is one ball left
-        if (balls.isEmpty()) {
+        if (balls.size() == removeBalls.size()){
             gameStarted = false;
             lives--;
             if (lives <= 0) {
@@ -317,6 +344,7 @@ public class Arkanoid extends Worlds {
         powers.clear();
         balls.clear();
         balls.add(new Ball(player));
+        removeBalls.clear();
         player.changeWidth(100,Math.abs(100-player.getIntWidth()));
     }
 

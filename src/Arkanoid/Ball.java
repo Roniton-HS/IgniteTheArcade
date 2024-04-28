@@ -13,6 +13,7 @@ public class Ball extends Rectangle {
     private int x;
     private int y;
     private boolean fire = false;
+    private boolean destroy = false;
 
     public Ball(Player player) {
         this.ball = new Rectangle((player.getIntX() + (player.getIntWidth() / 2)) - (DIAMETER / 2), player.getIntY() - DIAMETER, DIAMETER, DIAMETER);
@@ -82,6 +83,14 @@ public class Ball extends Rectangle {
 
     public Rectangle getBounds() {
         return ball.getBounds();
+    }
+
+    public void setDestroy(boolean destroy){
+        this.destroy = destroy;
+    }
+
+    public boolean getDestroy(){
+        return destroy;
     }
 
     public void render(Graphics g) {
