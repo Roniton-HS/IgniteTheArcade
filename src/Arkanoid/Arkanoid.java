@@ -32,7 +32,7 @@ public class Arkanoid extends Worlds {
 
     // ball variables
     private final ArrayList<Ball> balls = new ArrayList<>();
-    private final ArrayList<Ball> removeBalls = new ArrayList<>();
+    private final ArrayList<Ball> rmBalls = new ArrayList<>();
 
     // borders
     private Rectangle borderL, borderR, borderT, borderB;
@@ -41,12 +41,14 @@ public class Arkanoid extends Worlds {
     // pattern variables
     private final Pattern pattern = new Pattern();
     private final ArrayList<Brick> bricks = new ArrayList<>();
+    private final ArrayList<Brick> rmBricks = new ArrayList<>();
     private int numberPattern;
 
     // powerUp variables
     private final PowerUps powerUps = new PowerUps();
     private final Random random = new Random();
     private final ArrayList<PowerUp> powers = new ArrayList<>();
+    private final ArrayList<PowerUp> rmPowers = new ArrayList<>();
     private long fireTime;
 
     /**
@@ -100,6 +102,10 @@ public class Arkanoid extends Worlds {
                     ball.setFire(false);
                 }
             }
+            checkBalls();
+            removeBricks();
+            removePowers();
+
         }
         if (gameOver) {
             gameStarted = false;
@@ -198,7 +204,7 @@ public class Arkanoid extends Worlds {
             if (ball.getBounds().intersects(borderB.getBounds())) {
                 if(!ball.getDestroy()){
                     ball.setDestroy(true);
-                    removeBalls.add(ball);
+                    rmBalls.add(ball);
                     ball.setIntX(10000);
                     ball.setIntY(10000);
                     ball.setSpeedX(0);
@@ -206,8 +212,7 @@ public class Arkanoid extends Worlds {
                 }
             }
 
-            for (int j = 0; j < bricks.size(); j++) {
-                Brick brick = bricks.get(j);
+            for (Brick brick : bricks) {
                 if (ball.getBounds().intersects(brick.getBounds())) {
                     if (!ball.isFire()) {
                         brick.setHp(brick.getHp() - 1);
@@ -234,24 +239,10 @@ public class Arkanoid extends Worlds {
                 }
             }
         }
-
-        /*if (!removeBalls.isEmpty()){
-            for (Ball ball:removeBalls){
-                if (ball.getDestroy()) {
-                    System.out.println(ball.getDestroy());
-                    balls.remove(ball);
-                }
-            }
-            removeBalls.clear();
-        }
-
-         */
-        checkBalls();
-        System.out.println("b:"+balls.size()+", rb:"+removeBalls.size());
     }
 
     private void checkBalls() {
-        if (balls.size() == removeBalls.size()){
+        if (balls.size() == rmBalls.size()){
             gameStarted = false;
             lives--;
             if (lives <= 0) {
@@ -261,6 +252,20 @@ public class Arkanoid extends Worlds {
                 reset();
             }
         }
+    }
+
+    private void removeBricks(){
+        bricks.removeAll(rmBricks);
+        rmBricks.clear();
+        if (bricks.isEmpty()) {
+            gameWon = true;
+            gameOverTime = System.currentTimeMillis();
+        }
+    }
+
+    private void removePowers() {
+        powers.removeAll(rmPowers);
+        rmPowers.clear();
     }
 
     private void checkBrickBorder(Brick brick, Ball ball) {
@@ -291,18 +296,13 @@ public class Arkanoid extends Worlds {
     private void checkBrick(Brick brick, Ball ball) {
         if (brick.getHp() <= 0) {
             score += brick.getScore();
-            bricks.remove(brick);
+            rmBricks.add(brick);
 
             if (ball.isFire()){
                 spawnPowerUp(brick,5);
             }
             else {
                 spawnPowerUp(brick, 20);
-            }
-
-            if (bricks.isEmpty()) {
-                gameWon = true;
-                gameOverTime = System.currentTimeMillis();
             }
         }
     }
@@ -312,11 +312,11 @@ public class Arkanoid extends Worlds {
             PowerUp power = powers.get(i);
             power.y += power.getSpeed();
             if (power.getBounds().intersects(borderB.getBounds())) {
-                powers.remove(power);
+                rmPowers.add(power);
             }
             if (power.getBounds().intersects(player.getBounds())) {
                 power.getEffect(player, balls, borders);
-                powers.remove(power);
+                rmPowers.add(power);
                 if (power.getId() == 3) {
                     fireTime = System.currentTimeMillis();
                 }
@@ -344,7 +344,7 @@ public class Arkanoid extends Worlds {
         powers.clear();
         balls.clear();
         balls.add(new Ball(player));
-        removeBalls.clear();
+        rmBalls.clear();
         player.changeWidth(100,Math.abs(100-player.getIntWidth()));
     }
 
