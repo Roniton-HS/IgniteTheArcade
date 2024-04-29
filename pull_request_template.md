@@ -1,5 +1,13 @@
+## Content
+This PR includes:
+- [ ] new features
+- [ ] bugfixes
+- [ ] tests
+Does this break any existing features?
+- [ ] yes
+- [ ] no
+
 ## Description
-Ich teste PR-Templates
 
 ## Testing
-- [] PR-Template
+- [ ] all new features are tested
