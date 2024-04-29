@@ -66,7 +66,15 @@ public class PowerUp extends Rectangle {
 
     private void actionGetMoreBalls(ArrayList<Ball> balls) {
         Random random = new Random();
-        Ball ball = balls.get(random.nextInt(balls.size()));
+        ArrayList<Ball> validBalls = new ArrayList<>();
+
+        for (Ball ball:balls){
+            if (!ball.getDestroy()){
+                validBalls.add(ball);
+            }
+        }
+
+        Ball ball = validBalls.get(random.nextInt(validBalls.size()));
         Ball newBall = new Ball(ball);
         double angle = (random.nextInt(46) * Math.PI) / 180;
         double speedX = Math.cos(angle) * -ball.getSpeed();

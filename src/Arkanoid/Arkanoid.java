@@ -399,7 +399,7 @@ public class Arkanoid extends Worlds {
         g.setColor(Color.orange);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
         g.drawString("Pattern: " + numberPattern, 50, 673);
-        g.drawString("Num balls/pows: " + balls.size() + "/" + powers.size(), 50, 683);
+        g.drawString("Num balls/pows: " + (balls.size()-rmBalls.size()) + "/" + powers.size(), 50, 683);
         g.drawString("Player width: " + player.getIntWidth(), 50, 693);
 
         g.setColor(Color.black);
