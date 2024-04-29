@@ -22,7 +22,6 @@ public class Arkanoid extends Worlds {
     private boolean gameWon = false;
     private boolean debug = false;
     private boolean keyPressed = false;
-    private boolean keyPressedS = false;
     private int lives = 3;
     private int score = 0;
     private long gameOverTime;
@@ -168,15 +167,6 @@ public class Arkanoid extends Worlds {
         }
         if (!game.getKeyHandler().p) {
             keyPressed = false;
-        }
-
-        if(game.getKeyHandler().b && !keyPressedS){
-            PowerUp power = powerUps.getPowerUps().get(2);
-            power.getEffect(player, balls, borders);
-            keyPressedS = true;
-        }
-        if (!game.getKeyHandler().b){
-            keyPressedS = false;
         }
     }
 
