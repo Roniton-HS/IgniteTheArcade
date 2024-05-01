@@ -9,17 +9,17 @@
 - [ ] no
 
 
-## New Features
+# New Features
 
 
 
-## Bugfixes
+# Bugfixes
 ### Description of the bug:  
 
 ### Solution:  
 
 
 
-## Testing
+# Testing
 - [ ] all new features are tested
 ### These features still need tests:
