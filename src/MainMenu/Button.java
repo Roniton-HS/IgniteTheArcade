@@ -44,7 +44,6 @@ public class Button {
             Worlds.setWorld(world);
         }
 
-
         //check mouse hover
         int mouseX = game.getMouseHandler().getX();
         int mouseY = game.getMouseHandler().getY();
