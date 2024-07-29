@@ -73,7 +73,6 @@ public class Game{
         double delta = 0;
         long now;
         long lastTime = System.nanoTime();
-        long timer = 0;
 
         //tps counter
         int ticks = 0;
@@ -86,17 +85,12 @@ public class Game{
             //tick
             now = System.nanoTime();
             delta += (now - lastTime) / timePerTick;
-            timer += now - lastTime;
             lastTime = now;
 
             if(delta >= 1){
                 tick();
                 ticks++;
                 delta--;
-            }
-
-            if(timer >= 1000000000){
-                timer = 0;
             }
 
             //render

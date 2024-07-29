@@ -30,7 +30,6 @@ public class MainMenu extends Worlds {
      */
     public MainMenu(Game game) {
         super(game, "MainMenu");
-        init();
     }
 
     @Override
