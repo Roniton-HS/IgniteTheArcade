@@ -5,6 +5,8 @@ import Input.ImageLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static PacMan.PacMan.offsetX;
+
 public class Fruit {
     BufferedImage image;
     private final int x, y;
@@ -54,7 +56,7 @@ public class Fruit {
      * renders the fruit image
      */
     public void render(Graphics g) {
-        g.drawImage(image, x, y, size, size, null);
+        g.drawImage(image, x + offsetX, y, size, size, null);
     }
 
     /**

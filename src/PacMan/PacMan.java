@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static Main.Constants.BACKGROUND;
 import static Main.Constants.emulogic;
 
 public class PacMan extends Worlds {
@@ -45,6 +46,10 @@ public class PacMan extends Worlds {
     //teleports
     public final Rectangle left = new Rectangle(-2 * BLOCK_SIZE, 12 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
     public final Rectangle right = new Rectangle(20 * BLOCK_SIZE, 12 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+
+    //offset to move game on screen
+    public static final int offsetX = 145;
+    public static final int offsetY = 0;
 
     /*
     ====================================================================================================================
@@ -448,6 +453,14 @@ public class PacMan extends Worlds {
         renderGhosts(g);
         renderStats(g);
         renderStatus(g);
+        renderBackground(g);
+    }
+
+    public void renderBackground(Graphics g){
+        g.setColor(BACKGROUND);
+        g.fillRect(0,0,145,1200);
+        g.fillRect(0, 26*getBlockSize(), 40*getBlockSize(), getBlockSize()+3);
+        g.fillRect(23*getBlockSize()-6, 0, 160, 1200);
     }
 
     /**
@@ -457,11 +470,11 @@ public class PacMan extends Worlds {
         if (gameOver) {
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.RED);
-            g.drawString("Game Over", 6 + 7 * BLOCK_SIZE, 28 + 16 * BLOCK_SIZE);
+            g.drawString("Game Over", 6 + 7 * BLOCK_SIZE + offsetX, 28 + 16 * BLOCK_SIZE);
         } else if (gamePaused) {
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.setColor(Color.YELLOW);
-            g.drawString("Ready!", 8 * BLOCK_SIZE, 28 + 16 * BLOCK_SIZE);
+            g.drawString("Ready!", 8 * BLOCK_SIZE + offsetX, 28 + 16 * BLOCK_SIZE);
         }
 
     }
@@ -482,11 +495,11 @@ public class PacMan extends Worlds {
         //points
         g.setColor(Color.WHITE);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
-        g.drawString("Score:" + score, 7, 29);
+        g.drawString("Score:" + score, 7 + offsetX, 29);
 
         //hp
         for (int i = 0; i < hp; i++) {
-            g.drawImage(player.image1, 16 * BLOCK_SIZE + i * 36, 3, null);
+            g.drawImage(player.image1, 16 * BLOCK_SIZE + i * 36 + offsetX, 3, null);
         }
     }
 
@@ -496,12 +509,12 @@ public class PacMan extends Worlds {
     private void renderPoints(Graphics g) {
         for (Rectangle o : powerUps) {
             g.setColor(Color.white);
-            g.fillRect(o.getBounds().x, o.getBounds().y, o.getBounds().width, o.getBounds().height);
+            g.fillRect(o.getBounds().x + offsetX, o.getBounds().y, o.getBounds().width, o.getBounds().height);
         }
 
         for (Rectangle o : points) {
             g.setColor(Color.white);
-            g.fillRect(o.getBounds().x, o.getBounds().y, o.getBounds().width, o.getBounds().height);
+            g.fillRect(o.getBounds().x + offsetX, o.getBounds().y, o.getBounds().width, o.getBounds().height);
         }
 
         for (Fruit f : fruits) {
@@ -514,10 +527,10 @@ public class PacMan extends Worlds {
      */
     private void renderBorders(Graphics g) {
         g.setColor(Color.black);
-        g.fillRect(0, 0, 19 * BLOCK_SIZE + 1, 26 * BLOCK_SIZE);
+        g.fillRect(0 + offsetX, 0, 19 * BLOCK_SIZE + 1, 26 * BLOCK_SIZE);
         g.setColor(Color.blue);
         for (Rectangle box : worldBounds) {
-            g.drawRect((int) box.getX(), (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
+            g.drawRect((int) box.getX() + offsetX, (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
 
         }
         removeBlueLines(g);
@@ -529,50 +542,50 @@ public class PacMan extends Worlds {
     private void removeBlueLines(Graphics g) {
         g.setColor(Color.black);
 
-        g.fillRect(3 * BLOCK_SIZE + 1, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(15 * BLOCK_SIZE + 1, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1 + offsetX, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1 + offsetX, 17 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
 
-        g.fillRect(3 * BLOCK_SIZE + 1, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(15 * BLOCK_SIZE + 1, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1 + offsetX, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1 + offsetX, 20 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
 
-        g.fillRect(BLOCK_SIZE, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(18 * BLOCK_SIZE, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(BLOCK_SIZE + offsetX, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(18 * BLOCK_SIZE + offsetX, 21 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
 
-        g.fillRect(5 * BLOCK_SIZE + 1, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(13 * BLOCK_SIZE + 1, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1, 25 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1 + 18 * BLOCK_SIZE, 25 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(9 * BLOCK_SIZE + 1, 22 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(9 * BLOCK_SIZE + 1, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1 + 18 * BLOCK_SIZE, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(3 * BLOCK_SIZE + 1, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(15 * BLOCK_SIZE + 1, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(3 * BLOCK_SIZE, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(16 * BLOCK_SIZE, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(3 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(3 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(16 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(16 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(3 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(16 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(18 * BLOCK_SIZE, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(1, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1 + 18 * BLOCK_SIZE, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1, BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(1 + 18 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(6 * BLOCK_SIZE, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(13 * BLOCK_SIZE, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(8 * BLOCK_SIZE, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(11 * BLOCK_SIZE, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(8 * BLOCK_SIZE, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(11 * BLOCK_SIZE, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(9 * BLOCK_SIZE + 1, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
-        g.fillRect(0, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(0, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(19 * BLOCK_SIZE, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
-        g.fillRect(19 * BLOCK_SIZE, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(5 * BLOCK_SIZE + 1 + offsetX, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(13 * BLOCK_SIZE + 1 + offsetX, 23 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, 25 * BLOCK_SIZE + offsetX, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE + offsetX, 25 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(9 * BLOCK_SIZE + 1 + offsetX, 22 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(9 * BLOCK_SIZE + 1 + offsetX, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, 18 * BLOCK_SIZE + offsetX, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE + offsetX, 18 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + 1 + offsetX, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(15 * BLOCK_SIZE + 1 + offsetX, 8 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(3 * BLOCK_SIZE + offsetX, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE + offsetX, 17 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE + offsetX, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE + offsetX, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE + offsetX, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE + offsetX, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(3 * BLOCK_SIZE + offsetX, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(16 * BLOCK_SIZE + offsetX, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(BLOCK_SIZE + offsetX, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(18 * BLOCK_SIZE + offsetX, 7 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(1, 7 * BLOCK_SIZE + offsetX, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE + offsetX, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(1, BLOCK_SIZE + offsetX, BLOCK_SIZE - 1, 1);
+        g.fillRect(1 + 18 * BLOCK_SIZE + offsetX, BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(6 * BLOCK_SIZE + offsetX, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(13 * BLOCK_SIZE + offsetX, 8 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(8 * BLOCK_SIZE + offsetX, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(11 * BLOCK_SIZE + offsetX, 10 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(8 * BLOCK_SIZE + offsetX, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(11 * BLOCK_SIZE + offsetX, 15 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(9 * BLOCK_SIZE + 1 + offsetX, 7 * BLOCK_SIZE, BLOCK_SIZE - 1, 1);
+        g.fillRect(0 + offsetX, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(0 + offsetX, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(19 * BLOCK_SIZE + offsetX, 13 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
+        g.fillRect(19 * BLOCK_SIZE + offsetX, 11 * BLOCK_SIZE + 1, 1, BLOCK_SIZE - 1);
     }
 
 

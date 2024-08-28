@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static PacMan.PacMan.offsetX;
+
 public class Ghost {
 
     //general
@@ -543,33 +545,33 @@ public class Ghost {
     public void renderImage(Graphics g) {
         if (eaten) {
             switch (direction) {
-                case 1 -> g.drawImage(eyesUp, x, y, 38, 38, null);
-                case 2 -> g.drawImage(eyesLeft, x, y, 38, 38, null);
-                case 3 -> g.drawImage(eyesDown, x, y, 38, 38, null);
-                case 4 -> g.drawImage(eyesRight, x, y, 38, 38, null);
+                case 1 -> g.drawImage(eyesUp, x + offsetX, y, 38, 38, null);
+                case 2 -> g.drawImage(eyesLeft, x + offsetX, y, 38, 38, null);
+                case 3 -> g.drawImage(eyesDown, x + offsetX, y, 38, 38, null);
+                case 4 -> g.drawImage(eyesRight, x + offsetX, y, 38, 38, null);
             }
         } else if (fear) {
             if (blink) {
                 if (blinkTimer < 15) {
-                    g.drawImage(frightened, x, y, 38, 38, null);
+                    g.drawImage(frightened, x + offsetX, y, 38, 38, null);
                 } else {
                     switch (direction) {
-                        case 1 -> g.drawImage(up, x, y, 38, 38, null);
-                        case 2 -> g.drawImage(left, x, y, 38, 38, null);
-                        case 3 -> g.drawImage(down, x, y, 38, 38, null);
-                        case 4 -> g.drawImage(right, x, y, 38, 38, null);
+                        case 1 -> g.drawImage(up, x + offsetX, y, 38, 38, null);
+                        case 2 -> g.drawImage(left, x + offsetX, y, 38, 38, null);
+                        case 3 -> g.drawImage(down, x + offsetX, y, 38, 38, null);
+                        case 4 -> g.drawImage(right, x + offsetX, y, 38, 38, null);
                     }
                 }
             } else {
-                g.drawImage(frightened, x, y, 38, 38, null);
+                g.drawImage(frightened, x + offsetX, y, 38, 38, null);
             }
 
         } else {
             switch (direction) {
-                case 1 -> g.drawImage(up, x, y, 38, 38, null);
-                case 2 -> g.drawImage(left, x, y, 38, 38, null);
-                case 3 -> g.drawImage(down, x, y, 38, 38, null);
-                case 4 -> g.drawImage(right, x, y, 38, 38, null);
+                case 1 -> g.drawImage(up, x + offsetX, y, 38, 38, null);
+                case 2 -> g.drawImage(left, x + offsetX, y, 38, 38, null);
+                case 3 -> g.drawImage(down, x + offsetX, y, 38, 38, null);
+                case 4 -> g.drawImage(right, x + offsetX, y, 38, 38, null);
             }
         }
     }
@@ -579,7 +581,7 @@ public class Ghost {
      */
     @SuppressWarnings("unused")
     private void renderVector(Graphics g) {
-        g.drawLine(this.x + size / 2, this.y + size / 2, targetX + size / 2, targetY + size / 2);
+        g.drawLine(this.x + size / 2 + offsetX, this.y + size / 2, targetX + size / 2 + offsetX, targetY + size / 2);
     }
 
 

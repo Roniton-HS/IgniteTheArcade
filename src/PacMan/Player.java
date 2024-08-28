@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static Main.Constants.emulogic;
+import static PacMan.PacMan.offsetX;
 
 public class Player {
 
@@ -164,12 +165,12 @@ public class Player {
 
     private void animation(Graphics g) {
         if (direction == 0) {
-            g.drawImage(image0, x + 3, y + 3, 32, 32, null);
+            g.drawImage(image0, x + 3 + offsetX, y + 3, 32, 32, null);
         } else {
             switch (animationCount) {
-                case 0 -> g.drawImage(usedImage0, x + 3, y + 3, 32, 32, null);
-                case 1, 3 -> g.drawImage(usedImage1, x + 3, y + 3, 32, 32, null);
-                case 2 -> g.drawImage(usedImage2, x + 3, y + 3, 32, 32, null);
+                case 0 -> g.drawImage(usedImage0, x + 3 + offsetX, y + 3, 32, 32, null);
+                case 1, 3 -> g.drawImage(usedImage1, x + 3 + offsetX, y + 3, 32, 32, null);
+                case 2 -> g.drawImage(usedImage2, x + 3 + offsetX, y + 3, 32, 32, null);
             }
         }
     }
@@ -196,7 +197,7 @@ public class Player {
         if (showPoints) {
             g.setColor(Color.WHITE);
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 10.0F));
-            g.drawString(String.valueOf(pointsToShow), x + 32, y);
+            g.drawString(String.valueOf(pointsToShow), x + 32 + offsetX, y);
             if (System.currentTimeMillis() - displayTimer > 500) {
                 showPoints = false;
             }
