@@ -57,7 +57,6 @@ public class Tetris extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(1000, 1000);
     }
 
     /**

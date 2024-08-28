@@ -57,7 +57,6 @@ public class PacMan extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(19 * 38 + 17, 27 * 38 + 2);
         player = new Player(9 * BLOCK_SIZE, 20 * BLOCK_SIZE, this, game);
         ghosts.add(new Ghost(8 * BLOCK_SIZE, 11 * BLOCK_SIZE, 1, this, game));
         ghosts.add(new Ghost(10 * BLOCK_SIZE, 13 * BLOCK_SIZE, 2, this, game));

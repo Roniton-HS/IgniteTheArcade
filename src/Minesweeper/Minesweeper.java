@@ -35,7 +35,6 @@ public class Minesweeper extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(mapSize * blockSize + 2 * blockSize + 16, mapSize * blockSize + 2 * blockSize + 39);
         map = new int[mapSize][mapSize];
         clicked = new int[mapSize][mapSize];
         winCount = mapSize * mapSize - BOMBS;

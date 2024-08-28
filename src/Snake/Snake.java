@@ -27,7 +27,7 @@ public class Snake extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(753, 904);
+
     }
 
     @Override

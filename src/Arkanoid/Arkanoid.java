@@ -59,7 +59,6 @@ public class Arkanoid extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(WINDOW_WIDTH + WIN10_WIDTH_DIFF, WINDOW_HEIGHT + WIN10_HEIGHT_DIFF);
         createGame();
         createBorders();
         pattern.createPattern();

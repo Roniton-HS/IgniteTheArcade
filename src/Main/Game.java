@@ -29,8 +29,8 @@ public class Game{
      */
     public Game(){
         title = "Ignite The Arcade";
-        width = 1000;
-        height = 1000;
+        width = 1028;
+        height = 1028;
         init();
     }
 

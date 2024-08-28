@@ -36,7 +36,6 @@ public class Pong extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(WINDOW_SIZE + WIN10_WIDTH_DIFF, WINDOW_SIZE + WIN10_HEIGHT_DIFF);
         loadSoundPaths();
         createGame();
         createBorders();

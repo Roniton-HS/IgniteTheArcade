@@ -30,7 +30,6 @@ public class FlappyBird extends Worlds {
 
     @Override
     public void init() {
-        game.getDisplay().resize(WINDOW_WIDTH, WINDOW_HEIGHT);
         createGame();
     }
 
