@@ -58,7 +58,7 @@ public class MainMenu extends Worlds {
                 case 3 -> snake2;
                 case 4 -> minesweeper;
             };
-            buttons.add(new Button(25, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 350, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(180, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 450, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
         for (int i = 1; i < 5; i++) {
             world = switch (i) {
@@ -67,7 +67,7 @@ public class MainMenu extends Worlds {
                 case 3 -> tetris;
                 case 4 -> flappyBird;
             };
-            buttons.add(new Button(395, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 350, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(540, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 450, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
     }
 
@@ -84,12 +84,12 @@ public class MainMenu extends Worlds {
         g.fillRect(0, 0, 1000, 1000);
         g.drawImage(background, 0, 0, 1344, 768, null);
         g.setColor(Color.BLACK);
-        g.fillRect(20, 130, 700, 100);
+        g.fillRect(160, 230, 700, 100);
         g.setColor(Constants.BUTTON);
-        g.fillRect(15, 125, 700, 100);
+        g.fillRect(155, 225, 700, 100);
         g.setColor(Color.WHITE);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 40.0F));
-        g.drawString("Ignite The Arcade", 22, 190);
+        g.drawString("Ignite The Arcade", 162, 290);
         for (Button b : buttons) {
             b.render(g);
         }
