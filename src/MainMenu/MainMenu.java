@@ -24,7 +24,6 @@ public class MainMenu extends Worlds {
     ArrayList<Button> buttons = new ArrayList<>();
     private final int BUTTON_WIDTH = 300;
     private final int BUTTON_HEIGHT = 50;
-
     BufferedImage background = ImageLoader.loadImage("/preview.png");
 
     /**
