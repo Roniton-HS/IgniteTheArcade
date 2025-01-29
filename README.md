@@ -60,4 +60,4 @@ Minesweeper:
 ## Authors
 [Seyrila](https://github.com/Seyrila)  
 [Roniton](https://github.com/Roniton-HS)  
-[Duwutape](https://github.com/Duwutape)
+[duwutape](https://github.com/duwutape)
