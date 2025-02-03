@@ -121,6 +121,9 @@ public class Game{
      * renders the game
      */
     private void render(){
+        if ( System.getProperty("os.name").startsWith("Linux")){
+            Toolkit.getDefaultToolkit().sync();
+        }
         //Graphics
         BufferStrategy bs = display.getCanvas().getBufferStrategy();
         if(bs == null){
