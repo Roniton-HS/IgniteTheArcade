@@ -24,7 +24,7 @@ public class MainMenu extends Worlds {
     ArrayList<Button> buttons = new ArrayList<>();
     private final int BUTTON_WIDTH = 300;
     private final int BUTTON_HEIGHT = 50;
-    BufferedImage background = ImageLoader.loadImage("/preview.png");
+    BufferedImage background = ImageLoader.loadImage("/menuRes/background.png");
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ public class MainMenu extends Worlds {
                 case 3 -> snake2;
                 case 4 -> minesweeper;
             };
-            buttons.add(new Button(180, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 450, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(60, 550 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
         for (int i = 1; i < 5; i++) {
             world = switch (i) {
@@ -66,7 +66,7 @@ public class MainMenu extends Worlds {
                 case 3 -> tetris;
                 case 4 -> flappyBird;
             };
-            buttons.add(new Button(540, i * BUTTON_HEIGHT + (i - 1) * OFFSET + 450, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(670, 550 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
     }
 
@@ -79,16 +79,7 @@ public class MainMenu extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(new Color(203, 203, 203));
-        g.fillRect(0, 0, 1000, 1000);
-        g.drawImage(background, 0, 0, 1344, 768, null);
-        g.setColor(Color.BLACK);
-        g.fillRect(160, 230, 700, 100);
-        g.setColor(Constants.BUTTON);
-        g.fillRect(155, 225, 700, 100);
-        g.setColor(Color.WHITE);
-        g.setFont(emulogic.deriveFont(emulogic.getSize() * 40.0F));
-        g.drawString("Ignite The Arcade", 162, 290);
+        g.drawImage(background, 0, 0, 1028, 1028, null);
         for (Button b : buttons) {
             b.render(g);
         }

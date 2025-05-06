@@ -51,23 +51,27 @@ public class Button {
     }
 
     public void render(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        // Save the original stroke
+        Stroke originalStroke = g2d.getStroke();
+        // Set new stroke with desired thickness (e.g., 3.0f for 3 pixel width)
+        g2d.setStroke(new BasicStroke(3.0f));
+
 
         if (highlighted){
-            g.setColor(Color.BLACK);
-            g.fillRect(x+5, y+5, width, height);
             g.setColor(Constants.BUTTON_HOVER);
             g.fillRect(x+2, y+2, width, height);
             g.setColor(Color.WHITE);
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.drawString(world.getName(),x+22,y+35);
         }else {
-            g.setColor(Color.BLACK);
-            g.fillRect(x+5, y+5, width, height);
             g.setColor(Constants.BUTTON);
             g.fillRect(x, y, width, height);
             g.setColor(Color.WHITE);
             g.setFont(emulogic.deriveFont(emulogic.getSize() * 20.0F));
             g.drawString(world.getName(),x+20,y+33);
+            g.setColor(Color.BLACK);
+            g2d.drawRect(x, y, width, height);
         }
     }
 
