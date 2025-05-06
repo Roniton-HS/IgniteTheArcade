@@ -12,7 +12,7 @@ import java.util.Random;
 import static Main.Constants.emulogic;
 
 public class Tetris extends Worlds {
-    //finals
+    //constants
     private final int SPAWN = 4;
     private final int WIDTH = 10;
     private final int HEIGHT = 20 + SPAWN;
@@ -20,14 +20,16 @@ public class Tetris extends Worlds {
     final int BORDER_SIZE = 5;
 
     //general
+    private int tickDelay = 800;
+    private int tempScore = 0;
     private int score = 0;
     private boolean pause;
     private boolean lost = false;
 
     //pieces
-    private int[][] map = new int[WIDTH][HEIGHT];
+    private final int[][] map = new int[WIDTH][HEIGHT];
     private long timer = System.currentTimeMillis();
-    private boolean[] piecesUsed = new boolean[7];
+    private final boolean[] piecesUsed = new boolean[7];
     private char current = getNewPiece();
     private char next = getNewPiece();
     private int state = 0;
@@ -44,12 +46,9 @@ public class Tetris extends Worlds {
     5: j
     6: t
     7: i
-    +7 if the become static
+    +7 if they become static
      */
 
-    /**
-     * Constructor
-     */
     public Tetris(Game game, boolean pause) {
         super(game, "Tetris");
         this.pause = pause;
@@ -59,9 +58,6 @@ public class Tetris extends Worlds {
     public void init() {
     }
 
-    /**
-     * ticks the game
-     */
     @Override
     public void tick() {
         input();
@@ -69,7 +65,7 @@ public class Tetris extends Worlds {
             if (!movingBlock()) {
                 spawnPiece();
             }
-            if (System.currentTimeMillis() - timer > 800) {
+            if (System.currentTimeMillis() - timer > tickDelay) {
                 moveDown();
                 timer = System.currentTimeMillis();
             }
@@ -339,14 +335,14 @@ public class Tetris extends Worlds {
      */
     private void rotate() {
         switch (current) {
-            default -> {
-            }
             case 'i' -> rotateI();
             case 'l' -> rotateL();
             case 'j' -> rotateJ();
             case 's' -> rotateS();
             case 'z' -> rotateZ();
             case 't' -> rotateT();
+            default -> {
+            }
         }
     }
 
@@ -806,6 +802,7 @@ public class Tetris extends Worlds {
                 score += 100;
                 removeLine(i);
                 moveLines(i);
+                checkScore();
             }
         }
     }
@@ -835,6 +832,13 @@ public class Tetris extends Worlds {
         }
     }
 
+    private void checkScore() {
+        if (score - tempScore > 500 && tickDelay >= 10) {
+            tickDelay -= 20;
+            tempScore = score;
+        }
+    }
+
     /*
     ====================================================================================================================
     FULL LINE
@@ -859,7 +863,6 @@ public class Tetris extends Worlds {
         for (int i = SPAWN; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 switch (map[j][i]) {
-                    default -> g.setColor(Color.WHITE);
                     case 1, 8 -> g.setColor(Constants.YELLOW);
                     case 2, 9 -> g.setColor(Constants.GREEN);
                     case 3, 10 -> g.setColor(Constants.RED);
@@ -867,6 +870,7 @@ public class Tetris extends Worlds {
                     case 5, 12 -> g.setColor(Color.CYAN);
                     case 6, 13 -> g.setColor(Constants.PINK);
                     case 7, 14 -> g.setColor(Constants.BLUE);
+                    default -> g.setColor(Color.WHITE);
                 }
                 g.fillRect(SPACING + j * BLOCK_SIZE, SPACING + (i - SPAWN) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 g.setColor(Color.BLACK);
@@ -886,8 +890,6 @@ public class Tetris extends Worlds {
         g.setColor(Color.BLACK);
         g.drawRect(xPos, yPos, 5 * BLOCK_SIZE, 5 * BLOCK_SIZE);
         switch (next) {
-            default -> {
-            }
             case 'o' -> {
                 final int x = xPos + 3 * BLOCK_SIZE / 2;
                 final int y = yPos + 3 * BLOCK_SIZE / 2;
@@ -969,6 +971,8 @@ public class Tetris extends Worlds {
                 g.drawRect(x, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 g.drawRect(x + BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 g.drawRect(x + 2 * BLOCK_SIZE, y + BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            }
+            default -> {
             }
         }
     }
