@@ -45,8 +45,8 @@ public class Snake extends Worlds {
     @Override
     public void render(Graphics g) {
         //background
-        g.setColor(Constants.BACKGROUND);
-        g.fillRect(0, 0, 1000, 1000);
+        g.setColor(Constants.BACKGROUND_FILTER);
+        g.fillRect(0,0, 1028, 1028);
         g.setColor(Constants.BUTTON);
         final int BORDER_SIZE = 8;
         g.fillRect(2*BLOCK_SIZE - BORDER_SIZE, 4 * BLOCK_SIZE - BORDER_SIZE, 19 * BLOCK_SIZE + 2*BORDER_SIZE, 21 * BLOCK_SIZE + 2*BORDER_SIZE);

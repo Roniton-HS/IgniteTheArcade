@@ -64,4 +64,6 @@ public class Constants {
     public static final Color BUTTON = new Color(246, 125, 0, 50);
     public static final Color BUTTON_HOVER = new Color(206, 72, 0);
     public static final Color BACKGROUND = new Color(138, 138, 138);
+    public static final Color BACKGROUND_FILTER = new Color(0, 0, 0, 180);
+
 }

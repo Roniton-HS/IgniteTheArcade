@@ -224,13 +224,13 @@ public class Minesweeper extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Constants.BACKGROUND);
-        g.fillRect(0, 0, 2000, 2000);
+        g.setColor(Constants.BACKGROUND_FILTER);
+        g.fillRect(0,0, 1028, 1028);
         final int BORDER_SIZE = 5;
         g.setColor(Color.BLACK);
-        g.fillRect(blockSize - BORDER_SIZE, blockSize - BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE);
+        g.fillRect((int) (1.5 * blockSize - BORDER_SIZE), blockSize - BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE);
         g.setColor(Color.WHITE);
-        g.fillRect(blockSize, blockSize, mapSize * blockSize, mapSize * blockSize);
+        g.fillRect((int) (1.5 * blockSize), blockSize, mapSize * blockSize, mapSize * blockSize);
         renderMap(g);
         renderClicked(g);
 
@@ -261,15 +261,15 @@ public class Minesweeper extends Worlds {
         for (int i = 0; i < clicked.length; i++) {
             for (int j = 0; j < clicked.length; j++) {
                 if (clicked[j][i] == 0) {
-                    g.setColor(Constants.BUTTON);
-                    g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
+                    g.setColor(Constants.BUTTON_HOVER);
+                    g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
                 } else if (clicked[j][i] == 2) {
-                    g.setColor(Constants.BUTTON);
-                    g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
-                    g.drawImage(flag, j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize, null);
+                    g.setColor(Constants.BUTTON_HOVER);
+                    g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
+                    g.drawImage(flag, (int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize, null);
                 }
                 g.setColor(Color.BLACK);
-                g.drawRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
+                g.drawRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
             }
         }
     }
@@ -288,19 +288,19 @@ public class Minesweeper extends Worlds {
                 if (entry == 9) {
                     if (gameLost) {
                         g.setColor(new Color(209, 0, 38));
-                        g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
+                        g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
                     }
                     if (gameWon) {
                         g.setColor(new Color(15, 186, 51));
-                        g.fillRect(j * blockSize + blockSize, i * blockSize + blockSize, blockSize, blockSize);
+                        g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
                     }
-                    g.drawImage(bomb, j * blockSize + blockSize + (int) (blockSize / 1.3 / 5.3),
+                    g.drawImage(bomb, (int) (j * blockSize + 1.5 * blockSize) + (int) (blockSize / 1.3 / 5.3),
                             i * blockSize + blockSize + (int) (blockSize / 1.3 / 5.3),
                             (int) (blockSize / 1.3), (int) (blockSize / 1.3), null);
                 } else if (entry != 0) {
                     g.setColor(Color.BLACK);
                     String value = String.valueOf(entry);
-                    g.drawString(value, xOff + j * blockSize + blockSize, yOff + i * blockSize + blockSize);
+                    g.drawString(value, xOff + (int) (j * blockSize + 1.5 * blockSize), yOff + i * blockSize + blockSize);
                 }
             }
         }

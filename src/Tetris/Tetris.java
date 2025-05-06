@@ -847,8 +847,8 @@ public class Tetris extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(0,0, 1000, 1000);
+        g.setColor(Constants.BACKGROUND_FILTER);
+        g.fillRect(0,0, 1028, 1028);
 
         renderMap(g);
         renderNextBlock(13, 2, g);

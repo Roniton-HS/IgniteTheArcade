@@ -1,5 +1,6 @@
 package Main;
 
+import Input.ImageLoader;
 import Input.KeyHandler;
 import Input.MouseHandler;
 import MainMenu.MainMenu;
@@ -7,6 +8,7 @@ import Worlds.Worlds;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 public class Game{
 
@@ -136,6 +138,8 @@ public class Game{
 
         //Draw Here!
         if(Worlds.getWorld() != null){
+            BufferedImage background = ImageLoader.loadImage("/menuRes/background.png");
+            g.drawImage(background, 0, 0, 1028, 1028, null);
             Worlds.getWorld().render(g); //render current world
         }
         //EndDrawing
