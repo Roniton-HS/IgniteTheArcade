@@ -26,11 +26,6 @@ public class MainMenu extends Worlds {
     private final int BUTTON_HEIGHT = 50;
     BufferedImage background = ImageLoader.loadImage("/menuRes/background.png");
 
-    /**
-     * Constructor
-     *
-     * @param game
-     */
     public MainMenu(Game game) {
         super(game, "MainMenu");
     }
@@ -52,19 +47,19 @@ public class MainMenu extends Worlds {
         Worlds world;
         for (int i = 1; i < 5; i++) {
             world = switch (i) {
-                default -> pacMan;
                 case 2 -> snake;
                 case 3 -> snake2;
                 case 4 -> minesweeper;
+                default -> pacMan;
             };
             buttons.add(new Button(60, 600 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
         for (int i = 1; i < 5; i++) {
             world = switch (i) {
-                default -> arkanoid;
                 case 2 -> pong;
                 case 3 -> tetris;
                 case 4 -> flappyBird;
+                default -> arkanoid;
             };
             buttons.add(new Button(670, 600 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }

@@ -3,7 +3,6 @@ package Snake;
 import java.awt.*;
 
 public class Apple {
-
     public int x, y;
 
     public Apple(int xApple, int yApple) {
