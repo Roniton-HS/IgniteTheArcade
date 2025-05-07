@@ -23,6 +23,7 @@ public class Game{
 
     private Display display;
 
+    BufferedImage background = ImageLoader.loadImage("/menuRes/background.png");
 
     //Player
 
@@ -138,7 +139,6 @@ public class Game{
 
         //Draw Here!
         if(Worlds.getWorld() != null){
-            BufferedImage background = ImageLoader.loadImage("/menuRes/background.png");
             g.drawImage(background, 0, 0, 1028, 1028, null);
             Worlds.getWorld().render(g); //render current world
         }

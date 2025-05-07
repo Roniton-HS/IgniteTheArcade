@@ -61,7 +61,7 @@ public class Constants {
     public static final Color DARK_GREEN = new Color(85,128,34);
     public static final Color LIGHT_GREEN = new Color(209,236,125);
     public static final Color DARK_YELLOW = new Color(248,183,51);
-    public static final Color BUTTON = new Color(246, 125, 0, 50);
+    public static final Color BUTTON = new Color(246, 125, 0, 100);
     public static final Color BUTTON_HOVER = new Color(206, 72, 0);
     public static final Color BACKGROUND = new Color(138, 138, 138);
     public static final Color BACKGROUND_FILTER = new Color(0, 0, 0, 180);

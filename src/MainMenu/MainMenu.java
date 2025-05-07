@@ -57,7 +57,7 @@ public class MainMenu extends Worlds {
                 case 3 -> snake2;
                 case 4 -> minesweeper;
             };
-            buttons.add(new Button(60, 550 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(60, 600 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
         for (int i = 1; i < 5; i++) {
             world = switch (i) {
@@ -66,7 +66,7 @@ public class MainMenu extends Worlds {
                 case 3 -> tetris;
                 case 4 -> flappyBird;
             };
-            buttons.add(new Button(670, 550 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
+            buttons.add(new Button(670, 600 + i * BUTTON_HEIGHT + (i - 1) * OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT, world, game));
         }
     }
 
