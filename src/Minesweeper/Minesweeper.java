@@ -13,6 +13,13 @@ import java.util.Random;
 import static Main.Constants.recursiveBold;
 
 public class Minesweeper extends Worlds {
+    private static final float MAP_OFFSET_X = 1.75f;
+    private static final float MAP_OFFSET_Y = 1.75f;
+    private static final int GAME_OVER_WIDTH = 500;
+    private static final int GAME_OVER_HEIGHT = 100;
+    private static final int LARGE_FONT_SIZE = 60;
+    private static final int SMALL_FONT_SIZE = 20;
+
     int blockSize;
     int winCount;
     int mapSize;
@@ -61,9 +68,9 @@ public class Minesweeper extends Worlds {
      * checks mouse and keyboard input
      */
     private void input() {
-        int clickX = (game.getMouseHandler().getClickX() - blockSize) / blockSize;
-        int clickY = (game.getMouseHandler().getClickY() - blockSize) / blockSize;
-
+        // right-click
+        int clickX = screenToMapX(game.getMouseHandler().getClickX());
+        int clickY = screenToMapY(game.getMouseHandler().getClickY());
         if (!gameLost && !gameWon) {
             if (clickX < clicked.length && clickY < clicked.length) { //in bounds?
 
@@ -93,8 +100,10 @@ public class Minesweeper extends Worlds {
                 }
                 firstClick = false;
             }
-            int lClickX = (game.getMouseHandler().getLClickX() - blockSize) / blockSize;
-            int lClickY = (game.getMouseHandler().getLClickY() - blockSize) / blockSize;
+
+            // left-click
+            int lClickX = screenToMapX(game.getMouseHandler().getLClickX());
+            int lClickY = screenToMapY(game.getMouseHandler().getLClickY());
             if (lClickX < clicked.length && lClickY < clicked.length && clicked[lClickX][lClickY] != 1) {
                 if (clicked[lClickX][lClickY] == 2) {
                     clicked[lClickX][lClickY] = 0;
@@ -224,52 +233,70 @@ public class Minesweeper extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Constants.BACKGROUND_FILTER);
-        g.fillRect(0,0, 1028, 1028);
         final int BORDER_SIZE = 5;
+        g.setColor(Constants.BACKGROUND_FILTER);
+        g.fillRect(0, 0, 1028, 1028);
         g.setColor(Color.BLACK);
-        g.fillRect((int) (1.5 * blockSize - BORDER_SIZE), blockSize - BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE, mapSize * blockSize + 2 * BORDER_SIZE);
+        g.fillRect(mapToScreenX(0) - BORDER_SIZE,
+                mapToScreenY(0) - BORDER_SIZE,
+                mapSize * blockSize + 2 * BORDER_SIZE,
+                mapSize * blockSize + 2 * BORDER_SIZE);
         g.setColor(Color.WHITE);
-        g.fillRect((int) (1.5 * blockSize), blockSize, mapSize * blockSize, mapSize * blockSize);
+        g.fillRect(mapToScreenX(0),
+                mapToScreenY(0),
+                mapSize * blockSize,
+                mapSize * blockSize);
+
         renderMap(g);
         renderClicked(g);
-
-        int xPos = 250;
-        int yPos = 450;
-        if (gameLost) {
-            g.setColor(new Color(209, 0, 38));
-            g.fillRect(xPos, yPos, 500, 100);
-            g.setColor(new Color(0, 0, 0));
-            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 60.0F));
-            g.drawString("You Lost", xPos + 100, yPos + 60);
-            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 20.0F));
-            g.drawString("press [enter] to restart", xPos + 105, yPos + 80);
-            g.drawRect(xPos, yPos, 500, 100);
-        } else if (gameWon) {
-            g.setColor(new Color(15, 186, 51));
-            g.fillRect(xPos, yPos, 500, 100);
-            g.setColor(new Color(0, 0, 0));
-            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 60.0F));
-            g.drawString("You Won", xPos + 125, yPos + 60);
-            g.setFont(recursiveBold.deriveFont(recursiveBold.getSize() * 20.0F));
-            g.drawString("press [enter] to restart", xPos + 105, yPos + 80);
-            g.drawRect(xPos, yPos, 500, 100);
-        }
+        renderGameOverMessage(g);
     }
+
+    private void renderGameOverMessage(Graphics g) {
+        if (!gameLost && !gameWon) {
+            return;
+        }
+
+        // Center the message box relative to the map
+        int messageX = mapToScreenX(0) + (mapSize * blockSize - GAME_OVER_WIDTH) / 2;
+        int messageY = mapToScreenY(0) + (mapSize * blockSize - GAME_OVER_HEIGHT) / 2;
+
+        // Draw the background box
+        g.setColor(gameLost ? new Color(209, 0, 38) : new Color(15, 186, 51));
+        g.fillRect(messageX, messageY, GAME_OVER_WIDTH, GAME_OVER_HEIGHT);
+
+        // Draw the border
+        g.setColor(Color.BLACK);
+        g.drawRect(messageX, messageY, GAME_OVER_WIDTH, GAME_OVER_HEIGHT);
+
+        // Main message
+        g.setFont(recursiveBold.deriveFont((float) LARGE_FONT_SIZE));
+        String mainMessage = gameLost ? "You Lost" : "You Won";
+        int mainMessageX = messageX + (GAME_OVER_WIDTH - g.getFontMetrics().stringWidth(mainMessage)) / 2;
+        g.drawString(mainMessage, mainMessageX, messageY + 60);
+
+        // Restart instruction
+        g.setFont(recursiveBold.deriveFont((float) SMALL_FONT_SIZE));
+        String restartMsg = "press [enter] to restart";
+        int restartMsgX = messageX + (GAME_OVER_WIDTH - g.getFontMetrics().stringWidth(restartMsg)) / 2;
+        g.drawString(restartMsg, restartMsgX, messageY + 80);
+    }
+
 
     private void renderClicked(Graphics g) {
         for (int i = 0; i < clicked.length; i++) {
             for (int j = 0; j < clicked.length; j++) {
-                if (clicked[j][i] == 0) {
+                if (clicked[j][i] == 0 || clicked[j][i] == 2) {
                     g.setColor(Constants.BUTTON_HOVER);
-                    g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
-                } else if (clicked[j][i] == 2) {
-                    g.setColor(Constants.BUTTON_HOVER);
-                    g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
-                    g.drawImage(flag, (int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize, null);
+                    g.fillRect(mapToScreenX(j), mapToScreenY(i), blockSize, blockSize);
+
+                    if (clicked[j][i] == 2) {
+                        g.drawImage(flag, mapToScreenX(j), mapToScreenY(i),
+                                blockSize, blockSize, null);
+                    }
                 }
                 g.setColor(Color.BLACK);
-                g.drawRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
+                g.drawRect(mapToScreenX(j), mapToScreenY(i), blockSize, blockSize);
             }
         }
     }
@@ -288,22 +315,44 @@ public class Minesweeper extends Worlds {
                 if (entry == 9) {
                     if (gameLost) {
                         g.setColor(new Color(209, 0, 38));
-                        g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
+                        g.fillRect(mapToScreenX(j), mapToScreenY(i), blockSize, blockSize);
                     }
                     if (gameWon) {
                         g.setColor(new Color(15, 186, 51));
-                        g.fillRect((int) (j * blockSize + 1.5 * blockSize), i * blockSize + blockSize, blockSize, blockSize);
+                        g.fillRect(mapToScreenX(j), mapToScreenY(i), blockSize, blockSize);
                     }
-                    g.drawImage(bomb, (int) (j * blockSize + 1.5 * blockSize) + (int) (blockSize / 1.3 / 5.3),
-                            i * blockSize + blockSize + (int) (blockSize / 1.3 / 5.3),
-                            (int) (blockSize / 1.3), (int) (blockSize / 1.3), null);
+                    g.drawImage(bomb,
+                            mapToScreenX(j) + (int)(blockSize / 1.3 / 5.3),
+                            mapToScreenY(i) + (int)(blockSize / 1.3 / 5.3),
+                            (int)(blockSize / 1.3),
+                            (int)(blockSize / 1.3),
+                            null);
                 } else if (entry != 0) {
                     g.setColor(Color.BLACK);
                     String value = String.valueOf(entry);
-                    g.drawString(value, xOff + (int) (j * blockSize + 1.5 * blockSize), yOff + i * blockSize + blockSize);
+                    g.drawString(value,
+                            xOff + mapToScreenX(j),
+                            yOff + mapToScreenY(i));
                 }
             }
         }
     }
+
+    private int screenToMapX(int screenX) {
+        return (screenX - (int)(MAP_OFFSET_X * blockSize)) / blockSize;
+    }
+
+    private int screenToMapY(int screenY) {
+        return (int) ((screenY - MAP_OFFSET_Y * blockSize) / blockSize);
+    }
+
+    private int mapToScreenX(int mapX) {
+        return (int)(mapX * blockSize + MAP_OFFSET_X * blockSize);
+    }
+
+    private int mapToScreenY(int mapY) {
+        return (int) (mapY * blockSize + MAP_OFFSET_Y * blockSize);
+    }
+
 }
 

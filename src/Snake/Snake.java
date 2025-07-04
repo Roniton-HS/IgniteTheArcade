@@ -11,12 +11,18 @@ import static Main.Constants.emulogic;
 
 public class Snake extends Worlds {
     public static final int BLOCK_SIZE = 32;
-    public boolean gameStart = false;
+    private static final float MAP_OFFSET_X = 6.0f;
+    private static final float MAP_OFFSET_Y = 4.0f;
+    private static final int MAP_WIDTH = 19;
+    private static final int MAP_HEIGHT = 21;
+    private static final int BORDER_SIZE = 8;
+    private static final int SCORE_HEIGHT = 115;
 
+    public boolean gameStart = false;
     private boolean startScreen = false;
 
     private final Player snake = new Player(14 * 32, 14 * 32, game, this);
-    private Apple apple = new Apple(8 * 32, 10 * 32);
+    private final Apple apple = new Apple(8 * 32, 10 * 32);
 
     /**
      * Constructor
@@ -44,14 +50,23 @@ public class Snake extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        //background
+        // Background
         g.setColor(Constants.BACKGROUND_FILTER);
-        g.fillRect(0,0, 1028, 1028);
-        g.setColor(Constants.BUTTON);
-        final int BORDER_SIZE = 8;
-        g.fillRect(2*BLOCK_SIZE - BORDER_SIZE, 4 * BLOCK_SIZE - BORDER_SIZE, 19 * BLOCK_SIZE + 2*BORDER_SIZE, 21 * BLOCK_SIZE + 2*BORDER_SIZE);
+        g.fillRect(0, 0, 1028, 1028);
+
+        // Game border
+        g.setColor(Constants.BUTTON_HOVER);
+        g.fillRect(mapToScreenX(0) - BORDER_SIZE,
+                mapToScreenY(0) - BORDER_SIZE,
+                MAP_WIDTH * BLOCK_SIZE + 2 * BORDER_SIZE,
+                MAP_HEIGHT * BLOCK_SIZE + 2 * BORDER_SIZE);
+
+        // Game background
         g.setColor(Color.WHITE);
-        g.fillRect(2*BLOCK_SIZE, 4 * BLOCK_SIZE, 19 * BLOCK_SIZE, 21 * BLOCK_SIZE);
+        g.fillRect(mapToScreenX(0),
+                mapToScreenY(0),
+                MAP_WIDTH * BLOCK_SIZE,
+                MAP_HEIGHT * BLOCK_SIZE);
 
         snake.render(g);
         apple.render(g);
@@ -65,39 +80,51 @@ public class Snake extends Worlds {
 
     public void renderStartScreen(Graphics g) {
         g.setColor(new Color(208, 208, 208, 205));
-        g.fillRect(0, 400, 831, 100);
+        g.fillRect(0, mapToScreenY(MAP_HEIGHT/2) - 50, 831, 100);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 30.0F));
         g.setColor(Color.black);
-        g.drawString("Press [Space] to start", 30, 460);
+        g.drawString("Press [Space] to start", 30, mapToScreenY(MAP_HEIGHT/2));
         if (game.getKeyHandler().space) {
             gameStart = true;
             startScreen = false;
         }
     }
 
-    /**
-     * renders the map
-     */
     public void renderGrid(Graphics g) {
         g.setColor(Color.BLACK);
-        for (int i = 1; i < 11; i++) {
-            g.drawRect(((2 * i)) * BLOCK_SIZE, 4 * BLOCK_SIZE, BLOCK_SIZE, 21 * BLOCK_SIZE);
+        // Vertical lines
+        for (int i = 0; i < MAP_WIDTH/2 + 1; i++) {  // Changed from i = 1 to i = 0
+            g.drawRect(mapToScreenX(i * 2),
+                    mapToScreenY(0),
+                    BLOCK_SIZE,
+                    MAP_HEIGHT * BLOCK_SIZE);
         }
-        for (int i = 2; i < 13; i++) {
-            g.drawRect(2 * BLOCK_SIZE, ((2 * i)) * BLOCK_SIZE, 19 * BLOCK_SIZE, BLOCK_SIZE);
+        // Horizontal lines
+        for (int i = 0; i < MAP_HEIGHT/2 + 1; i++) {
+            g.drawRect(mapToScreenX(0),
+                    mapToScreenY(i * 2),
+                    MAP_WIDTH * BLOCK_SIZE,
+                    BLOCK_SIZE);
         }
-        g.drawRect(2 * BLOCK_SIZE, 4 * BLOCK_SIZE, 19 * BLOCK_SIZE, 21 * BLOCK_SIZE);
+        // Border
+        g.drawRect(mapToScreenX(0),
+                mapToScreenY(0),
+                MAP_WIDTH * BLOCK_SIZE,
+                MAP_HEIGHT * BLOCK_SIZE);
     }
 
-    /**
-     * renders the score
-     */
+
     public void renderAppleCounter(Graphics g) {
-        g.setColor(Constants.BUTTON);
-        g.fillRect(2*BLOCK_SIZE - 8,10,19 * BLOCK_SIZE + 2*8,115);
+        g.setColor(Constants.BUTTON_HOVER);
+        g.fillRect(mapToScreenX(0) - BORDER_SIZE,
+                10,
+                MAP_WIDTH * BLOCK_SIZE + 2 * BORDER_SIZE,
+                SCORE_HEIGHT);
         g.setFont(emulogic.deriveFont(emulogic.getSize() * 60.0F));
         g.setColor(Color.white);
-        g.drawString("Score: " + snake.appleCounter, 100, 3 * BLOCK_SIZE);
+        g.drawString("Score: " + snake.appleCounter,
+                mapToScreenX(2),
+                mapToScreenY(-1));
     }
 
     /**
@@ -117,10 +144,13 @@ public class Snake extends Worlds {
     public void updateApple() {
         Random r = new Random();
         do {
-            apple.x = (r.nextInt(19 - 2) + 2) * BLOCK_SIZE;
-            apple.y = (r.nextInt(21 - 4) + 4) * BLOCK_SIZE;
+            int mapX = r.nextInt(MAP_WIDTH - 4) + 2;
+            int mapY = r.nextInt(MAP_HEIGHT - 4) + 2;
+            apple.x = mapToScreenX(mapX);
+            apple.y = mapToScreenY(mapY);
         } while (inSnake(apple));
     }
+
 
     /**
      * check if the new apple is inside the snake
@@ -133,4 +163,21 @@ public class Snake extends Worlds {
         }
         return false;
     }
+
+    public static int mapToScreenX(int mapX) {
+        return (int)((mapX + MAP_OFFSET_X) * BLOCK_SIZE);
+    }
+
+    public static int mapToScreenY(int mapY) {
+        return (int)((mapY + MAP_OFFSET_Y) * BLOCK_SIZE);
+    }
+
+    public static int screenToMapX(int screenX) {
+        return (int)((screenX / BLOCK_SIZE) - MAP_OFFSET_X);
+    }
+
+    public static int screenToMapY(int screenY) {
+        return (int)((screenY / BLOCK_SIZE) - MAP_OFFSET_Y);
+    }
+
 }

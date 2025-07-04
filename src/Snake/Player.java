@@ -1,3 +1,4 @@
+
 package Snake;
 
 import Main.Constants;
@@ -8,25 +9,22 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Player {
-
     private int x, y;
     private int tick;
     private int directions;
     public int appleCounter;
     public int start;
-    public ArrayList<Rectangle> tiles = new ArrayList();
+    public ArrayList<Rectangle> tiles = new ArrayList<>();
     public boolean appleCollected = false;
     private final Game game;
     private final Snake snakeWorld;
 
-    /**
-     * Constructor
-     */
     public Player(int x, int y, Game game, Snake snakeWorld) {
         this.x = x;
         this.y = y;
         this.game = game;
         this.snakeWorld = snakeWorld;
+        tiles.add(new Rectangle(x, y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE));
     }
 
     public void tick() {
@@ -61,15 +59,31 @@ public class Player {
         }
 
         if (tick > TICK_TIMER) {
+            // Store current position
+            int newX = x;
+            int newY = y;
+
             switch (directions) {
-                case 0 -> y = y - Snake.BLOCK_SIZE;
-                case 1 -> x = x - Snake.BLOCK_SIZE;
-                case 2 -> y = y + Snake.BLOCK_SIZE;
-                case 3 -> x = x + Snake.BLOCK_SIZE;
+                case 0 -> newY = y - Snake.BLOCK_SIZE;
+                case 1 -> newX = x - Snake.BLOCK_SIZE;
+                case 2 -> newY = y + Snake.BLOCK_SIZE;
+                case 3 -> newX = x + Snake.BLOCK_SIZE;
             }
-            tiles.add(new Rectangle(this.x, this.y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE));
-            tick = 0;
-            waitForStart();
+
+            // Check if new position would be within bounds
+            int mapX = (newX - Snake.mapToScreenX(0)) / Snake.BLOCK_SIZE;
+            int mapY = (newY - Snake.mapToScreenY(0)) / Snake.BLOCK_SIZE;
+
+            if (mapX >= 0 && mapX < 19 && mapY >= 0 && mapY < 21) {
+                x = newX;
+                y = newY;
+                tiles.add(new Rectangle(x, y, Snake.BLOCK_SIZE, Snake.BLOCK_SIZE));
+                tick = 0;
+                waitForStart();
+            } else {
+                snakeWorld.gameStart = false;
+                restart();
+            }
         } else {
             tick++;
         }
@@ -78,7 +92,7 @@ public class Player {
     public void waitForStart() {
         if (start >= 3) {
             if (!appleCollected) {
-                tiles.remove(0);
+                tiles.removeFirst();
             } else {
                 appleCollected = false;
             }
@@ -89,24 +103,14 @@ public class Player {
     }
 
     public void die() {
-        Rectangle head = tiles.get(tiles.size() - 1);
+        Rectangle head = tiles.getLast();
+        // Check collision with self
         for (int i = 0; i < tiles.size(); i++) {
             Rectangle rectangle = tiles.get(i);
             if (head.getBounds().intersects(rectangle.getBounds()) && i != tiles.size() - 1) {
                 snakeWorld.gameStart = false;
                 restart();
             }
-        }
-        Rectangle up = new Rectangle(2 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle down = new Rectangle(2 * Snake.BLOCK_SIZE, 25 * Snake.BLOCK_SIZE, 23 * Snake.BLOCK_SIZE, 1);
-        Rectangle left = new Rectangle(Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
-        Rectangle right = new Rectangle(21 * Snake.BLOCK_SIZE, 3 * Snake.BLOCK_SIZE, 1, 23 * Snake.BLOCK_SIZE);
-        if (head.getBounds().intersects(up.getBounds()) ||
-                head.getBounds().intersects(down.getBounds()) ||
-                head.getBounds().intersects(left.getBounds()) ||
-                head.getBounds().intersects(right.getBounds())) {
-            snakeWorld.gameStart = false;
-            restart();
         }
     }
 
@@ -116,7 +120,6 @@ public class Player {
     }
 
     public Rectangle getBounds() {
-        return tiles.get(tiles.size() - 1);
+        return tiles.getLast();
     }
-
 }
