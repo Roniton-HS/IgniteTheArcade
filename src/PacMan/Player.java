@@ -160,7 +160,6 @@ public class Player {
     public void render(Graphics g) {
         animation(g);
         renderScore(g);
-
     }
 
     private void animation(Graphics g) {
